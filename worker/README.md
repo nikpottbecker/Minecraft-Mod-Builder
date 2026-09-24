@@ -36,8 +36,15 @@ npx wrangler secret put SESSION_SECRET   # einen zufälligen String eingeben
 npx wrangler deploy
 ```
 
-Danach bekommst du eine `https://f1-rangliste.<dein-worker-subdomain>.workers.dev`
-URL als Vorschau.
+`wrangler.toml` enthält bereits eine `routes`-Zeile für die Custom Domain
+**`f1.homelab.ptbrnetwork.com`**. Da `ptbrnetwork.com` als Zone in
+demselben Cloudflare-Account liegt, legt `wrangler deploy` den DNS-Eintrag
+und die Custom-Domain-Bindung automatisch mit an – danach ist die Seite
+sofort unter `https://f1.homelab.ptbrnetwork.com` erreichbar (zusätzlich
+zur Standard-URL `https://f1-rangliste.<dein-worker-subdomain>.workers.dev`).
+
+Falls die Subdomain doch anders heißen soll, einfach das `pattern` in
+`wrangler.toml` vor dem Deploy anpassen.
 
 ## Alternative: Netzwerkzugriff in dieser Session erlauben
 

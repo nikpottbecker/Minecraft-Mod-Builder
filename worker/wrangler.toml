@@ -2,6 +2,10 @@ name = "f1-rangliste"
 main = "src/index.js"
 compatibility_date = "2026-01-01"
 
+routes = [
+  { pattern = "f1.homelab.ptbrnetwork.com", custom_domain = true }
+]
+
 [vars]
 SUPABASE_URL = "https://byitheklzbpwysdeckvy.supabase.co"
 SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5aXRoZWtsemJwd3lzZGVja3Z5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyMzc4OTgsImV4cCI6MjEwNTgxMzg5OH0.5DExeZ8iKYWFw_H70K3QBdiaQ6_4GVnFKlNQg8t8wck"
