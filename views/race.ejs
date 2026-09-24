@@ -1,0 +1,36 @@
+<%- include('partials_head') %>
+
+<div class="card">
+  <h2><%= race.name %></h2>
+  <p class="muted"><%= race.track || '' %> <%= race.race_date ? '· ' + race.race_date : '' %></p>
+
+  <% if (results.length === 0) { %>
+    <p class="muted">Noch keine Ergebnisse fuer dieses Rennen.</p>
+  <% } else { %>
+    <table>
+      <thead>
+        <tr><th>Platz</th><th>Fahrer</th><th>Punkte</th></tr>
+      </thead>
+      <tbody>
+        <% results.forEach(r => { %>
+          <tr>
+            <td><%= r.dnf ? 'DNF' : r.position %></td>
+            <td><span class="driver-color" style="background: <%= r.driver_color %>"></span><%= r.driver_name %>
+              <% if (race.fastest_lap_driver_id === r.driver_id) { %> <span class="muted">(schnellste Runde)</span><% } %>
+            </td>
+            <td class="points">
+              <% if (r.dnf) { %>0<% } else {
+                let pts = POINTS[r.position] || 0;
+                if (race.fastest_lap_driver_id === r.driver_id && r.position && r.position <= 10) pts += FASTEST_LAP_BONUS;
+              %><%= pts %><% } %>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+
+<a href="/">&larr; Zurueck zur Rangliste</a>
+
+<%- include('partials_foot') %>

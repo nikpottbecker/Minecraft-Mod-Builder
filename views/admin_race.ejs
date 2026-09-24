@@ -1,0 +1,36 @@
+<%- include('partials_head') %>
+
+<div class="card">
+  <h2>Ergebnisse eintragen: <%= race.name %></h2>
+  <p class="muted"><%= race.track || '' %> <%= race.race_date ? '· ' + race.race_date : '' %></p>
+
+  <% if (drivers.length === 0) { %>
+    <p class="muted">Lege zuerst Fahrer im <a href="/admin">Admin-Bereich</a> an.</p>
+  <% } else { %>
+    <form action="/admin/races/<%= race.id %>/results" method="POST" class="results-form">
+      <table>
+        <thead>
+          <tr><th>Fahrer</th><th>Platz</th><th>DNF</th><th>Schnellste Runde</th></tr>
+        </thead>
+        <tbody>
+          <% drivers.forEach(d => {
+            const r = resultsByDriver[d.id];
+          %>
+            <tr>
+              <td><span class="driver-color" style="background: <%= d.color %>"></span><%= d.name %></td>
+              <td><input type="number" min="1" max="99" name="position_<%= d.id %>" value="<%= r && r.position ? r.position : '' %>" /></td>
+              <td><input type="checkbox" name="dnf_<%= d.id %>" <%= r && r.dnf ? 'checked' : '' %> /></td>
+              <td><input type="radio" name="fastest_lap_driver_id" value="<%= d.id %>" <%= race.fastest_lap_driver_id === d.id ? 'checked' : '' %> /></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+      <br />
+      <button class="btn" type="submit">Ergebnisse speichern</button>
+    </form>
+  <% } %>
+</div>
+
+<a href="/admin">&larr; Zurueck zum Admin-Bereich</a>
+
+<%- include('partials_foot') %>
