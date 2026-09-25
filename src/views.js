@@ -16,6 +16,13 @@ nav a, header.topbar a.btn { color: var(--f1-text); text-decoration: none; margi
 .btn.secondary { background: var(--f1-gray); }
 .btn.danger { background: #7a1010; }
 main { max-width: 1000px; margin: 0 auto; padding: 24px; }
+@media (max-width: 480px) {
+  header.topbar { padding: 14px 16px; }
+  header.topbar h1 { font-size: 1.2rem; }
+  nav a, header.topbar a.btn, header.topbar form { margin-left: 8px; }
+  main { padding: 14px; }
+  .card { padding: 14px; }
+}
 .card { background: var(--f1-dark); border-radius: 8px; padding: 20px; margin-bottom: 24px; box-shadow: 0 4px 14px rgba(0,0,0,0.4); }
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--f1-gray); }
@@ -33,11 +40,18 @@ input, select { background: #0f0f16; border: 1px solid var(--f1-gray); color: va
 @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
 .muted { color: var(--f1-muted); font-size: 0.9rem; }
 .results-form td input[type="number"] { width: 70px; }
+.table-wrap { overflow-x: auto; }
 .chart-wrap { overflow-x: auto; }
-.chart-wrap svg { display: block; }
+.chart-wrap svg { display: block; width: 100%; min-width: 480px; }
 .chart-legend { display: flex; flex-wrap: wrap; gap: 12px 18px; margin-top: 12px; }
 .chart-legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--f1-muted); }
 .chart-legend .swatch { width: 10px; height: 10px; border-radius: 50%; }
+.wide-input { min-width: 220px; flex: 1 1 220px; }
+@media (max-width: 480px) {
+  .wide-input { min-width: 0; flex: 1 1 100%; }
+  form.inline { flex-direction: column; align-items: stretch; }
+  form.inline input, form.inline button { width: 100%; }
+}
 `;
 
 function esc(s) {
@@ -134,7 +148,7 @@ function renderPointsChart(progression) {
 
   return `
   <div class="chart-wrap">
-    <svg viewBox="0 0 ${width} ${height}" width="100%" role="img" aria-label="Punkteverlauf pro Fahrer">
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Punkteverlauf pro Fahrer">
       ${gridLines}
       ${lines}
       ${xLabels}
@@ -176,10 +190,10 @@ export function renderIndex({ standings, races, progression, isAdmin }) {
     ${
       standings.length === 0
         ? `<p class="muted">Noch keine Fahrer angelegt. ${isAdmin ? '<a href="/admin">Jetzt im Admin-Bereich anlegen</a>.' : ''}</p>`
-        : `<table>
+        : `<div class="table-wrap"><table>
       <thead><tr><th>#</th><th>Fahrer</th><th>Rennen</th><th>Siege</th><th>Podien</th><th>Punkte</th></tr></thead>
       <tbody>${rows}</tbody>
-    </table>`
+    </table></div>`
     }
   </div>
   <div class="card">
@@ -191,7 +205,7 @@ export function renderIndex({ standings, races, progression, isAdmin }) {
     ${
       races.length === 0
         ? `<p class="muted">Noch keine Rennen eingetragen.</p>`
-        : `<table><thead><tr><th>Datum</th><th>Rennen</th><th>Strecke</th></tr></thead><tbody>${raceRows}</tbody></table>`
+        : `<div class="table-wrap"><table><thead><tr><th>Datum</th><th>Rennen</th><th>Strecke</th></tr></thead><tbody>${raceRows}</tbody></table></div>`
     }
   </div>`;
   return layout({ title: 'F1 Rangliste', isAdmin, body });
@@ -223,7 +237,7 @@ export function renderRace({ race, results, POINTS, FASTEST_LAP_BONUS, isAdmin }
     ${
       results.length === 0
         ? `<p class="muted">Noch keine Ergebnisse fuer dieses Rennen.</p>`
-        : `<table><thead><tr><th>Platz</th><th>Fahrer</th><th>Punkte</th></tr></thead><tbody>${rows}</tbody></table>`
+        : `<div class="table-wrap"><table><thead><tr><th>Platz</th><th>Fahrer</th><th>Punkte</th></tr></thead><tbody>${rows}</tbody></table></div>`
     }
     ${
       race.video_url
@@ -284,7 +298,7 @@ export function renderAdmin({ drivers, races, passwordError }) {
   <div class="grid-2">
     <div class="card">
       <h2>Fahrer</h2>
-      <table><thead><tr><th>Name</th><th>Farbe</th><th></th></tr></thead><tbody>${driverRows}</tbody></table>
+      <div class="table-wrap"><table><thead><tr><th>Name</th><th>Farbe</th><th></th></tr></thead><tbody>${driverRows}</tbody></table></div>
       <form class="inline" action="/admin/drivers" method="POST">
         <input type="text" name="name" placeholder="Fahrername" required />
         <input type="color" name="color" value="#e10600" />
@@ -293,12 +307,12 @@ export function renderAdmin({ drivers, races, passwordError }) {
     </div>
     <div class="card">
       <h2>Rennen</h2>
-      <table><thead><tr><th>Rennen</th><th>Datum</th><th></th></tr></thead><tbody>${raceRows}</tbody></table>
+      <div class="table-wrap"><table><thead><tr><th>Rennen</th><th>Datum</th><th></th></tr></thead><tbody>${raceRows}</tbody></table></div>
       <form class="inline" action="/admin/races" method="POST">
         <input type="text" name="name" placeholder="Rennname (z.B. GP Spa)" required />
         <input type="text" name="track" placeholder="Strecke" />
         <input type="date" name="race_date" />
-        <input type="text" name="video_url" placeholder="YouTube-Link (optional)" style="min-width:220px;" />
+        <input type="text" name="video_url" class="wide-input" placeholder="YouTube-Link (optional)" />
         <button class="btn" type="submit">Rennen anlegen</button>
       </form>
     </div>
@@ -337,11 +351,11 @@ export function renderAdminRace({ race, drivers, resultsByDriver }) {
       drivers.length === 0
         ? `<p class="muted">Lege zuerst Fahrer im <a href="/admin">Admin-Bereich</a> an.</p>`
         : `<form action="/admin/races/${race.id}/results" method="POST" class="results-form">
-        <table><thead><tr><th>Fahrer</th><th>Platz</th><th>DNF</th><th>Schnellste Runde</th></tr></thead>
-        <tbody>${rows}</tbody></table>
+        <div class="table-wrap"><table><thead><tr><th>Fahrer</th><th>Platz</th><th>DNF</th><th>Schnellste Runde</th></tr></thead>
+        <tbody>${rows}</tbody></table></div>
         <div class="row" style="margin-top:14px;">
           <label>YouTube-Link zur Aufzeichnung:<br />
-            <input type="text" name="video_url" value="${esc(race.video_url || '')}" style="min-width:320px;" />
+            <input type="text" name="video_url" class="wide-input" style="display:block;width:100%;max-width:420px;" value="${esc(race.video_url || '')}" />
           </label>
         </div>
         <br /><button class="btn" type="submit">Ergebnisse speichern</button>
