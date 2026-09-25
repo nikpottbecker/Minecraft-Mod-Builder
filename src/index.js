@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { getSupabase, getStandings, POINTS, FASTEST_LAP_BONUS } from './supabase.js';
+import { getSupabase, loadRaceData, computeStandings, computeProgression, POINTS, FASTEST_LAP_BONUS } from './supabase.js';
 import { createSessionCookie, clearSessionCookie, readSession } from './auth.js';
 import { renderIndex, renderRace, renderLogin, renderAdmin, renderAdminRace } from './views.js';
 
@@ -21,13 +21,13 @@ function requireAdmin(c) {
 
 app.get('/', async (c) => {
   const supabase = getSupabase(c.env);
-  const standings = await getStandings(supabase);
-  const { data: races } = await supabase
-    .from('races')
-    .select('*')
-    .order('race_date', { ascending: false })
-    .order('id', { ascending: false });
-  return c.html(renderIndex({ standings, races: races || [], isAdmin: c.get('isAdmin') }));
+  const { drivers, races, results } = await loadRaceData(supabase);
+  const standings = computeStandings(drivers, races, results);
+  const progression = computeProgression(drivers, races, results);
+  const racesDesc = races
+    .slice()
+    .sort((a, b) => (b.race_date || '').localeCompare(a.race_date || '') || b.id - a.id);
+  return c.html(renderIndex({ standings, races: racesDesc, progression, isAdmin: c.get('isAdmin') }));
 });
 
 app.get('/races/:id', async (c) => {

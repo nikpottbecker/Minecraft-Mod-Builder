@@ -33,6 +33,11 @@ input, select { background: #0f0f16; border: 1px solid var(--f1-gray); color: va
 @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
 .muted { color: var(--f1-muted); font-size: 0.9rem; }
 .results-form td input[type="number"] { width: 70px; }
+.chart-wrap { overflow-x: auto; }
+.chart-wrap svg { display: block; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 12px 18px; margin-top: 12px; }
+.chart-legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--f1-muted); }
+.chart-legend .swatch { width: 10px; height: 10px; border-radius: 50%; }
 `;
 
 function esc(s) {
@@ -68,7 +73,78 @@ function layout({ title = 'F1 Rangliste', isAdmin = false, body = '' }) {
 </html>`;
 }
 
-export function renderIndex({ standings, races, isAdmin }) {
+function renderPointsChart(progression) {
+  const { races: orderedRaces, drivers } = progression;
+  if (orderedRaces.length < 2) {
+    return `<p class="muted">Sobald mindestens zwei Rennen eingetragen sind, erscheint hier der Punkteverlauf.</p>`;
+  }
+
+  const width = 680;
+  const height = 260;
+  const padLeft = 34;
+  const padRight = 12;
+  const padTop = 14;
+  const padBottom = 26;
+  const plotW = width - padLeft - padRight;
+  const plotH = height - padTop - padBottom;
+
+  const maxPoints = Math.max(1, ...drivers.map((d) => d.series[d.series.length - 1] || 0));
+  const yMax = Math.ceil((maxPoints * 1.1) / 10) * 10 || 10;
+
+  const x = (i) => padLeft + (orderedRaces.length === 1 ? 0 : (i / (orderedRaces.length - 1)) * plotW);
+  const y = (v) => padTop + plotH - (v / yMax) * plotH;
+
+  const gridLines = [0, 0.25, 0.5, 0.75, 1]
+    .map((f) => {
+      const val = Math.round(yMax * f);
+      const yy = y(val);
+      return `<line x1="${padLeft}" y1="${yy}" x2="${width - padRight}" y2="${yy}" stroke="var(--f1-gray)" stroke-width="1" />
+        <text x="${padLeft - 8}" y="${yy + 4}" text-anchor="end" font-size="10" fill="var(--f1-muted)">${val}</text>`;
+    })
+    .join('');
+
+  const xLabels = orderedRaces
+    .map((r, i) => {
+      if (orderedRaces.length > 12 && i % Math.ceil(orderedRaces.length / 12) !== 0) return '';
+      return `<text x="${x(i)}" y="${height - 6}" text-anchor="middle" font-size="10" fill="var(--f1-muted)">${i + 1}</text>`;
+    })
+    .join('');
+
+  const lines = drivers
+    .map((d) => {
+      const points = d.series.map((v, i) => `${x(i)},${y(v)}`).join(' ');
+      const dots = d.series
+        .map(
+          (v, i) =>
+            `<circle cx="${x(i)}" cy="${y(v)}" r="2.6" fill="${esc(d.color)}"><title>${esc(d.name)} · ${esc(
+              orderedRaces[i].name
+            )}: ${v} Punkte</title></circle>`
+        )
+        .join('');
+      return `<polyline points="${points}" fill="none" stroke="${esc(d.color)}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />${dots}`;
+    })
+    .join('');
+
+  const legend = drivers
+    .map(
+      (d) =>
+        `<span><span class="swatch" style="background:${esc(d.color)}"></span>${esc(d.name)}</span>`
+    )
+    .join('');
+
+  return `
+  <div class="chart-wrap">
+    <svg viewBox="0 0 ${width} ${height}" width="100%" role="img" aria-label="Punkteverlauf pro Fahrer">
+      ${gridLines}
+      ${lines}
+      ${xLabels}
+    </svg>
+  </div>
+  <div class="chart-legend">${legend}</div>
+  <p class="muted" style="margin-top:8px;">X-Achse: Rennen in chronologischer Reihenfolge (1 = erstes Rennen)</p>`;
+}
+
+export function renderIndex({ standings, races, progression, isAdmin }) {
   const rows = standings
     .map(
       (s, i) => `
@@ -105,6 +181,10 @@ export function renderIndex({ standings, races, isAdmin }) {
       <tbody>${rows}</tbody>
     </table>`
     }
+  </div>
+  <div class="card">
+    <h2>Punkteverlauf</h2>
+    ${renderPointsChart(progression)}
   </div>
   <div class="card">
     <h2>Rennen</h2>
