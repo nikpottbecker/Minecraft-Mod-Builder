@@ -88,7 +88,8 @@ app.get('/admin', async (c) => {
     .select('*')
     .order('race_date', { ascending: false })
     .order('id', { ascending: false });
-  return c.html(renderAdmin({ drivers: drivers || [], races: races || [] }));
+  const { data: telemetryStatus } = await supabase.from('telemetry_status').select('*').eq('id', 1).single();
+  return c.html(renderAdmin({ drivers: drivers || [], races: races || [], telemetryStatus }));
 });
 
 app.post('/admin/drivers', async (c) => {

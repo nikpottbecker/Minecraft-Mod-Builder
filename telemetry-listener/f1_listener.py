@@ -42,6 +42,8 @@ import os
 import socket
 import struct
 import sys
+import threading
+import time
 from datetime import datetime, timezone
 
 import requests
@@ -60,6 +62,20 @@ PACKET_ID_FINAL_CLASSIFICATION = 8
 
 # Result statuses that count as "did not finish" for our own points scheme.
 DNF_RESULT_STATUSES = {4, 5, 6, 7}  # DNF, disqualified, not classified, retired
+
+# m_resultReason aus der FinalClassificationData, offizielle EA-Spezifikation
+RESULT_REASON_TEXT = {
+    1: "Ausgefallen",
+    2: "Beendet",
+    3: "Totalschaden",
+    4: "Inaktiv",
+    5: "Nicht genug Runden gefahren",
+    6: "Schwarze Flagge",
+    7: "Rote Flagge",
+    8: "Mechanischer Defekt",
+    9: "Session uebersprungen",
+    10: "Session simuliert",
+}
 
 # --- Struct layouts, exactly as in the official F1 25 UDP specification ---
 # All little-endian, tightly packed (no padding).
@@ -123,6 +139,7 @@ def parse_final_classification(data):
         results.append({
             "car_index": i,
             "position": position,
+            "num_laps": num_laps,
             "result_status": result_status,
             "result_reason": result_reason,
             "best_lap_time_ms": best_lap_time_ms,
@@ -140,6 +157,31 @@ def rest_headers(extra=None):
     if extra:
         headers.update(extra)
     return headers
+
+
+def push_heartbeat(shared_state):
+    """Laeuft als Hintergrund-Thread und schreibt alle paar Sekunden den
+    aktuellen Status (laeuft ueberhaupt / kommt gerade Telemetrie an /
+    scharf fuers naechste Rennen) nach Supabase, damit er im Admin-Bereich
+    der Webseite sichtbar ist."""
+    while not shared_state["stop"]:
+        payload = {
+            "id": 1,
+            "last_heartbeat": datetime.now(timezone.utc).isoformat(),
+            "last_packet_at": shared_state["last_packet_at"],
+            "armed": os.path.exists(ARM_FILE),
+        }
+        try:
+            requests.patch(
+                SUPABASE_URL + "/rest/v1/telemetry_status",
+                params={"id": "eq.1"},
+                headers=rest_headers(),
+                json=payload,
+                timeout=10,
+            )
+        except requests.RequestException:
+            pass  # naechster Versuch in 10s reicht, kein Grund den Listener abzubrechen
+        time.sleep(10)
 
 
 def get_or_create_driver(name, cache):
@@ -184,12 +226,14 @@ def create_race(track_hint=None):
     return race_id
 
 
-def upsert_result(race_id, driver_id, position, dnf):
+def upsert_result(race_id, driver_id, position, dnf, dnf_reason=None, laps_completed=None):
     payload = {
         "race_id": race_id,
         "driver_id": driver_id,
         "position": None if dnf else position,
         "dnf": dnf,
+        "dnf_reason": dnf_reason if dnf else None,
+        "laps_completed": laps_completed,
     }
     resp = requests.post(
         SUPABASE_URL + "/rest/v1/results",
@@ -231,9 +275,13 @@ def process_final_classification(data, participants, race_id, driver_cache):
         driver_id = get_or_create_driver(name, driver_cache)
         dnf = entry["result_status"] in DNF_RESULT_STATUSES
         position = entry["position"]
+        dnf_reason = RESULT_REASON_TEXT.get(entry["result_reason"]) if dnf else None
 
-        upsert_result(race_id, driver_id, position, dnf)
-        print(f"  {name}: Platz {position if not dnf else 'DNF'}")
+        upsert_result(race_id, driver_id, position, dnf, dnf_reason, entry["num_laps"])
+        if dnf:
+            print(f"  {name}: DNF in Runde {entry['num_laps']} ({dnf_reason or 'unbekannt'})")
+        else:
+            print(f"  {name}: Platz {position}")
 
         if not dnf and position and position <= 10:
             top10_driver_ids.add(driver_id)
@@ -296,6 +344,10 @@ def main():
     tracked_sessions = {}  # session_uid -> bool
     driver_cache = {}
 
+    shared_state = {"last_packet_at": None, "stop": False}
+    heartbeat_thread = threading.Thread(target=push_heartbeat, args=(shared_state,), daemon=True)
+    heartbeat_thread.start()
+
     try:
         while True:
             data, _addr = sock.recvfrom(2048)
@@ -304,6 +356,8 @@ def main():
             header = parse_header(data)
             if header["m_packetFormat"] != 2025:
                 continue  # anderes Spiel/Format, ignorieren
+
+            shared_state["last_packet_at"] = datetime.now(timezone.utc).isoformat()
 
             session_uid = header["m_sessionUID"]
             packet_id = header["m_packetId"]
@@ -334,6 +388,7 @@ def main():
                 process_final_classification(data, participants, args.race_id, driver_cache)
 
     except KeyboardInterrupt:
+        shared_state["stop"] = True
         print("\nBeendet.")
         sys.exit(0)
 

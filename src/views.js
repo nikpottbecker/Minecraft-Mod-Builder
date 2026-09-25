@@ -47,6 +47,23 @@ input, select { background: #0f0f16; border: 1px solid var(--f1-gray); color: va
 .chart-legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--f1-muted); }
 .chart-legend .swatch { width: 10px; height: 10px; border-radius: 50%; }
 .wide-input { min-width: 220px; flex: 1 1 220px; }
+.replay-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.replay-card { display: block; color: var(--f1-text); text-decoration: none; background: #14141d; border-radius: 8px; overflow: hidden; border: 1px solid var(--f1-gray); }
+.replay-card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: #0a0a10; }
+.replay-card .replay-info { padding: 10px 12px; }
+.replay-card .replay-info strong { display: block; font-size: 0.92rem; }
+.replay-card .replay-info span { color: var(--f1-muted); font-size: 0.78rem; }
+.highlights { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.highlights li { padding: 8px 12px; border-radius: 6px; background: #14141d; border-left: 3px solid var(--f1-gray); font-size: 0.9rem; }
+.highlights li.dnf { border-left-color: #c0392b; }
+.highlights li.fastest { border-left-color: #3498db; }
+.highlights li.winner { border-left-color: var(--gold); }
+.status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+.status-tile { background: #14141d; border-radius: 8px; padding: 12px 14px; border: 1px solid var(--f1-gray); }
+.status-tile .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; }
+.status-tile .dot.on { background: #2ecc71; }
+.status-tile .dot.off { background: #5a5a66; }
+.status-tile .label { display: block; color: var(--f1-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
 @media (max-width: 480px) {
   .wide-input { min-width: 0; flex: 1 1 100%; }
   form.inline { flex-direction: column; align-items: stretch; }
@@ -85,6 +102,86 @@ function layout({ title = 'F1 Rangliste', isAdmin = false, body = '' }) {
 <main>${body}</main>
 </body>
 </html>`;
+}
+
+function youtubeId(url) {
+  if (!url) return null;
+  const m = String(url).match(
+    /(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{6,})/
+  );
+  return m ? m[1] : null;
+}
+
+function renderReplaysGallery(races) {
+  const withVideo = races.filter((r) => r.video_url);
+  if (withVideo.length === 0) {
+    return `<p class="muted">Noch keine Rennaufzeichnungen verlinkt.</p>`;
+  }
+  const cards = withVideo
+    .map((r) => {
+      const vid = youtubeId(r.video_url);
+      const thumb = vid
+        ? `<img src="https://img.youtube.com/vi/${esc(vid)}/hqdefault.jpg" alt="" loading="lazy" />`
+        : `<div style="aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;color:var(--f1-muted);">&#9654;</div>`;
+      return `<a class="replay-card" href="${esc(r.video_url)}" target="_blank" rel="noopener">
+        ${thumb}
+        <div class="replay-info">
+          <strong>${esc(r.name)}</strong>
+          <span>${esc(r.race_date || '')}${r.track ? ' · ' + esc(r.track) : ''}</span>
+        </div>
+      </a>`;
+    })
+    .join('');
+  return `<div class="replay-grid">${cards}</div>`;
+}
+
+function renderHighlights(race, results) {
+  const items = [];
+
+  const winner = results.find((r) => !r.dnf && r.position === 1);
+  if (winner) {
+    items.push({ cls: 'winner', text: `🏆 ${winner.driver_name} gewinnt das Rennen.` });
+  }
+
+  const fastest = results.find((r) => r.driver_id === race.fastest_lap_driver_id);
+  if (fastest) {
+    items.push({ cls: 'fastest', text: `⚡ ${fastest.driver_name} fährt die schnellste Runde.` });
+  }
+
+  for (const r of results) {
+    if (!r.dnf) continue;
+    const lapText = r.laps_completed ? `in Runde ${r.laps_completed} ` : '';
+    const reasonText = r.dnf_reason ? `wegen ${r.dnf_reason}` : '(Grund unbekannt)';
+    items.push({ cls: 'dnf', text: `💥 ${r.driver_name} scheidet ${lapText}aus ${reasonText}.` });
+  }
+
+  if (items.length === 0) {
+    return `<p class="muted">Noch keine Highlights für dieses Rennen.</p>`;
+  }
+
+  return `<ul class="highlights">${items
+    .map((i) => `<li class="${i.cls}">${i.text}</li>`)
+    .join('')}</ul>`;
+}
+
+export function renderTelemetryStatus(status) {
+  const now = Date.now();
+  const secondsSince = (iso) => (iso ? (now - new Date(iso).getTime()) / 1000 : Infinity);
+
+  const listenerOn = secondsSince(status?.last_heartbeat) < 30;
+  const gameOn = secondsSince(status?.last_packet_at) < 15;
+  const armed = !!status?.armed;
+
+  const tile = (on, label, extra) =>
+    `<div class="status-tile"><span class="dot ${on ? 'on' : 'off'}"></span>${extra || (on ? 'Ja' : 'Nein')}
+      <span class="label">${esc(label)}</span></div>`;
+
+  return `
+  <div class="status-grid">
+    ${tile(listenerOn, 'Listener aktiv')}
+    ${tile(gameOn, 'Verbindung zum Spiel')}
+    ${tile(armed, 'Naechstes Rennen scharf')}
+  </div>`;
 }
 
 function renderPointsChart(progression) {
@@ -207,6 +304,10 @@ export function renderIndex({ standings, races, progression, isAdmin }) {
         ? `<p class="muted">Noch keine Rennen eingetragen.</p>`
         : `<div class="table-wrap"><table><thead><tr><th>Datum</th><th>Rennen</th><th>Strecke</th></tr></thead><tbody>${raceRows}</tbody></table></div>`
     }
+  </div>
+  <div class="card">
+    <h2>Rennaufzeichnungen</h2>
+    ${renderReplaysGallery(races)}
   </div>`;
   return layout({ title: 'F1 Rangliste', isAdmin, body });
 }
@@ -245,6 +346,10 @@ export function renderRace({ race, results, POINTS, FASTEST_LAP_BONUS, isAdmin }
         : ''
     }
   </div>
+  <div class="card">
+    <h2>Highlights</h2>
+    ${renderHighlights(race, results)}
+  </div>
   <a href="/">&larr; Zurueck zur Rangliste</a>`;
   return layout({ title: race.name, isAdmin, body });
 }
@@ -269,7 +374,7 @@ export function renderLogin({ error }) {
   return layout({ title: 'Admin-Login', isAdmin: false, body });
 }
 
-export function renderAdmin({ drivers, races, passwordError }) {
+export function renderAdmin({ drivers, races, passwordError, telemetryStatus }) {
   const driverRows = drivers
     .map(
       (d) => `
@@ -295,6 +400,10 @@ export function renderAdmin({ drivers, races, passwordError }) {
     .join('');
 
   const body = `
+  <div class="card">
+    <h2>Telemetrie-Status</h2>
+    ${renderTelemetryStatus(telemetryStatus)}
+  </div>
   <div class="grid-2">
     <div class="card">
       <h2>Fahrer</h2>
