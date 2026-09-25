@@ -1,29 +1,17 @@
 {
-  "name": "minecraft-mod-builder",
+  "name": "f1-rangliste-worker",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nikpottbecker/Minecraft-Mod-Builder.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/nikpottbecker/Minecraft-Mod-Builder/issues"
-  },
-  "homepage": "https://github.com/nikpottbecker/Minecraft-Mod-Builder#readme",
   "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "better-sqlite3": "^13.0.3",
-    "dotenv": "^18.0.3",
-    "ejs": "^6.0.1",
-    "express": "^5.2.1",
-    "express-session": "^1.19.0"
+    "@supabase/supabase-js": "^2.45.4",
+    "hono": "^4.6.9"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
   }
 }
