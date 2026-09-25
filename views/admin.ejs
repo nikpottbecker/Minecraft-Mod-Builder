@@ -1,0 +1,66 @@
+<%- include('partials_head') %>
+
+<div class="grid-2">
+  <div class="card">
+    <h2>Fahrer</h2>
+    <table>
+      <thead><tr><th>Name</th><th>Farbe</th><th></th></tr></thead>
+      <tbody>
+        <% drivers.forEach(d => { %>
+          <tr>
+            <td><%= d.name %></td>
+            <td><span class="driver-color" style="background: <%= d.color %>"></span></td>
+            <td>
+              <form action="/admin/drivers/<%= d.id %>/delete" method="POST" onsubmit="return confirm('Fahrer wirklich loeschen?');">
+                <button class="btn danger" type="submit">Loeschen</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <form class="inline" action="/admin/drivers" method="POST">
+      <input type="text" name="name" placeholder="Fahrername" required />
+      <input type="color" name="color" value="#e10600" />
+      <button class="btn" type="submit">Fahrer hinzufuegen</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Rennen</h2>
+    <table>
+      <thead><tr><th>Rennen</th><th>Datum</th><th></th></tr></thead>
+      <tbody>
+        <% races.forEach(r => { %>
+          <tr>
+            <td><a class="race-link" href="/admin/races/<%= r.id %>"><%= r.name %></a></td>
+            <td><%= r.race_date || '-' %></td>
+            <td>
+              <form action="/admin/races/<%= r.id %>/delete" method="POST" onsubmit="return confirm('Rennen wirklich loeschen?');">
+                <button class="btn danger" type="submit">Loeschen</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <form class="inline" action="/admin/races" method="POST">
+      <input type="text" name="name" placeholder="Rennname (z.B. GP Spa)" required />
+      <input type="text" name="track" placeholder="Strecke" />
+      <input type="date" name="race_date" />
+      <button class="btn" type="submit">Rennen anlegen</button>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Passwort aendern</h2>
+  <% if (typeof passwordError !== 'undefined' && passwordError) { %><div class="error"><%= passwordError %></div><% } %>
+  <form action="/admin/password" method="POST" class="inline">
+    <input type="password" name="current_password" placeholder="Aktuelles Passwort" required />
+    <input type="password" name="new_password" placeholder="Neues Passwort" required minlength="4" />
+    <button class="btn" type="submit">Aendern</button>
+  </form>
+</div>
+
+<%- include('partials_foot') %>

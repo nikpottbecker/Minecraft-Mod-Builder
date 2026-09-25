@@ -1,0 +1,58 @@
+<%- include('partials_head') %>
+
+<div class="card">
+  <h2>Fahrerwertung</h2>
+  <% if (standings.length === 0) { %>
+    <p class="muted">Noch keine Fahrer angelegt. <% if (locals.isAdmin) { %><a href="/admin">Jetzt im Admin-Bereich anlegen</a>.<% } %></p>
+  <% } else { %>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Fahrer</th>
+          <th>Rennen</th>
+          <th>Siege</th>
+          <th>Podien</th>
+          <th>Punkte</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% standings.forEach((s, i) => { %>
+          <tr class="pos-<%= i + 1 %>">
+            <td class="pos"><%= i + 1 %></td>
+            <td><span class="driver-color" style="background: <%= s.color %>"></span><%= s.name %></td>
+            <td><%= s.races %></td>
+            <td><%= s.wins %></td>
+            <td><%= s.podiums %></td>
+            <td class="points"><%= s.points %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+
+<div class="card">
+  <h2>Rennen</h2>
+  <% if (races.length === 0) { %>
+    <p class="muted">Noch keine Rennen eingetragen.</p>
+  <% } else { %>
+    <table>
+      <thead>
+        <tr><th>Datum</th><th>Rennen</th><th>Strecke</th><th></th></tr>
+      </thead>
+      <tbody>
+        <% races.forEach(r => { %>
+          <tr>
+            <td><%= r.race_date || '-' %></td>
+            <td><a class="race-link" href="/races/<%= r.id %>"><%= r.name %></a></td>
+            <td><%= r.track || '-' %></td>
+            <td></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+
+<%- include('partials_foot') %>
