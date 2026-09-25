@@ -1,9 +1,11 @@
 # F1 Rangliste – Cloudflare Worker + Supabase
 
-Diese Variante der App läuft als Cloudflare Worker (Hono) und nutzt
-Supabase (Postgres) statt SQLite als Datenbank. Funktional identisch zur
-Node/Express-Version im Projekt-Root (gleiche Punkteregeln, gleicher
-Admin-Bereich, gleiches Design).
+Diese App läuft als Cloudflare Worker (Hono) und nutzt Supabase (Postgres)
+als Datenbank. Der Worker-Code liegt bewusst im **Repo-Root** (`wrangler.toml`,
+`src/`, `package.json`), damit Cloudflare Workers Builds ihn ohne
+"Root directory"-Einstellung findet. Die ursprüngliche Node/Express +
+SQLite-Version (funktional identisch, aber ohne Cloudflare/Supabase) liegt
+zum Vergleich in `legacy-express-app/`.
 
 ## Bereits erledigt
 
@@ -29,7 +31,6 @@ dieser Session heraus nicht ausgeführt werden.
 ## Selbst deployen (2 Minuten)
 
 ```bash
-cd worker
 npm install
 npx wrangler login          # einmalig im Browser einloggen
 npx wrangler secret put SESSION_SECRET   # einen zufälligen String eingeben
@@ -45,6 +46,16 @@ zur Standard-URL `https://f1-rangliste.<dein-worker-subdomain>.workers.dev`).
 
 Falls die Subdomain doch anders heißen soll, einfach das `pattern` in
 `wrangler.toml` vor dem Deploy anpassen.
+
+## Cloudflare Workers Builds (Git-Integration)
+
+Falls der Worker über "Import a repository" mit GitHub verbunden ist:
+- **Root directory / Path:** leer lassen bzw. `/` (Default) – der Code liegt
+  jetzt absichtlich im Repo-Root, genau dort, wo Cloudflare Workers Builds
+  standardmäßig baut.
+- **Build command:** `npm install && npx wrangler deploy`
+- **Branch:** `main` (oder der Branch, den du verbunden hast)
+- Secret `SESSION_SECRET` unter Settings → Variables and Secrets setzen.
 
 ## Alternative: Netzwerkzugriff in dieser Session erlauben
 
