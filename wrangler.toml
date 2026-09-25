@@ -1,4 +1,4 @@
-name = "f1-rangliste"
+name = "minecraft-mod-builder"
 main = "src/index.js"
 compatibility_date = "2026-01-01"
 
