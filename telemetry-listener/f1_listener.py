@@ -19,20 +19,34 @@ So aktivierst du die Telemetrie in F1 25:
     UDP-Port:            20777 (Standard)
     UDP-Format:          2025
 
+Der Listener laeuft dauerhaft im Hintergrund, laedt aber NUR Rennen hoch,
+die vorher explizit "scharf geschaltet" wurden - damit nicht jedes Testrennen
+oder jede Solo-Runde in der Rangliste landet. Scharfschalten:
+
+  python f1_listener.py --arm
+
+(oder Doppelklick auf track_race.bat unter Windows). Das gilt fuer genau
+das naechste Rennen, das gestartet wird - danach ist der Listener wieder
+automatisch "kalt" und ignoriert Rennen, bis du erneut scharfschaltest.
+
 Nutzung:
   pip install requests
-  python f1_listener.py
+  python f1_listener.py           # Listener dauerhaft im Hintergrund laufen lassen
+  python f1_listener.py --arm     # naechstes Rennen zum Hochladen scharfschalten
   # optional: bestehende Renn-ID statt automatisch neuem Rennen verwenden
   python f1_listener.py --race-id 12
 """
 
 import argparse
+import os
 import socket
 import struct
 import sys
 from datetime import datetime, timezone
 
 import requests
+
+ARM_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "TRACK_NEXT_RACE.flag")
 
 SUPABASE_URL = "https://byitheklzbpwysdeckvy.supabase.co"
 SUPABASE_ANON_KEY = (
@@ -237,21 +251,49 @@ def process_final_classification(data, participants, race_id, driver_cache):
     return race_id
 
 
+def arm_next_race():
+    with open(ARM_FILE, "w") as f:
+        f.write("armed\n")
+    print(f"Scharf geschaltet: Das naechste gestartete Rennen wird hochgeladen.")
+    print(f"(Marker-Datei: {ARM_FILE})")
+
+
+def consume_arm_flag():
+    """Prueft, ob scharfgeschaltet wurde, und loescht die Markierung sofort
+    wieder - gilt also nur fuer genau ein Rennen."""
+    if os.path.exists(ARM_FILE):
+        try:
+            os.remove(ARM_FILE)
+        except OSError:
+            pass
+        return True
+    return False
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--port", type=int, default=20777, help="UDP-Port (Standard: 20777)")
     parser.add_argument("--race-id", type=int, default=None,
                          help="Bestehende Renn-ID verwenden statt automatisch ein neues Rennen anzulegen")
+    parser.add_argument("--arm", action="store_true",
+                         help="Naechstes gestartetes Rennen zum Hochladen scharfschalten und beenden")
     args = parser.parse_args()
+
+    if args.arm:
+        arm_next_race()
+        return
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind(("0.0.0.0", args.port))
     print(f"Warte auf F1-25-Telemetrie auf UDP-Port {args.port} ...")
     print("(In F1 25: Einstellungen -> Telemetrie-Einstellungen -> UDP-Telemetrie: Ein,")
-    print(" UDP-IP-Adresse = IP dieses Rechners, UDP-Format = 2025)\n")
+    print(" UDP-IP-Adresse = IP dieses Rechners, UDP-Format = 2025)")
+    print("Rennen werden NUR hochgeladen, wenn du sie vorher scharfschaltest:")
+    print("  python f1_listener.py --arm   (oder track_race.bat)\n")
 
     participants_by_session = {}
     processed_sessions = set()
+    tracked_sessions = {}  # session_uid -> bool
     driver_cache = {}
 
     try:
@@ -265,6 +307,18 @@ def main():
 
             session_uid = header["m_sessionUID"]
             packet_id = header["m_packetId"]
+
+            if session_uid not in tracked_sessions:
+                # Neue Session erkannt - jetzt entscheiden, ob sie getrackt wird.
+                is_armed = consume_arm_flag()
+                tracked_sessions[session_uid] = is_armed
+                if is_armed:
+                    print(f"Neues Rennen erkannt (Session {session_uid}) - wird getrackt.")
+                else:
+                    print(f"Neues Rennen erkannt (Session {session_uid}) - wird ignoriert (nicht scharfgeschaltet).")
+
+            if not tracked_sessions[session_uid]:
+                continue  # dieses Rennen ist nicht scharfgeschaltet - komplett ignorieren
 
             if packet_id == PACKET_ID_PARTICIPANTS:
                 participants_by_session[session_uid] = parse_participants(data)

@@ -13,6 +13,30 @@ Basiert auf der offiziellen EA-Spezifikation "Data Output from F1 25 v3"
 - **Final-Classification-Paket** (ID 8): liefert das Zielklassement
   (Platz, DNF-Status, schnellste Rundenzeit) direkt nach Rennende
 
+## Nur ausgewaehlte Rennen hochladen ("Scharfschalten")
+
+Der Listener laeuft dauerhaft, laedt aber **nur** Rennen hoch, die du vorher
+explizit dafuer freigegeben hast - damit nicht jede Testrunde oder jedes
+Solo-Training in der Rangliste landet:
+
+1. **Listener starten** (einmal, laeuft dann im Hintergrund):
+   ```bash
+   python f1_listener.py
+   ```
+   Unter Windows: Doppelklick auf `start_listener.bat`.
+
+2. **Kurz bevor du ein Rennen startest, das gezaehlt werden soll:**
+   ```bash
+   python f1_listener.py --arm
+   ```
+   Unter Windows: Doppelklick auf `track_race.bat`.
+
+Das gilt fuer genau das naechste Rennen, das in F1 25 gestartet wird. Direkt
+danach ist der Listener wieder "kalt" und ignoriert alles, bis du erneut
+scharfschaltest. Der Listener selbst kann durchgehend im Hintergrund laufen
+(z.B. den ganzen Abend) - nur das "Scharfschalten" pro Rennen entscheidet,
+was tatsaechlich in die Datenbank geschrieben wird.
+
 ## Einrichtung
 
 1. **Python-Abhängigkeit installieren** (auf dem Rechner, der während des
@@ -32,16 +56,12 @@ Basiert auf der offiziellen EA-Spezifikation "Data Output from F1 25 v3"
    - UDP-Port: **20777** (Standard)
    - UDP-Format: **2025**
 
-3. **Listener starten:**
-
-   ```bash
-   python f1_listener.py
-   ```
-
-   Das Skript legt für jedes beendete Rennen automatisch einen neuen
-   Renneintrag an (`F1 25 Auto-Import <Datum>`) und trägt die Ergebnisse
-   ein. Fahrer, die noch nicht in der Datenbank existieren, werden
-   anhand ihres In-Game-Namens automatisch neu angelegt.
+3. **Listener starten und pro Rennen scharfschalten** — siehe Abschnitt
+   oben ("Nur ausgewählte Rennen hochladen"). Das Skript legt für jedes
+   scharfgeschaltete, beendete Rennen automatisch einen neuen Renneintrag
+   an (`F1 25 Auto-Import <Datum>`) und trägt die Ergebnisse ein. Fahrer,
+   die noch nicht in der Datenbank existieren, werden anhand ihres
+   In-Game-Namens automatisch neu angelegt.
 
    Willst du die Ergebnisse stattdessen einem bereits im Admin-Bereich
    angelegten Rennen zuordnen:
@@ -54,8 +74,8 @@ Basiert auf der offiziellen EA-Spezifikation "Data Output from F1 25 v3"
 
 4. Rennen fahren, ins Ziel kommen — sobald der Ergebnisbildschirm
    erscheint, verarbeitet das Skript automatisch das Zielklassement und
-   beendet sich nicht (läuft weiter für das nächste Rennen). Mit
-   `Strg+C` beenden.
+   beendet sich nicht (läuft weiter für das nächste Rennen, bis du es
+   erneut scharfschaltest). Mit `Strg+C` beenden.
 
 ## Punkte
 
