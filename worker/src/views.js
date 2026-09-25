@@ -145,6 +145,11 @@ export function renderRace({ race, results, POINTS, FASTEST_LAP_BONUS, isAdmin }
         ? `<p class="muted">Noch keine Ergebnisse fuer dieses Rennen.</p>`
         : `<table><thead><tr><th>Platz</th><th>Fahrer</th><th>Punkte</th></tr></thead><tbody>${rows}</tbody></table>`
     }
+    ${
+      race.video_url
+        ? `<p style="margin-top:16px;"><a class="race-link" href="${esc(race.video_url)}" target="_blank" rel="noopener">&#9654; Rennaufzeichnung ansehen</a></p>`
+        : ''
+    }
   </div>
   <a href="/">&larr; Zurueck zur Rangliste</a>`;
   return layout({ title: race.name, isAdmin, body });
@@ -213,6 +218,7 @@ export function renderAdmin({ drivers, races, passwordError }) {
         <input type="text" name="name" placeholder="Rennname (z.B. GP Spa)" required />
         <input type="text" name="track" placeholder="Strecke" />
         <input type="date" name="race_date" />
+        <input type="text" name="video_url" placeholder="YouTube-Link (optional)" style="min-width:220px;" />
         <button class="btn" type="submit">Rennen anlegen</button>
       </form>
     </div>
@@ -253,6 +259,11 @@ export function renderAdminRace({ race, drivers, resultsByDriver }) {
         : `<form action="/admin/races/${race.id}/results" method="POST" class="results-form">
         <table><thead><tr><th>Fahrer</th><th>Platz</th><th>DNF</th><th>Schnellste Runde</th></tr></thead>
         <tbody>${rows}</tbody></table>
+        <div class="row" style="margin-top:14px;">
+          <label>YouTube-Link zur Aufzeichnung:<br />
+            <input type="text" name="video_url" value="${esc(race.video_url || '')}" style="min-width:320px;" />
+          </label>
+        </div>
         <br /><button class="btn" type="submit">Ergebnisse speichern</button>
       </form>`
     }

@@ -123,6 +123,7 @@ app.post('/admin/races', async (c) => {
       name,
       track: body.track || null,
       race_date: body.race_date || null,
+      video_url: body.video_url || null,
     });
   }
   return c.redirect('/admin');
@@ -177,7 +178,10 @@ app.post('/admin/races/:id/results', async (c) => {
   }
 
   const fastestLapDriverId = body.fastest_lap_driver_id ? Number(body.fastest_lap_driver_id) : null;
-  await supabase.from('races').update({ fastest_lap_driver_id: fastestLapDriverId }).eq('id', raceId);
+  await supabase
+    .from('races')
+    .update({ fastest_lap_driver_id: fastestLapDriverId, video_url: body.video_url || null })
+    .eq('id', raceId);
 
   return c.redirect(`/admin/races/${raceId}`);
 });
