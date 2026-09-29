@@ -36,7 +36,7 @@ function pointsForResult(result, race) {
 }
 
 export function computeStandings(drivers, races, results) {
-  const standings = drivers.map((d) => ({ ...d, points: 0, wins: 0, podiums: 0, races: 0 }));
+  const standings = drivers.map((d) => ({ ...d, points: 0, wins: 0, podiums: 0, races: 0, bestPosition: Infinity }));
   const byId = Object.fromEntries(standings.map((s) => [s.id, s]));
   const raceById = Object.fromEntries(races.map((r) => [r.id, r]));
 
@@ -48,13 +48,19 @@ export function computeStandings(drivers, races, results) {
     s.points += points;
     if (win) s.wins += 1;
     if (podium) s.podiums += 1;
+    if (!r.dnf && r.position && r.position < s.bestPosition) s.bestPosition = r.position;
   }
 
   standings.sort((a, b) => {
     if ((a.races === 0) !== (b.races === 0)) return a.races === 0 ? 1 : -1;
-    return b.points - a.points || b.wins - a.wins || a.name.localeCompare(b.name);
+    return (
+      b.points - a.points ||
+      b.wins - a.wins ||
+      a.bestPosition - b.bestPosition ||
+      a.name.localeCompare(b.name)
+    );
   });
-  return standings;
+  return standings.map(({ bestPosition, ...s }) => s);
 }
 
 export async function getStandings(supabase) {
