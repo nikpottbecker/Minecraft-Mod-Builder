@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { getSupabase, loadRaceData, computeStandings, computeProgression, POINTS, FASTEST_LAP_BONUS } from './supabase.js';
+import { getSupabase, loadRaceData, computeStandings, computeProgression, computeTeamStandings, POINTS, FASTEST_LAP_BONUS } from './supabase.js';
 import { createSessionCookie, clearSessionCookie, readSession } from './auth.js';
 import { renderIndex, renderRace, renderLogin, renderAdmin, renderAdminRace } from './views.js';
 
@@ -23,11 +23,14 @@ app.get('/', async (c) => {
   const supabase = getSupabase(c.env);
   const { drivers, races, results } = await loadRaceData(supabase);
   const standings = computeStandings(drivers, races, results);
+  const teamStandings = computeTeamStandings(drivers, races, results);
   const progression = computeProgression(drivers, races, results);
   const racesDesc = races
     .slice()
     .sort((a, b) => (b.race_date || '').localeCompare(a.race_date || '') || b.id - a.id);
-  return c.html(renderIndex({ standings, races: racesDesc, progression, isAdmin: c.get('isAdmin') }));
+  return c.html(
+    renderIndex({ standings, teamStandings, races: racesDesc, progression, isAdmin: c.get('isAdmin') })
+  );
 });
 
 app.get('/races/:id', async (c) => {
@@ -99,10 +102,21 @@ app.post('/admin/drivers', async (c) => {
   const name = String(body.name || '').trim();
   const color = String(body.color || '#e10600');
   const isAi = !!body.is_ai;
+  const team = String(body.team || '').trim() || null;
   if (name) {
     const supabase = getSupabase(c.env);
-    await supabase.from('drivers').insert({ name, color, is_ai: isAi });
+    await supabase.from('drivers').insert({ name, color, is_ai: isAi, team });
   }
+  return c.redirect('/admin');
+});
+
+app.post('/admin/drivers/:id/team', async (c) => {
+  const guard = requireAdmin(c);
+  if (guard) return guard;
+  const supabase = getSupabase(c.env);
+  const body = await c.req.parseBody();
+  const team = String(body.team || '').trim() || null;
+  await supabase.from('drivers').update({ team }).eq('id', c.req.param('id'));
   return c.redirect('/admin');
 });
 

@@ -59,6 +59,27 @@ export async function getStandings(supabase) {
   return computeStandings(drivers, races, results);
 }
 
+// Constructor-style team standings: points from every driver assigned to
+// a team are summed, same as the real F1 points scheme. Drivers without a
+// team set are left out of this table.
+export function computeTeamStandings(drivers, races, results) {
+  const driverStandings = computeStandings(drivers, races, results);
+  const teams = {};
+
+  for (const d of driverStandings) {
+    if (!d.team) continue;
+    if (!teams[d.team]) {
+      teams[d.team] = { team: d.team, points: 0, wins: 0, podiums: 0, drivers: [] };
+    }
+    teams[d.team].points += d.points;
+    teams[d.team].wins += d.wins;
+    teams[d.team].podiums += d.podiums;
+    teams[d.team].drivers.push({ id: d.id, name: d.name, color: d.color, is_ai: d.is_ai, points: d.points });
+  }
+
+  return Object.values(teams).sort((a, b) => b.points - a.points || a.team.localeCompare(b.team));
+}
+
 // Cumulative points per driver after each race, in chronological order -
 // the data behind the points-progression chart on the standings page.
 export function computeProgression(drivers, races, results) {

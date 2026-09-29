@@ -316,7 +316,32 @@ function renderPointsChart(progression) {
   <p class="muted" style="margin-top:8px;">X-Achse: Rennen in chronologischer Reihenfolge (1 = erstes Rennen)</p>`;
 }
 
-export function renderIndex({ standings, races, progression, isAdmin }) {
+function renderTeamStandings(teamStandings) {
+  if (teamStandings.length === 0) {
+    return `<p class="muted">Noch keine Fahrer mit einem Team versehen. Team im Admin-Bereich beim Fahrer eintragen.</p>`;
+  }
+  const rows = teamStandings
+    .map((t, i) => {
+      const driverNames = t.drivers
+        .map((d) => `${esc(d.name)}${aiBadge(d.is_ai)} (${d.points})`)
+        .join(', ');
+      return `
+    <tr class="pos-${i + 1}">
+      <td><span class="pos-badge">${i + 1}</span></td>
+      <td><strong>${esc(t.team)}</strong><br /><span class="muted" style="font-size:0.78rem;">${driverNames}</span></td>
+      <td>${t.wins}</td>
+      <td>${t.podiums}</td>
+      <td class="points">${t.points}</td>
+    </tr>`;
+    })
+    .join('');
+  return `<div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>Team</th><th>Siege</th><th>Podien</th><th>Punkte</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+}
+
+export function renderIndex({ standings, teamStandings, races, progression, isAdmin }) {
   const rows = standings
     .map(
       (s, i) => `
@@ -353,6 +378,10 @@ export function renderIndex({ standings, races, progression, isAdmin }) {
       <tbody>${rows}</tbody>
     </table></div>`
     }
+  </div>
+  <div class="card">
+    <h2>Team-Wertung</h2>
+    ${renderTeamStandings(teamStandings)}
   </div>
   <div class="card">
     <h2>Punkteverlauf</h2>
@@ -442,6 +471,12 @@ export function renderAdmin({ drivers, races, passwordError, telemetryStatus }) 
     <tr>
       <td>${esc(d.name)}${aiBadge(d.is_ai)}</td>
       <td><span class="driver-color" style="background:${esc(d.color)}"></span></td>
+      <td>
+        <form action="/admin/drivers/${d.id}/team" method="POST" class="inline" style="margin:0;flex-wrap:nowrap;">
+          <input type="text" name="team" value="${esc(d.team || '')}" placeholder="Team" style="width:150px;" />
+          <button class="btn secondary" type="submit" style="padding:6px 10px;">✓</button>
+        </form>
+      </td>
       <td><form action="/admin/drivers/${d.id}/delete" method="POST" onsubmit="return confirm('Fahrer wirklich loeschen?');">
         <button class="btn danger" type="submit">Loeschen</button></form></td>
     </tr>`
@@ -468,10 +503,11 @@ export function renderAdmin({ drivers, races, passwordError, telemetryStatus }) 
   <div class="grid-2">
     <div class="card">
       <h2>Fahrer</h2>
-      <div class="table-wrap"><table><thead><tr><th>Name</th><th>Farbe</th><th></th></tr></thead><tbody>${driverRows}</tbody></table></div>
+      <div class="table-wrap"><table><thead><tr><th>Name</th><th>Farbe</th><th>Team</th><th></th></tr></thead><tbody>${driverRows}</tbody></table></div>
       <form class="inline" action="/admin/drivers" method="POST">
         <input type="text" name="name" placeholder="Fahrername" required />
         <input type="color" name="color" value="#e10600" />
+        <input type="text" name="team" placeholder="Team (optional)" class="wide-input" />
         <label class="muted" style="display:flex;align-items:center;gap:5px;">
           <input type="checkbox" name="is_ai" style="width:auto;" /> KI-Fahrer
         </label>
