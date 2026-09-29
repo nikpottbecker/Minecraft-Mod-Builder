@@ -114,3 +114,47 @@ export function computeProgression(drivers, races, results) {
     drivers: drivers.map((d) => ({ id: d.id, name: d.name, color: d.color, series: series[d.id] })),
   };
 }
+
+// Combines persisted news (team changes, ...) with events derived live from
+// race results (crashes/DNFs, race winners) into one chronological feed.
+export function computeNewsFeed(drivers, races, results, persistedNews) {
+  const driverById = Object.fromEntries(drivers.map((d) => [d.id, d]));
+  const resultsByRace = {};
+  for (const r of results) {
+    (resultsByRace[r.race_id] ||= []).push(r);
+  }
+
+  const items = [];
+
+  for (const n of persistedNews) {
+    items.push({ at: n.created_at, kind: n.kind, message: n.message });
+  }
+
+  for (const race of races) {
+    const at = race.race_date ? `${race.race_date}T12:00:00Z` : race.created_at || new Date(0).toISOString();
+    const raceResults = resultsByRace[race.id] || [];
+
+    const winner = raceResults.find((r) => !r.dnf && r.position === 1);
+    if (winner && driverById[winner.driver_id]) {
+      items.push({
+        at,
+        kind: 'win',
+        message: `🏆 ${driverById[winner.driver_id].name} gewinnt "${race.name}".`,
+      });
+    }
+
+    for (const r of raceResults) {
+      if (!r.dnf || !driverById[r.driver_id]) continue;
+      const lapText = r.laps_completed ? `in Runde ${r.laps_completed} ` : '';
+      const reasonText = r.dnf_reason ? `wegen ${r.dnf_reason}` : '(Grund unbekannt)';
+      items.push({
+        at,
+        kind: 'crash',
+        message: `💥 ${driverById[r.driver_id].name} scheidet bei "${race.name}" ${lapText}aus ${reasonText}.`,
+      });
+    }
+  }
+
+  items.sort((a, b) => new Date(b.at) - new Date(a.at));
+  return items;
+}

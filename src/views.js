@@ -121,6 +121,16 @@ input:focus, select:focus { outline: none; border-color: var(--f1-red); }
 .status-tile .dot.off { background: #5a5a66; }
 .status-tile .label { display: block; color: var(--f1-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 5px; }
 
+.news-feed { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.news-item { display: flex; gap: 14px; align-items: flex-start; padding: 12px 14px; border-radius: 8px;
+  background: var(--f1-dark-2); border-left: 3px solid var(--f1-gray); }
+.news-item.crash { border-left-color: #e05a4a; }
+.news-item.win { border-left-color: var(--gold); }
+.news-item.team_change { border-left-color: var(--accent-blue); }
+.news-item .news-date { flex: 0 0 auto; color: var(--f1-muted); font-size: 0.76rem; font-variant-numeric: tabular-nums;
+  min-width: 78px; padding-top: 2px; }
+.news-item .news-message { font-size: 0.94rem; }
+
 @media (max-width: 480px) {
   .wide-input { min-width: 0; flex: 1 1 100%; }
   form.inline { flex-direction: column; align-items: stretch; }
@@ -150,6 +160,7 @@ function layout({ title = 'F1 Rangliste', isAdmin = false, body = '' }) {
   <h1><span>F1</span> Freunde-Rangliste</h1>
   <nav>
     <a href="/">Rangliste</a>
+    <a href="/news">News</a>
     ${
       isAdmin
         ? `<a href="/admin">Admin</a>
@@ -442,6 +453,30 @@ export function renderRace({ race, results, POINTS, FASTEST_LAP_BONUS, isAdmin }
   </div>
   <a href="/">&larr; Zurueck zur Rangliste</a>`;
   return layout({ title: race.name, isAdmin, body });
+}
+
+export function renderNews({ items, isAdmin }) {
+  const dateFmt = (iso) =>
+    new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+  const body = `
+  <div class="card">
+    <h2>News</h2>
+    ${
+      items.length === 0
+        ? `<p class="muted">Noch keine News. Sobald jemand ausfaellt, gewinnt oder das Team wechselt, taucht es hier auf.</p>`
+        : `<ul class="news-feed">${items
+            .map(
+              (i) => `<li class="news-item ${esc(i.kind)}">
+              <span class="news-date">${esc(dateFmt(i.at))}</span>
+              <span class="news-message">${esc(i.message)}</span>
+            </li>`
+            )
+            .join('')}</ul>`
+    }
+  </div>
+  <a href="/">&larr; Zurueck zur Rangliste</a>`;
+  return layout({ title: 'News', isAdmin, body });
 }
 
 export function renderLogin({ error }) {

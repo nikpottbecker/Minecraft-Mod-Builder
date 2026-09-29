@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
-import { getSupabase, loadRaceData, computeStandings, computeProgression, computeTeamStandings, POINTS, FASTEST_LAP_BONUS } from './supabase.js';
+import { getSupabase, loadRaceData, computeStandings, computeProgression, computeTeamStandings, computeNewsFeed, POINTS, FASTEST_LAP_BONUS } from './supabase.js';
 import { createSessionCookie, clearSessionCookie, readSession } from './auth.js';
-import { renderIndex, renderRace, renderLogin, renderAdmin, renderAdminRace } from './views.js';
+import { renderIndex, renderRace, renderNews, renderLogin, renderAdmin, renderAdminRace } from './views.js';
 
 const app = new Hono();
 
@@ -31,6 +31,18 @@ app.get('/', async (c) => {
   return c.html(
     renderIndex({ standings, teamStandings, races: racesDesc, progression, isAdmin: c.get('isAdmin') })
   );
+});
+
+app.get('/news', async (c) => {
+  const supabase = getSupabase(c.env);
+  const { drivers, races, results } = await loadRaceData(supabase);
+  const { data: persistedNews } = await supabase
+    .from('news')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(200);
+  const items = computeNewsFeed(drivers, races, results, persistedNews || []);
+  return c.html(renderNews({ items, isAdmin: c.get('isAdmin') }));
 });
 
 app.get('/races/:id', async (c) => {
@@ -116,7 +128,18 @@ app.post('/admin/drivers/:id/team', async (c) => {
   const supabase = getSupabase(c.env);
   const body = await c.req.parseBody();
   const team = String(body.team || '').trim() || null;
-  await supabase.from('drivers').update({ team }).eq('id', c.req.param('id'));
+  const driverId = c.req.param('id');
+
+  const { data: driver } = await supabase.from('drivers').select('name, team').eq('id', driverId).single();
+  await supabase.from('drivers').update({ team }).eq('id', driverId);
+
+  if (driver && driver.team !== team) {
+    const message = team
+      ? `🔄 ${driver.name} wechselt ${driver.team ? `von ${driver.team} ` : ''}zu ${team}.`
+      : `🔄 ${driver.name} verlaesst ${driver.team}.`;
+    await supabase.from('news').insert({ kind: 'team_change', message });
+  }
+
   return c.redirect('/admin');
 });
 
