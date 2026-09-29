@@ -50,7 +50,10 @@ export function computeStandings(drivers, races, results) {
     if (podium) s.podiums += 1;
   }
 
-  standings.sort((a, b) => b.points - a.points || b.wins - a.wins || a.name.localeCompare(b.name));
+  standings.sort((a, b) => {
+    if ((a.races === 0) !== (b.races === 0)) return a.races === 0 ? 1 : -1;
+    return b.points - a.points || b.wins - a.wins || a.name.localeCompare(b.name);
+  });
   return standings;
 }
 
