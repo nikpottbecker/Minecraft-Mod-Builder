@@ -70,6 +70,9 @@ tr.pos-1 td, tr.pos-2 td, tr.pos-3 td { font-weight: 700; }
 
 .driver-color { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 9px;
   box-shadow: 0 0 0 3px rgba(255,255,255,0.06); }
+.ai-badge { display: inline-block; margin-left: 7px; padding: 1px 7px; border-radius: 999px;
+  background: rgba(79,176,232,0.15); color: var(--accent-blue); font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.4px; vertical-align: middle; }
 .points { font-weight: 800; color: var(--f1-red); font-variant-numeric: tabular-nums; }
 a.race-link { color: var(--f1-text); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--f1-gray); transition: border-color 0.12s, color 0.12s; }
 a.race-link:hover { color: var(--f1-red); border-color: var(--f1-red); }
@@ -127,6 +130,10 @@ input:focus, select:focus { outline: none; border-color: var(--f1-red); }
 
 function esc(s) {
   return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function aiBadge(isAi) {
+  return isAi ? '<span class="ai-badge">KI</span>' : '';
 }
 
 function layout({ title = 'F1 Rangliste', isAdmin = false, body = '' }) {
@@ -315,7 +322,7 @@ export function renderIndex({ standings, races, progression, isAdmin }) {
       (s, i) => `
     <tr class="pos-${i + 1}">
       <td><span class="pos-badge">${i + 1}</span></td>
-      <td><span class="driver-color" style="background:${esc(s.color)}"></span>${esc(s.name)}</td>
+      <td><span class="driver-color" style="background:${esc(s.color)}"></span>${esc(s.name)}${aiBadge(s.is_ai)}</td>
       <td>${s.races}</td>
       <td>${s.wins}</td>
       <td>${s.podiums}</td>
@@ -377,7 +384,7 @@ export function renderRace({ race, results, POINTS, FASTEST_LAP_BONUS, isAdmin }
       return `
     <tr class="${!r.dnf && r.position <= 3 ? 'pos-' + r.position : ''}">
       <td>${r.dnf ? '<span class="muted">DNF</span>' : `<span class="pos-badge">${r.position}</span>`}</td>
-      <td><span class="driver-color" style="background:${esc(r.driver_color)}"></span>${esc(r.driver_name)}
+      <td><span class="driver-color" style="background:${esc(r.driver_color)}"></span>${esc(r.driver_name)}${aiBadge(r.driver_is_ai)}
         ${race.fastest_lap_driver_id === r.driver_id ? '<span class="muted">(schnellste Runde)</span>' : ''}
       </td>
       <td class="points">${pts}</td>
@@ -433,7 +440,7 @@ export function renderAdmin({ drivers, races, passwordError, telemetryStatus }) 
     .map(
       (d) => `
     <tr>
-      <td>${esc(d.name)}</td>
+      <td>${esc(d.name)}${aiBadge(d.is_ai)}</td>
       <td><span class="driver-color" style="background:${esc(d.color)}"></span></td>
       <td><form action="/admin/drivers/${d.id}/delete" method="POST" onsubmit="return confirm('Fahrer wirklich loeschen?');">
         <button class="btn danger" type="submit">Loeschen</button></form></td>
@@ -465,6 +472,9 @@ export function renderAdmin({ drivers, races, passwordError, telemetryStatus }) 
       <form class="inline" action="/admin/drivers" method="POST">
         <input type="text" name="name" placeholder="Fahrername" required />
         <input type="color" name="color" value="#e10600" />
+        <label class="muted" style="display:flex;align-items:center;gap:5px;">
+          <input type="checkbox" name="is_ai" style="width:auto;" /> KI-Fahrer
+        </label>
         <button class="btn" type="submit">Fahrer hinzufuegen</button>
       </form>
     </div>
@@ -498,7 +508,7 @@ export function renderAdminRace({ race, drivers, resultsByDriver }) {
       const r = resultsByDriver[d.id];
       return `
     <tr>
-      <td><span class="driver-color" style="background:${esc(d.color)}"></span>${esc(d.name)}</td>
+      <td><span class="driver-color" style="background:${esc(d.color)}"></span>${esc(d.name)}${aiBadge(d.is_ai)}</td>
       <td><input type="number" min="1" max="99" name="position_${d.id}" value="${r && r.position ? r.position : ''}" /></td>
       <td><input type="checkbox" name="dnf_${d.id}" ${r && r.dnf ? 'checked' : ''} /></td>
       <td><input type="radio" name="fastest_lap_driver_id" value="${d.id}" ${race.fastest_lap_driver_id === d.id ? 'checked' : ''} /></td>

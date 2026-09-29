@@ -37,11 +37,11 @@ app.get('/races/:id', async (c) => {
   if (!race) return c.text('Rennen nicht gefunden', 404);
   const { data: results } = await supabase
     .from('results')
-    .select('*, drivers(name, color)')
+    .select('*, drivers(name, color, is_ai)')
     .eq('race_id', raceId);
 
   const flatResults = (results || [])
-    .map((r) => ({ ...r, driver_name: r.drivers?.name, driver_color: r.drivers?.color }))
+    .map((r) => ({ ...r, driver_name: r.drivers?.name, driver_color: r.drivers?.color, driver_is_ai: r.drivers?.is_ai }))
     .sort((a, b) => (a.dnf === b.dnf ? (a.position || 99) - (b.position || 99) : a.dnf ? 1 : -1));
 
   return c.html(
@@ -98,9 +98,10 @@ app.post('/admin/drivers', async (c) => {
   const body = await c.req.parseBody();
   const name = String(body.name || '').trim();
   const color = String(body.color || '#e10600');
+  const isAi = !!body.is_ai;
   if (name) {
     const supabase = getSupabase(c.env);
-    await supabase.from('drivers').insert({ name, color });
+    await supabase.from('drivers').insert({ name, color, is_ai: isAi });
   }
   return c.redirect('/admin');
 });
