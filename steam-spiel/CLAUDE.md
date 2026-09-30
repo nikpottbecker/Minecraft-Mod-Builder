@@ -51,4 +51,5 @@ docs/          Design & Roadmap
 
 ## Art
 - Solange es keine fertigen Modelle gibt: **Platzhalter** (Kapseln für Figuren, Boxen für das Boot). Platzhalter müssen später austauschbar sein, deshalb Modelle immer als eigene Unterszene einbinden.
-- Stil: Knetfiguren (matte Materialien, warmes Licht, gesättigte Tropenfarben). Details siehe Game Design Abschnitt 6.
+- Stil: Knetfiguren (matte Materialien, warmes Licht, gesättigte Tropenfarben). Details: Game Design Abschnitt 6 und `docs/07_ART_UND_ASSET_BRIEF.md`.
+- **Lizenzen:** Jedes fremde Asset (Modell, Textur, Sound, Musik, Schrift, Plugin) sofort in `docs/LIZENZEN.md` eintragen (Name, Quelle, Lizenz, Autor). Keine Assets mit unklarer Lizenz verwenden.

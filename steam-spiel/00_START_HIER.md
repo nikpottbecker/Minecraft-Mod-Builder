@@ -2,13 +2,18 @@
 
 Arbeitstitel: **Driftwood Crew** (kann jederzeit geändert werden; vor dem Release auf Steam und per Google prüfen, ob der Name frei ist)
 
-In diesem Ordner liegen 4 Dateien:
+In diesem Ordner liegen diese Dateien:
 
 | Datei | Wofür |
 |---|---|
 | `00_START_HIER.md` | Diese Anleitung. Was **du** selbst machen musst (Installation, Accounts, Steam) |
 | `01_GAME_DESIGN.md` | Das Spielkonzept: was das Spiel ist, wie es sich spielt, wie es aussieht |
 | `02_ROADMAP.md` | Der Bauplan in Meilensteinen, mit **fertigen Prompts** zum Kopieren in Claude Code |
+| `03_MARKTANALYSE.md` | Markt, Konkurrenz, Chancen & Risiken, strategische Empfehlung |
+| `04_MARKETING_PLAN.md` | Zeitplan, Wunschlisten-Ziele, 25 TikTok-Ideen, Streamer & Festivals |
+| `05_STEAM_STORE_UND_BRANDING.md` | Namensvorschläge, Tags, Store-Texte (DE/EN), Capsule-Grafiken, Trailer-Skript, Preis |
+| `06_BUSINESS_UND_BUDGET.md` | Kosten, Umsatz-Szenarien, Formales in Deutschland |
+| `07_ART_UND_ASSET_BRIEF.md` | Stilvorgaben für Figuren, Boot, Welt, UI, Audio |
 | `CLAUDE.md` | Kommt in deinen Projektordner auf dem PC. Claude Code liest diese Datei automatisch und kennt dann die Regeln des Projekts |
 
 ---
@@ -40,7 +45,7 @@ In diesem Ordner liegen 4 Dateien:
 
 1. Ordner erstellen, z. B. `C:\Games\driftwood-crew`
 2. Die Datei **`CLAUDE.md`** aus diesem Paket **in diesen Ordner kopieren**.
-3. `01_GAME_DESIGN.md` und `02_ROADMAP.md` in einen Unterordner `docs\` kopieren.
+3. Alle anderen `.md`-Dateien in einen Unterordner `docs\` kopieren.
 4. Im Ordner ein Terminal öffnen (Rechtsklick → „Im Terminal öffnen“) und `claude` starten.
 5. Den **Prompt für Meilenstein 0** aus `02_ROADMAP.md` einfügen. Ab da führt Claude Code dich.
 
