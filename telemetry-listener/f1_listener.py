@@ -103,22 +103,23 @@ def parse_header(data):
 
 
 def parse_participants(data):
-    """Returns {car_index: driver_name}."""
+    """Returns {car_index: {"name": str, "is_ai": bool}}."""
     offset = HEADER_SIZE
     num_active_cars = data[offset]
     offset += 1
-    names = {}
+    participants = {}
     for i in range(NUM_CARS):
         chunk = data[offset:offset + PARTICIPANT_SIZE]
         if len(chunk) < PARTICIPANT_SIZE:
             break
         fields = struct.unpack(PARTICIPANT_FORMAT, chunk)
+        ai_controlled = bool(fields[0])  # uint8 m_aiControlled
         raw_name = fields[7]  # 32s
         name = raw_name.split(b"\x00", 1)[0].decode("utf-8", errors="replace").strip()
         if i < num_active_cars and name:
-            names[i] = name
+            participants[i] = {"name": name, "is_ai": ai_controlled}
         offset += PARTICIPANT_SIZE
-    return names
+    return participants
 
 
 def parse_final_classification(data):
@@ -184,7 +185,7 @@ def push_heartbeat(shared_state):
         time.sleep(10)
 
 
-def get_or_create_driver(name, cache):
+def get_or_create_driver(name, is_ai, cache):
     if name in cache:
         return cache[name]
     resp = requests.get(
@@ -201,12 +202,12 @@ def get_or_create_driver(name, cache):
         create = requests.post(
             SUPABASE_URL + "/rest/v1/drivers",
             headers=rest_headers({"Prefer": "return=representation"}),
-            json={"name": name, "color": "#e10600"},
+            json={"name": name, "color": "#e10600", "is_ai": is_ai},
             timeout=10,
         )
         create.raise_for_status()
         driver_id = create.json()[0]["id"]
-        print(f"  + neuer Fahrer angelegt: {name} (id {driver_id})")
+        print(f"  + neuer Fahrer angelegt: {name} (id {driver_id}, KI: {is_ai})")
     cache[name] = driver_id
     return driver_id
 
@@ -268,11 +269,12 @@ def process_final_classification(data, participants, race_id, driver_cache):
     top10_driver_ids = set()
 
     for entry in classification:
-        name = participants.get(entry["car_index"])
-        if not name:
+        participant = participants.get(entry["car_index"])
+        if not participant:
             continue  # kein Teilnehmername bekannt (Participants-Paket fehlte)
+        name = participant["name"]
 
-        driver_id = get_or_create_driver(name, driver_cache)
+        driver_id = get_or_create_driver(name, participant["is_ai"], driver_cache)
         dnf = entry["result_status"] in DNF_RESULT_STATUSES
         position = entry["position"]
         dnf_reason = RESULT_REASON_TEXT.get(entry["result_reason"]) if dnf else None
