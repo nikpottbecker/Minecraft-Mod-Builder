@@ -152,6 +152,8 @@ function layout({ title = 'F1 Rangliste', isAdmin = false, body = '' }) {
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="F1-style Rangliste und Rennergebnisse fuer die Gruppe." />
+<link rel="icon" href="data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="#0d0d12"/><rect x="18" y="28" width="8" height="44" fill="#e10600"/><path d="M26 28h56v10l-14 8 14 8v10l-14-8-14 8-14-8-14 8V46l14-8-14-8z" fill="#f4f4f6"/></svg>')}" />
 <title>${esc(title)}</title>
 <style>${STYLE}</style>
 </head>

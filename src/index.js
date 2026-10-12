@@ -241,10 +241,12 @@ app.post('/admin/password', async (c) => {
   if (!ok) {
     const { data: drivers } = await supabase.from('drivers').select('*').order('name');
     const { data: races } = await supabase.from('races').select('*');
+    const { data: telemetryStatus } = await supabase.from('telemetry_status').select('*').eq('id', 1).single();
     return c.html(
       renderAdmin({
         drivers: drivers || [],
         races: races || [],
+        telemetryStatus,
         passwordError: 'Aktuelles Passwort ist falsch.',
       })
     );
