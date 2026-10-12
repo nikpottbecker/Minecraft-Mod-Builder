@@ -22,7 +22,7 @@ export async function loadRaceData(supabase) {
   return { drivers: drivers || [], races: races || [], results: results || [] };
 }
 
-function pointsForResult(result, race) {
+export function pointsForResult(result, race) {
   if (result.dnf) return { points: 0, win: false, podium: false };
   let points = pointsForPosition(result.position);
   if (race && race.fastest_lap_driver_id === result.driver_id && result.position && result.position <= 10) {
@@ -32,6 +32,50 @@ function pointsForResult(result, race) {
     points,
     win: result.position === 1,
     podium: !!(result.position && result.position <= 3),
+  };
+}
+
+export function computeDriverProfile(driverId, drivers, races, results) {
+  const numericId = Number(driverId);
+  const driver = drivers.find((item) => Number(item.id) === numericId);
+  if (!driver) return null;
+
+  const standings = computeStandings(drivers, races, results);
+  const standingIndex = standings.findIndex((item) => Number(item.id) === numericId);
+  const standing = standingIndex >= 0 ? standings[standingIndex] : { ...driver, points: 0, wins: 0, podiums: 0, races: 0 };
+  const raceById = Object.fromEntries(races.map((race) => [race.id, race]));
+  const history = results
+    .filter((result) => Number(result.driver_id) === numericId)
+    .map((result) => {
+      const race = raceById[result.race_id];
+      if (!race) return null;
+      const { points } = pointsForResult(result, race);
+      return {
+        ...result,
+        race,
+        points,
+        fastestLap: Number(race.fastest_lap_driver_id) === numericId,
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => (b.race.race_date || '').localeCompare(a.race.race_date || '') || b.race.id - a.race.id);
+
+  let total = 0;
+  const progression = history
+    .slice()
+    .reverse()
+    .map((entry) => {
+      total += entry.points;
+      return { race: entry.race, points: total };
+    });
+
+  return {
+    driver,
+    standing,
+    rank: standingIndex >= 0 ? standingIndex + 1 : null,
+    history,
+    progression,
+    highlights: history.filter((entry) => entry.race.video_url),
   };
 }
 

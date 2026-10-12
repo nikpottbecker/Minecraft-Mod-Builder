@@ -268,11 +268,53 @@ main.dashboard-main { max-width: none; padding: 0 0 54px; }
 .play-icon svg { width: 10px; height: 10px; }
 .dashboard-foot { padding-top: 24px; color: var(--race-muted); font-size: .72rem; text-align: center; }
 
+/* Driver profiles */
+.driver-link { color: inherit; text-decoration: none; border-bottom: 1px solid transparent; transition: color .15s ease, border-color .15s ease; }
+.driver-link:hover { color: #fff; border-color: var(--race-red); }
+.profile-main { max-width: none; padding: 0 0 54px; }
+.profile-hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--race-line); background: linear-gradient(105deg, color-mix(in srgb, var(--driver-color) 15%, transparent), transparent 45%), radial-gradient(circle at 90% 20%, color-mix(in srgb, var(--driver-color) 16%, transparent), transparent 28%); }
+.profile-hero::after { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .1; background: repeating-linear-gradient(135deg, transparent 0 70px, rgba(255,255,255,.14) 70px 71px); }
+.profile-hero-inner { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 48px; align-items: end; padding-top: 48px; padding-bottom: 42px; }
+.profile-back { display: inline-flex; align-items: center; min-height: 44px; margin-bottom: 24px; color: var(--race-muted); font-size: .78rem; font-weight: 700; text-decoration: none; }
+.profile-back:hover { color: #fff; }
+.profile-name { margin: 0; font-size: clamp(3.2rem,8vw,6.6rem); font-style: italic; line-height: .8; letter-spacing: -2px; text-transform: uppercase; }
+.profile-team { display: flex; align-items: center; gap: 10px; margin: 18px 0 0; color: var(--race-muted); font-size: .9rem; }
+.profile-team::before { content: ''; width: 34px; height: 4px; background: var(--driver-color); transform: skewX(-18deg); }
+.profile-rank { min-width: 170px; text-align: right; }
+.profile-rank strong { display: block; color: var(--driver-color); font: 900 clamp(4.5rem,10vw,8rem)/.75 "Titillium Web", sans-serif; font-style: italic; }
+.profile-rank span { display: block; margin-top: 15px; color: var(--race-muted); font-size: .68rem; font-weight: 800; letter-spacing: 1.7px; text-transform: uppercase; }
+.profile-stats { display: grid; grid-template-columns: repeat(4,1fr); border-bottom: 1px solid var(--race-line); }
+.profile-stat { padding: 24px 18px; border-right: 1px solid var(--race-line); }
+.profile-stat:last-child { border-right: 0; }
+.profile-stat strong { display: block; font: 900 2rem/1 "Titillium Web", sans-serif; }
+.profile-stat span { display: block; margin-top: 7px; color: var(--race-muted); font-size: .64rem; font-weight: 700; letter-spacing: 1.1px; text-transform: uppercase; }
+.profile-grid { display: grid; grid-template-columns: minmax(0,1.45fr) minmax(300px,.7fr); gap: 36px; }
+.profile-grid > section:last-child { padding-left: 36px; border-left: 1px solid var(--race-line); }
+.profile-history-row { grid-template-columns: 105px minmax(0,1fr) 85px 72px; }
+.finish-position { font: 800 1rem "Titillium Web", sans-serif; text-align: right; }
+.finish-position.dnf { color: #ff7a70; font-size: .76rem; }
+.profile-points { color: var(--driver-color); font: 900 1.1rem "Titillium Web", sans-serif; text-align: right; }
+.profile-note { display: block; margin-top: 3px; color: var(--race-muted); font-size: .68rem; font-weight: 500; }
+.profile-highlights { display: flex; flex-direction: column; gap: 10px; }
+.profile-highlight { display: grid; grid-template-columns: 44px minmax(0,1fr) 18px; align-items: center; gap: 12px; min-height: 68px; padding: 10px 0; color: inherit; text-decoration: none; border-bottom: 1px solid var(--race-line); }
+.profile-highlight .play-icon { width: 38px; height: 38px; border-color: var(--driver-color); }
+.profile-highlight strong { display: block; font-size: .86rem; }
+.profile-highlight small { display: block; margin-top: 4px; color: var(--race-muted); font-size: .7rem; }
+.profile-highlight > svg { width: 18px; color: var(--driver-color); }
+.profile-highlight:hover > svg { transform: translateX(3px); }
+.mini-progress { display: flex; align-items: end; gap: 8px; min-height: 170px; padding: 18px 10px 0; border-bottom: 1px solid var(--race-line); }
+.mini-progress-item { display: flex; flex: 1; min-width: 0; flex-direction: column; align-items: center; justify-content: end; height: 150px; }
+.mini-progress-value { margin-bottom: 6px; color: #fff; font: 800 .8rem "Titillium Web", sans-serif; }
+.mini-progress-bar { width: min(34px,75%); min-height: 3px; height: calc(var(--bar) * 1%); background: linear-gradient(180deg, var(--driver-color), color-mix(in srgb, var(--driver-color) 45%, #071015)); border-radius: 3px 3px 0 0; }
+.mini-progress-label { width: 100%; margin-top: 8px; overflow: hidden; color: var(--race-muted); font-size: .6rem; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+
 @media (max-width: 900px) {
   .leader-grid { grid-template-columns: 1fr; gap: 34px; }
   .section-grid { grid-template-columns: 1fr; }
   .section-grid > section:first-child { padding: 0 0 34px; border-right: 0; border-bottom: 1px solid var(--race-line); }
   .section-grid > section:last-child { padding: 34px 0 0; }
+  .profile-grid { grid-template-columns: 1fr; }
+  .profile-grid > section:last-child { padding: 34px 0 0; border-left: 0; border-top: 1px solid var(--race-line); }
 }
 @media (max-width: 640px) {
   header.topbar { min-height: auto; padding: 13px 16px 0; }
@@ -310,6 +352,21 @@ main.dashboard-main { max-width: none; padding: 0 0 54px; }
   .row-action span.label { display: none; }
   .row-action { justify-content: flex-end; min-width: 44px; min-height: 44px; }
   .race-date { font-size: .72rem; }
+  .profile-hero-inner { grid-template-columns: 1fr; gap: 28px; padding-top: 18px; padding-bottom: 28px; }
+  .profile-back { margin-bottom: 16px; }
+  .profile-name { font-size: clamp(2.7rem,16vw,4.2rem); }
+  .profile-rank { min-width: 0; text-align: left; }
+  .profile-rank strong { display: inline; font-size: 3.7rem; }
+  .profile-rank span { display: inline; margin-left: 10px; }
+  .profile-stats { grid-template-columns: repeat(2,1fr); }
+  .profile-stat { padding: 18px 12px; }
+  .profile-stat:nth-child(2) { border-right: 0; }
+  .profile-stat:nth-child(-n+2) { border-bottom: 1px solid var(--race-line); }
+  .profile-history-row { grid-template-columns: 78px minmax(0,1fr) 48px 48px; gap: 8px; }
+  .profile-history-row .race-track { display: block; }
+  .timing-table .driver-link, .profile-history-row .driver-link { display: inline-flex; min-height: 44px; }
+  .timing-table .driver-link { align-items: center; }
+  .profile-history-row .driver-link { flex-direction: column; align-items: flex-start; justify-content: center; }
 }
 `;
 
@@ -540,7 +597,7 @@ function renderTeamStandings(teamStandings) {
   const rows = teamStandings
     .map((t, i) => {
       const driverNames = t.drivers
-        .map((d) => `${esc(d.name)}${aiBadge(d.is_ai)} (${d.points})`)
+        .map((d) => `<a class="driver-link" href="/drivers/${d.id}">${esc(d.name)}</a>${aiBadge(d.is_ai)} (${d.points})`)
         .join(', ');
       return `<li class="team-row" style="--team-color:${teamColor(t.team)}">
         <span class="team-rank">${i + 1}</span><span class="team-stripe" aria-hidden="true"></span>
@@ -566,7 +623,7 @@ export function renderIndex({ standings, teamStandings, races, progression, isAd
       return `
     <tr class="pos-${i + 1}" data-driver-kind="${kind}" data-rank-overall="${i + 1}" data-rank-group="${groupRank}"${s.is_ai ? ' hidden' : ''}>
       <td class="stat"><span class="row-position">${groupRank}</span></td>
-      <td><span class="driver-color" style="background:${esc(s.color)}"></span>${esc(s.name)}${aiBadge(s.is_ai)}
+      <td><span class="driver-color" style="background:${esc(s.color)}"></span><a class="driver-link" href="/drivers/${s.id}">${esc(s.name)}</a>${aiBadge(s.is_ai)}
         <span class="mobile-driver-stats">${s.races} Rennen · ${s.wins} Siege · ${s.podiums} Podien</span></td>
       <td class="stat desktop-stat">${s.races}</td>
       <td class="stat desktop-stat">${s.wins}</td>
@@ -589,7 +646,7 @@ export function renderIndex({ standings, teamStandings, races, progression, isAd
 
   const podium = standings.slice(0, 3).map((driver, index) => `<article class="podium-card" style="--podium:${podiumColors[index]}">
     <span class="podium-rank">${index + 1}</span>
-    <strong class="podium-name">${esc(driver.name)}${aiBadge(driver.is_ai)}</strong>
+    <strong class="podium-name"><a class="driver-link" href="/drivers/${driver.id}">${esc(driver.name)}</a>${aiBadge(driver.is_ai)}</strong>
     <span class="podium-points">${driver.points} <small>Punkte</small></span>
   </article>`).join('');
 
@@ -690,7 +747,7 @@ export function renderRace({ race, results, POINTS, FASTEST_LAP_BONUS, isAdmin }
       return `
     <tr class="${!r.dnf && r.position <= 3 ? 'pos-' + r.position : ''}">
       <td>${r.dnf ? '<span class="muted">DNF</span>' : `<span class="pos-badge">${r.position}</span>`}</td>
-      <td><span class="driver-color" style="background:${esc(r.driver_color)}"></span>${esc(r.driver_name)}${aiBadge(r.driver_is_ai)}
+      <td><span class="driver-color" style="background:${esc(r.driver_color)}"></span><a class="driver-link" href="/drivers/${r.driver_id}">${esc(r.driver_name)}</a>${aiBadge(r.driver_is_ai)}
         ${race.fastest_lap_driver_id === r.driver_id ? '<span class="muted">(schnellste Runde)</span>' : ''}
       </td>
       <td class="points">${pts}</td>
@@ -719,6 +776,49 @@ export function renderRace({ race, results, POINTS, FASTEST_LAP_BONUS, isAdmin }
   </div>
   <a href="/">&larr; Zurück zur Rangliste</a>`;
   return layout({ title: race.name, isAdmin, active: 'standings', body });
+}
+
+export function renderDriver({ driver, standing, rank, history, progression, highlights, isAdmin }) {
+  const maxProgress = Math.max(1, ...progression.map((item) => item.points));
+  const progressBars = progression.length
+    ? `<div class="mini-progress" role="img" aria-label="Punkteverlauf von ${esc(driver.name)}">${progression.map((item) => `<div class="mini-progress-item"><span class="mini-progress-value">${item.points}</span><span class="mini-progress-bar" style="--bar:${Math.max(2, Math.round((item.points / maxProgress) * 100))}"></span><span class="mini-progress-label" title="${esc(item.race.name)}">${formatDate(item.race.race_date)}</span></div>`).join('')}</div>`
+    : '<p class="muted">Noch keine Renndaten für diesen Fahrer.</p>';
+
+  const historyRows = history.map((entry) => {
+    const detail = [entry.fastestLap ? 'Schnellste Runde' : '', entry.dnf_reason || ''].filter(Boolean).join(' · ');
+    return `<li class="race-row profile-history-row">
+    <span class="race-date">${formatDate(entry.race.race_date)}</span>
+    <strong><a class="driver-link" href="/races/${entry.race.id}">${esc(entry.race.track || entry.race.name)}${detail ? `<span class="profile-note">${esc(detail)}</span>` : ''}</a></strong>
+    <span class="finish-position${entry.dnf ? ' dnf' : ''}">${entry.dnf ? 'DNF' : `P${entry.position}`}</span>
+    <strong class="profile-points">+${entry.points}</strong>
+  </li>`;
+  }).join('');
+
+  const highlightLinks = highlights.map((entry) => `<a class="profile-highlight" href="${esc(entry.race.video_url)}" target="_blank" rel="noopener">
+    ${playIcon()}<span><strong>${esc(entry.race.track || entry.race.name)}</strong><small>${formatDate(entry.race.race_date)} · ${entry.dnf ? 'DNF' : `Platz ${entry.position}`}</small></span>${arrowIcon()}
+  </a>`).join('');
+
+  const body = `
+  <section class="profile-hero" style="--driver-color:${esc(driver.color || '#ff2638')}" aria-labelledby="driver-name">
+    <div class="dashboard-shell profile-hero-inner">
+      <div><a class="profile-back" href="/">← Zur Rangliste</a><p class="champ-label">Fahrerprofil${driver.is_ai ? ' · KI-Fahrer' : ''}</p><h2 class="profile-name" id="driver-name">${esc(driver.name)}</h2><p class="profile-team">${esc(driver.team || 'Ohne Team')}</p></div>
+      <div class="profile-rank"><strong>${rank ? `#${rank}` : '–'}</strong><span>Gesamtwertung</span></div>
+    </div>
+  </section>
+  <div class="dashboard-shell" style="--driver-color:${esc(driver.color || '#ff2638')}">
+    <div class="profile-stats" aria-label="Fahrerstatistik">
+      <div class="profile-stat"><strong>${standing.points}</strong><span>Punkte</span></div>
+      <div class="profile-stat"><strong>${standing.races}</strong><span>Rennen</span></div>
+      <div class="profile-stat"><strong>${standing.wins}</strong><span>Siege</span></div>
+      <div class="profile-stat"><strong>${standing.podiums}</strong><span>Podien</span></div>
+    </div>
+    <section class="dashboard-section" aria-labelledby="progress-heading"><div class="section-head"><div><h2 class="section-heading" id="progress-heading">Punkteverlauf</h2><p class="section-kicker">Kumulierte Punkte nach jedem Start</p></div></div>${progressBars}</section>
+    <div class="dashboard-section profile-grid">
+      <section aria-labelledby="history-heading"><div class="section-head"><div><h2 class="section-heading" id="history-heading">Rennhistorie</h2><p class="section-kicker">Alle Ergebnisse und Punkte</p></div></div>${history.length ? `<ul class="race-list">${historyRows}</ul>` : '<p class="muted">Noch kein Rennen gefahren.</p>'}</section>
+      <section aria-labelledby="driver-highlights-heading"><div class="section-head"><div><h2 class="section-heading" id="driver-highlights-heading">Highlights</h2><p class="section-kicker">Videos aus gefahrenen Rennen</p></div></div>${highlights.length ? `<div class="profile-highlights">${highlightLinks}</div>` : '<p class="muted">Noch keine Highlight-Videos vorhanden.</p>'}</section>
+    </div>
+  </div>`;
+  return layout({ title: `${driver.name} · Fahrerprofil`, isAdmin, active: 'standings', mainClass: 'profile-main', body });
 }
 
 export function renderNews({ items, isAdmin }) {

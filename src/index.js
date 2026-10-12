@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
-import { getSupabase, loadRaceData, computeStandings, computeProgression, computeTeamStandings, computeNewsFeed, POINTS, FASTEST_LAP_BONUS } from './supabase.js';
+import { getSupabase, loadRaceData, computeStandings, computeProgression, computeTeamStandings, computeNewsFeed, computeDriverProfile, POINTS, FASTEST_LAP_BONUS } from './supabase.js';
 import { createSessionCookie, clearSessionCookie, readSession } from './auth.js';
-import { renderIndex, renderRace, renderNews, renderLogin, renderAdmin, renderAdminRace } from './views.js';
+import { renderIndex, renderRace, renderDriver, renderNews, renderLogin, renderAdmin, renderAdminRace } from './views.js';
 
 const app = new Hono();
 
@@ -62,6 +62,14 @@ app.get('/races/:id', async (c) => {
   return c.html(
     renderRace({ race, results: flatResults, POINTS, FASTEST_LAP_BONUS, isAdmin: c.get('isAdmin') })
   );
+});
+
+app.get('/drivers/:id', async (c) => {
+  const supabase = getSupabase(c.env);
+  const { drivers, races, results } = await loadRaceData(supabase);
+  const profile = computeDriverProfile(c.req.param('id'), drivers, races, results);
+  if (!profile) return c.text('Fahrer nicht gefunden', 404);
+  return c.html(renderDriver({ ...profile, isAdmin: c.get('isAdmin') }));
 });
 
 // ---------- Admin auth ----------
