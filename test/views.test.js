@@ -56,6 +56,11 @@ test('driver profile combines standings, results, and race highlight videos', ()
 });
 
 test('news page marks the news navigation item as current', () => {
-  const html = renderNews({ items: [], isAdmin: false });
+  const html = renderNews({ items: [{ id: 4, at: '2026-10-12T12:00:00Z', kind: 'post', message: 'Neue Liga\nHeute geht es los.', persisted: true }], isAdmin: true });
   assert.match(html, /href="\/news" aria-current="page">News/);
+  assert.match(html, /Paddock News/);
+  assert.match(html, /Neue Liga/);
+  assert.match(html, /Heute geht es los\./);
+  assert.match(html, /action="\/admin\/news"/);
+  assert.match(html, /action="\/admin\/news\/4\/delete"/);
 });

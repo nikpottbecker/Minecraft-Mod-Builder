@@ -177,7 +177,7 @@ export function computeNewsFeed(drivers, races, results, persistedNews) {
   const items = [];
 
   for (const n of persistedNews) {
-    items.push({ at: n.created_at, kind: n.kind, message: n.message });
+    items.push({ id: n.id, at: n.created_at, kind: n.kind, message: n.message, persisted: true });
   }
 
   for (const race of races) {

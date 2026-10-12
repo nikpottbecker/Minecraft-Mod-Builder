@@ -101,9 +101,9 @@ a.race-link { color: var(--f1-text); font-weight: 600; text-decoration: none; bo
 a.race-link:hover { color: var(--f1-red); border-color: var(--f1-red); }
 
 form.inline { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
-input, select { background: #0c0c12; border: 1px solid var(--f1-gray); color: var(--f1-text); padding: 9px 11px;
+input, select, textarea { background: #0c0c12; border: 1px solid var(--f1-gray); color: var(--f1-text); padding: 9px 11px;
   border-radius: 6px; font-family: inherit; transition: border-color 0.12s; }
-input:focus, select:focus { outline: none; border-color: var(--f1-red); }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--f1-red); }
 .error { background: rgba(163,5,0,0.18); border: 1px solid var(--f1-red); color: #ffb3ac; padding: 11px 14px; border-radius: 8px; margin-bottom: 16px; }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
@@ -145,15 +145,41 @@ input:focus, select:focus { outline: none; border-color: var(--f1-red); }
 .status-tile .dot.off { background: #5a5a66; }
 .status-tile .label { display: block; color: var(--f1-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 5px; }
 
-.news-feed { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-.news-item { display: flex; gap: 14px; align-items: flex-start; padding: 12px 14px; border-radius: 8px;
-  background: var(--f1-dark-2); border-left: 3px solid var(--f1-gray); }
-.news-item.crash { border-left-color: #e05a4a; }
-.news-item.win { border-left-color: var(--gold); }
-.news-item.team_change { border-left-color: var(--accent-blue); }
-.news-item .news-date { flex: 0 0 auto; color: var(--f1-muted); font-size: 0.76rem; font-variant-numeric: tabular-nums;
-  min-width: 78px; padding-top: 2px; }
-.news-item .news-message { font-size: 0.94rem; }
+.news-main { max-width: none; padding: 0 0 60px; }
+.news-hero { position: relative; overflow: hidden; padding: 48px 0 42px; border-bottom: 1px solid var(--race-line); background: linear-gradient(110deg, rgba(255,38,56,.12), transparent 42%), radial-gradient(circle at 88% 0, rgba(37,197,202,.09), transparent 30%); }
+.news-hero::after { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .1; background: repeating-linear-gradient(135deg, transparent 0 70px, rgba(255,255,255,.13) 70px 71px); }
+.news-hero-inner { position: relative; z-index: 1; display: flex; align-items: end; justify-content: space-between; gap: 32px; }
+.news-title { margin: 0; font-size: clamp(3.2rem,8vw,6.3rem); font-style: italic; line-height: .82; letter-spacing: -2px; text-transform: uppercase; }
+.news-intro { max-width: 560px; margin: 18px 0 0; color: var(--race-muted); line-height: 1.65; }
+.news-count { flex: 0 0 auto; text-align: right; }
+.news-count strong { display: block; color: var(--race-red); font: 900 4.5rem/.75 "Titillium Web", sans-serif; font-style: italic; }
+.news-count span { display: block; margin-top: 14px; color: var(--race-muted); font-size: .66rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; }
+.news-layout { display: grid; grid-template-columns: minmax(0,1fr) minmax(300px,.45fr); gap: 46px; }
+.news-layout > aside { padding-left: 36px; border-left: 1px solid var(--race-line); }
+.news-feed { position: relative; list-style: none; margin: 0; padding: 0; }
+.news-feed::before { content: ''; position: absolute; top: 8px; bottom: 8px; left: 8px; width: 1px; background: var(--race-line); }
+.news-item { position: relative; display: grid; grid-template-columns: 110px minmax(0,1fr) auto; gap: 24px; padding: 0 0 28px 34px; }
+.news-item::before { content: ''; position: absolute; top: 7px; left: 4px; width: 9px; height: 9px; border: 2px solid var(--race-red); border-radius: 50%; background: var(--race-bg); }
+.news-item.crash::before { border-color: #ff7a70; }
+.news-item.win::before { border-color: var(--gold); }
+.news-item.team_change::before { border-color: var(--race-cyan); }
+.news-item.post::before { width: 12px; height: 12px; top: 5px; left: 2px; background: var(--race-red); border-color: var(--race-red); }
+.news-date { color: var(--race-muted); font-size: .72rem; font-variant-numeric: tabular-nums; }
+.news-category { display: block; margin-bottom: 6px; color: var(--race-cyan); font-size: .62rem; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; }
+.news-item.post .news-category { color: var(--race-red); }
+.news-item.win .news-category { color: var(--gold); }
+.news-item.crash .news-category { color: #ff7a70; }
+.news-headline { display: block; font: 800 1.08rem/1.15 "Titillium Web", sans-serif; }
+.news-message { display: block; margin-top: 7px; color: #d8dde2; font-size: .88rem; line-height: 1.6; white-space: pre-line; }
+.news-delete { align-self: start; }
+.news-delete .btn { padding: 7px 10px; font-size: .65rem; }
+.news-composer { padding: 22px; border: 1px solid var(--race-line); border-top: 3px solid var(--race-red); background: linear-gradient(145deg, rgba(17,27,34,.95), rgba(8,15,20,.95)); }
+.news-composer label { display: block; margin-bottom: 14px; color: var(--race-muted); font-size: .68rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+.news-composer input, .news-composer textarea { display: block; width: 100%; margin-top: 7px; color: #fff; font-size: .9rem; font-weight: 500; text-transform: none; letter-spacing: 0; }
+.news-composer textarea { min-height: 150px; resize: vertical; line-height: 1.5; }
+.news-composer .btn { width: 100%; min-height: 44px; }
+.news-login-note { padding: 18px 0; color: var(--race-muted); font-size: .82rem; line-height: 1.6; }
+.news-login-note a { color: #fff; }
 
 @media (max-width: 640px) {
   .standings-table th:nth-child(3), .standings-table th:nth-child(4), .standings-table th:nth-child(5),
@@ -171,8 +197,16 @@ input:focus, select:focus { outline: none; border-color: var(--f1-red); }
   .wide-input { min-width: 0; flex: 1 1 100%; }
   form.inline { flex-direction: column; align-items: stretch; }
   form.inline input, form.inline button { width: 100%; }
-  .news-item { flex-direction: column; gap: 4px; }
-  .news-item .news-date { min-width: 0; }
+  .news-hero { padding: 34px 0 30px; }
+  .news-hero-inner { align-items: flex-start; flex-direction: column; gap: 26px; }
+  .news-title { font-size: 3.25rem; }
+  .news-count { text-align: left; }
+  .news-count strong { display: inline; font-size: 3.2rem; }
+  .news-count span { display: inline; margin-left: 9px; }
+  .news-layout { grid-template-columns: 1fr; gap: 30px; }
+  .news-layout > aside { padding: 30px 0 0; border-top: 1px solid var(--race-line); border-left: 0; }
+  .news-item { grid-template-columns: 1fr auto; gap: 8px 12px; padding-left: 28px; }
+  .news-date { grid-column: 1 / -1; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
@@ -825,24 +859,26 @@ export function renderNews({ items, isAdmin }) {
   const dateFmt = (iso) =>
     new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
+  const labels = { post: 'Redaktion', win: 'Rennergebnis', crash: 'Ausfall', team_change: 'Fahrerwechsel' };
+  const newsItems = items.map((item) => {
+    const [firstLine, ...rest] = String(item.message || '').split('\n');
+    const isPost = item.kind === 'post';
+    const headline = isPost ? firstLine : item.message;
+    const message = isPost ? rest.join('\n').trim() : '';
+    return `<li class="news-item ${esc(item.kind)}">
+      <time class="news-date" datetime="${esc(item.at)}">${esc(dateFmt(item.at))}</time>
+      <div><span class="news-category">${esc(labels[item.kind] || 'Saisonmeldung')}</span><strong class="news-headline">${esc(headline)}</strong>${message ? `<span class="news-message">${esc(message)}</span>` : ''}</div>
+      ${isAdmin && item.persisted && isPost ? `<form class="news-delete" action="/admin/news/${item.id}/delete" method="POST" onsubmit="return confirm('Beitrag wirklich löschen?');"><button class="btn danger" type="submit">Löschen</button></form>` : ''}
+    </li>`;
+  }).join('');
+
   const body = `
-  <div class="card">
-    <h2>News</h2>
-    ${
-      items.length === 0
-        ? `<p class="muted">Noch keine News. Sobald jemand ausfaellt, gewinnt oder das Team wechselt, taucht es hier auf.</p>`
-        : `<ul class="news-feed">${items
-            .map(
-              (i) => `<li class="news-item ${esc(i.kind)}">
-              <span class="news-date">${esc(dateFmt(i.at))}</span>
-              <span class="news-message">${esc(i.message)}</span>
-            </li>`
-            )
-            .join('')}</ul>`
-    }
-  </div>
-  <a href="/">&larr; Zurück zur Rangliste</a>`;
-  return layout({ title: 'News', isAdmin, active: 'news', body });
+  <section class="news-hero" aria-labelledby="news-title"><div class="dashboard-shell news-hero-inner"><div><h2 class="news-title" id="news-title">Paddock News</h2><p class="news-intro">Rennberichte, Fahrerwechsel und Neuigkeiten aus eurer Meisterschaft – chronologisch an einem Ort.</p></div><div class="news-count"><strong>${items.length}</strong><span>Meldungen</span></div></div></section>
+  <div class="dashboard-shell"><div class="dashboard-section news-layout">
+    <section aria-labelledby="news-feed-heading"><div class="section-head"><div><h2 class="section-heading" id="news-feed-heading">Aktueller Feed</h2><p class="section-kicker">Neueste Meldungen zuerst</p></div></div>${items.length ? `<ul class="news-feed">${newsItems}</ul>` : '<p class="muted">Noch keine Meldungen vorhanden.</p>'}</section>
+    <aside aria-labelledby="compose-heading"><div class="section-head"><div><h2 class="section-heading" id="compose-heading">Eigener Beitrag</h2><p class="section-kicker">Neuigkeiten selbst veröffentlichen</p></div></div>${isAdmin ? `<form class="news-composer" action="/admin/news" method="POST"><label>Überschrift<input name="title" maxlength="80" required placeholder="Was gibt es Neues?" /></label><label>Beitrag<textarea name="message" maxlength="1000" required placeholder="Schreibe hier deine Meldung …"></textarea></label><button class="btn" type="submit">Beitrag veröffentlichen</button></form>` : '<p class="news-login-note">Eigene Beiträge können nach dem <a href="/admin/login">Admin-Login</a> erstellt werden.</p>'}</aside>
+  </div></div>`;
+  return layout({ title: 'Paddock News', isAdmin, active: 'news', mainClass: 'news-main', body });
 }
 
 export function renderLogin({ error }) {
@@ -926,6 +962,11 @@ export function renderAdmin({ drivers, races, passwordError, telemetryStatus }) 
         <button class="btn" type="submit">Rennen anlegen</button>
       </form>
     </div>
+  </div>
+  <div class="card">
+    <h2>News verwalten</h2>
+    <p class="muted">Eigene Meldungen schreiben und veröffentlichte Beiträge verwalten.</p>
+    <a class="btn" href="/news">Zum News-Editor</a>
   </div>
   <div class="card">
     <h2>Passwort aendern</h2>

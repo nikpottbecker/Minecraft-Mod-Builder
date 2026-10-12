@@ -99,6 +99,27 @@ app.post('/admin/logout', (c) => {
   return c.redirect('/');
 });
 
+app.post('/admin/news', async (c) => {
+  const guard = requireAdmin(c);
+  if (guard) return guard;
+  const body = await c.req.parseBody();
+  const title = String(body.title || '').trim().slice(0, 80);
+  const message = String(body.message || '').trim().slice(0, 1000);
+  if (title && message) {
+    const supabase = getSupabase(c.env);
+    await supabase.from('news').insert({ kind: 'post', message: `${title}\n${message}` });
+  }
+  return c.redirect('/news');
+});
+
+app.post('/admin/news/:id/delete', async (c) => {
+  const guard = requireAdmin(c);
+  if (guard) return guard;
+  const supabase = getSupabase(c.env);
+  await supabase.from('news').delete().eq('id', c.req.param('id')).eq('kind', 'post');
+  return c.redirect('/news');
+});
+
 // ---------- Admin area ----------
 
 app.get('/admin', async (c) => {
