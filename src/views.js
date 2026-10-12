@@ -26,9 +26,15 @@ header.topbar {
 }
 header.topbar h1 { margin: 0; font-size: 1.5rem; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; }
 header.topbar h1 span { color: var(--f1-red); text-shadow: 0 0 18px rgba(225,6,0,0.55); }
+header.topbar h1 a { color: inherit; text-decoration: none; }
+nav { display: flex; align-items: center; gap: 6px; }
 nav a, header.topbar a.btn { color: var(--f1-text); text-decoration: none; margin-left: 16px; font-weight: 600; font-size: 0.9rem;
   padding-bottom: 2px; border-bottom: 2px solid transparent; transition: border-color 0.15s, color 0.15s; }
 nav a:hover { border-color: var(--f1-red); color: #fff; }
+nav a[aria-current="page"] { color: #fff; border-color: var(--f1-red); }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 3px solid rgba(79,176,232,0.85); outline-offset: 3px;
+}
 
 .btn { display: inline-block; background: linear-gradient(180deg, #ff1a10 0%, var(--f1-red) 100%);
   color: #fff !important; padding: 9px 18px; border-radius: 6px;
@@ -39,11 +45,13 @@ nav a:hover { border-color: var(--f1-red); color: #fff; }
 .btn.secondary { background: linear-gradient(180deg, #4a4a58 0%, var(--f1-gray) 100%); box-shadow: none; }
 .btn.danger { background: linear-gradient(180deg, #a3181f 0%, #7a1010 100%); box-shadow: none; }
 
-main { max-width: 1040px; margin: 0 auto; padding: 28px 24px 60px; }
+main { max-width: 1100px; margin: 0 auto; padding: 28px 24px 60px; }
 @media (max-width: 480px) {
   header.topbar { padding: 14px 16px; }
   header.topbar h1 { font-size: 1.15rem; }
-  nav a, header.topbar a.btn, header.topbar form { margin-left: 8px; }
+  nav { width: 100%; justify-content: space-between; gap: 4px; }
+  nav a, header.topbar a.btn, header.topbar form { margin-left: 0; }
+  nav a { font-size: 0.82rem; }
   main { padding: 16px 14px 40px; }
   .card { padding: 16px; }
 }
@@ -53,6 +61,21 @@ main { max-width: 1040px; margin: 0 auto; padding: 28px 24px 60px; }
   border-radius: 12px; padding: 22px; margin-bottom: 22px; box-shadow: 0 6px 18px rgba(0,0,0,0.35); }
 .card h2 { margin: 0 0 16px; font-size: 1.15rem; letter-spacing: 0.3px; display: flex; align-items: center; gap: 8px; }
 .card h2::before { content: ''; width: 4px; height: 18px; background: var(--f1-red); border-radius: 2px; display: inline-block; }
+
+.season-hero { position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(280px, .6fr);
+  gap: 24px; align-items: end; padding: 28px; border: 1px solid rgba(225,6,0,.28);
+  background: linear-gradient(125deg, rgba(225,6,0,.17), rgba(26,26,36,.96) 45%, rgba(20,20,29,.98)); }
+.season-hero::after { content: ''; position: absolute; right: -55px; top: -95px; width: 260px; height: 260px;
+  border: 34px solid rgba(225,6,0,.08); border-radius: 50%; pointer-events: none; }
+.eyebrow { margin: 0 0 6px; color: #ff6c66; text-transform: uppercase; font-size: .72rem; font-weight: 800; letter-spacing: 1.6px; }
+.season-hero h2 { margin: 0; font-size: clamp(2rem, 5vw, 3.6rem); line-height: .95; letter-spacing: -.8px; }
+.season-hero h2::before { display: none; }
+.season-hero .hero-subtitle { margin: 10px 0 0; color: var(--f1-muted); }
+.season-stats { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.season-stat { padding: 13px 14px; border-radius: 10px; background: rgba(8,8,12,.7); border: 1px solid rgba(255,255,255,.07); }
+.season-stat strong { display: block; font-family: "Titillium Web", sans-serif; font-size: 1.35rem; line-height: 1; }
+.season-stat span { display: block; margin-top: 5px; color: var(--f1-muted); font-size: .7rem; text-transform: uppercase; letter-spacing: .8px; }
+@media (max-width: 700px) { .season-hero { grid-template-columns: 1fr; align-items: start; padding: 22px 18px; } }
 
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 11px 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.06); }
@@ -86,7 +109,8 @@ input:focus, select:focus { outline: none; border-color: var(--f1-red); }
 @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
 .muted { color: var(--f1-muted); font-size: 0.9rem; }
 .results-form td input[type="number"] { width: 70px; }
-.table-wrap { overflow-x: auto; }
+.table-wrap { overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--f1-gray) transparent; }
+.mobile-driver-stats { display: none; }
 .chart-wrap { overflow-x: auto; }
 .chart-wrap svg { display: block; width: 100%; min-width: 480px; }
 .chart-legend { display: flex; flex-wrap: wrap; gap: 12px 18px; margin-top: 14px; }
@@ -131,10 +155,27 @@ input:focus, select:focus { outline: none; border-color: var(--f1-red); }
   min-width: 78px; padding-top: 2px; }
 .news-item .news-message { font-size: 0.94rem; }
 
+@media (max-width: 640px) {
+  .standings-table th:nth-child(3), .standings-table th:nth-child(4), .standings-table th:nth-child(5),
+  .standings-table td:nth-child(3), .standings-table td:nth-child(4), .standings-table td:nth-child(5),
+  .teams-table th:nth-child(3), .teams-table th:nth-child(4),
+  .teams-table td:nth-child(3), .teams-table td:nth-child(4) { display: none; }
+  .standings-table th, .standings-table td, .teams-table th, .teams-table td { padding-left: 8px; padding-right: 8px; }
+  .standings-table td:nth-child(2) { min-width: 155px; }
+  .standings-table td:last-child, .teams-table td:last-child { text-align: right; }
+  .standings-table th:last-child, .teams-table th:last-child { text-align: right; }
+  .mobile-driver-stats { display: block; margin-top: 3px; color: var(--f1-muted); font-size: .68rem; font-weight: 500; }
+  .chart-wrap svg { min-width: 620px; }
+}
 @media (max-width: 480px) {
   .wide-input { min-width: 0; flex: 1 1 100%; }
   form.inline { flex-direction: column; align-items: stretch; }
   form.inline input, form.inline button { width: 100%; }
+  .news-item { flex-direction: column; gap: 4px; }
+  .news-item .news-date { min-width: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
 }
 `;
 
@@ -146,7 +187,7 @@ function aiBadge(isAi) {
   return isAi ? '<span class="ai-badge">KI</span>' : '';
 }
 
-function layout({ title = 'F1 Rangliste', isAdmin = false, body = '' }) {
+function layout({ title = 'F1 Rangliste', isAdmin = false, active = '', body = '' }) {
   return `<!DOCTYPE html>
 <html lang="de">
 <head>
@@ -159,13 +200,13 @@ function layout({ title = 'F1 Rangliste', isAdmin = false, body = '' }) {
 </head>
 <body>
 <header class="topbar">
-  <h1><span>F1</span> Freunde-Rangliste</h1>
-  <nav>
-    <a href="/">Rangliste</a>
-    <a href="/news">News</a>
+  <h1><a href="/" aria-label="Zur F1 Freunde-Rangliste"><span>F1</span> Freunde-Rangliste</a></h1>
+  <nav aria-label="Hauptnavigation">
+    <a href="/"${active === 'standings' ? ' aria-current="page"' : ''}>Rangliste</a>
+    <a href="/news"${active === 'news' ? ' aria-current="page"' : ''}>News</a>
     ${
       isAdmin
-        ? `<a href="/admin">Admin</a>
+        ? `<a href="/admin"${active === 'admin' ? ' aria-current="page"' : ''}>Admin</a>
            <form action="/admin/logout" method="POST" style="display:inline">
              <button class="btn secondary" type="submit">Logout</button>
            </form>`
@@ -259,7 +300,9 @@ export function renderTelemetryStatus(status) {
 }
 
 function renderPointsChart(progression) {
-  const { races: orderedRaces, drivers } = progression;
+  const { races: orderedRaces } = progression;
+  const driversWithPoints = progression.drivers.filter((d) => d.series.some((value) => value > 0));
+  const drivers = driversWithPoints.length > 0 ? driversWithPoints : progression.drivers;
   if (orderedRaces.length < 2) {
     return `<p class="muted">Sobald mindestens zwei Rennen eingetragen sind, erscheint hier der Punkteverlauf.</p>`;
   }
@@ -326,7 +369,7 @@ function renderPointsChart(progression) {
     </svg>
   </div>
   <div class="chart-legend">${legend}</div>
-  <p class="muted" style="margin-top:8px;">X-Achse: Rennen in chronologischer Reihenfolge (1 = erstes Rennen)</p>`;
+  <p class="muted" style="margin-top:8px;">Rennen in chronologischer Reihenfolge · angezeigt werden Fahrer mit Punkten.</p>`;
 }
 
 function renderTeamStandings(teamStandings) {
@@ -348,19 +391,23 @@ function renderTeamStandings(teamStandings) {
     </tr>`;
     })
     .join('');
-  return `<div class="table-wrap"><table>
+  return `<div class="table-wrap"><table class="teams-table">
     <thead><tr><th>#</th><th>Team</th><th>Siege</th><th>Podien</th><th>Punkte</th></tr></thead>
     <tbody>${rows}</tbody>
   </table></div>`;
 }
 
 export function renderIndex({ standings, teamStandings, races, progression, isAdmin }) {
+  const seasonYear = races.find((r) => r.race_date)?.race_date?.slice(0, 4) || new Date().getFullYear();
+  const activeDrivers = standings.filter((s) => s.races > 0).length;
+  const leaderGap = Math.max(0, (standings[0]?.points || 0) - (standings[1]?.points || 0));
   const rows = standings
     .map(
       (s, i) => `
     <tr class="pos-${i + 1}">
       <td><span class="pos-badge">${i + 1}</span></td>
-      <td><span class="driver-color" style="background:${esc(s.color)}"></span>${esc(s.name)}${aiBadge(s.is_ai)}</td>
+      <td><span class="driver-color" style="background:${esc(s.color)}"></span>${esc(s.name)}${aiBadge(s.is_ai)}
+        <span class="mobile-driver-stats">${s.races} Rennen · ${s.wins} Siege · ${s.podiums} Podien</span></td>
       <td>${s.races}</td>
       <td>${s.wins}</td>
       <td>${s.podiums}</td>
@@ -381,12 +428,25 @@ export function renderIndex({ standings, teamStandings, races, progression, isAd
     .join('');
 
   const body = `
+  <section class="card season-hero" aria-labelledby="season-title">
+    <div>
+      <p class="eyebrow">Meisterschaft ${esc(seasonYear)}</p>
+      <h2 id="season-title">${standings[0] ? esc(standings[0].name) : 'Startaufstellung'}</h2>
+      <p class="hero-subtitle">${standings[0] ? `führt mit <strong>${standings[0].points} Punkten</strong>.` : 'Die Saison wartet auf das erste Ergebnis.'}</p>
+    </div>
+    <div class="season-stats" aria-label="Saisonübersicht">
+      <div class="season-stat"><strong>${races.length}</strong><span>Rennen</span></div>
+      <div class="season-stat"><strong>${activeDrivers}</strong><span>Aktive Fahrer</span></div>
+      <div class="season-stat"><strong>${standings[0]?.wins || 0}</strong><span>Siege des Leaders</span></div>
+      <div class="season-stat"><strong>${leaderGap}</strong><span>Punkte Vorsprung</span></div>
+    </div>
+  </section>
   <div class="card">
     <h2>Fahrerwertung</h2>
     ${
       standings.length === 0
         ? `<p class="muted">Noch keine Fahrer angelegt. ${isAdmin ? '<a href="/admin">Jetzt im Admin-Bereich anlegen</a>.' : ''}</p>`
-        : `<div class="table-wrap"><table>
+        : `<div class="table-wrap"><table class="standings-table">
       <thead><tr><th>#</th><th>Fahrer</th><th>Rennen</th><th>Siege</th><th>Podien</th><th>Punkte</th></tr></thead>
       <tbody>${rows}</tbody>
     </table></div>`
@@ -412,7 +472,7 @@ export function renderIndex({ standings, teamStandings, races, progression, isAd
     <h2>Rennaufzeichnungen</h2>
     ${renderReplaysGallery(races)}
   </div>`;
-  return layout({ title: 'F1 Rangliste', isAdmin, body });
+  return layout({ title: 'F1 Rangliste', isAdmin, active: 'standings', body });
 }
 
 export function renderRace({ race, results, POINTS, FASTEST_LAP_BONUS, isAdmin }) {
@@ -453,8 +513,8 @@ export function renderRace({ race, results, POINTS, FASTEST_LAP_BONUS, isAdmin }
     <h2>Highlights</h2>
     ${renderHighlights(race, results)}
   </div>
-  <a href="/">&larr; Zurueck zur Rangliste</a>`;
-  return layout({ title: race.name, isAdmin, body });
+  <a href="/">&larr; Zurück zur Rangliste</a>`;
+  return layout({ title: race.name, isAdmin, active: 'standings', body });
 }
 
 export function renderNews({ items, isAdmin }) {
@@ -477,8 +537,8 @@ export function renderNews({ items, isAdmin }) {
             .join('')}</ul>`
     }
   </div>
-  <a href="/">&larr; Zurueck zur Rangliste</a>`;
-  return layout({ title: 'News', isAdmin, body });
+  <a href="/">&larr; Zurück zur Rangliste</a>`;
+  return layout({ title: 'News', isAdmin, active: 'news', body });
 }
 
 export function renderLogin({ error }) {
@@ -572,7 +632,7 @@ export function renderAdmin({ drivers, races, passwordError, telemetryStatus }) 
       <button class="btn" type="submit">Aendern</button>
     </form>
   </div>`;
-  return layout({ title: 'Admin', isAdmin: true, body });
+  return layout({ title: 'Admin', isAdmin: true, active: 'admin', body });
 }
 
 export function renderAdminRace({ race, drivers, resultsByDriver }) {
