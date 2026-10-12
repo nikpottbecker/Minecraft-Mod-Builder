@@ -27,8 +27,12 @@ test('start page renders a safe, accessible season overview', () => {
 
   assert.match(html, /Meisterschaft 2026/);
   assert.match(html, /aria-current="page">Rangliste/);
-  assert.match(html, /class="standings-table"/);
+  assert.match(html, /class="timing-table standings-table"/);
   assert.match(html, /mobile-driver-stats/);
+  assert.match(html, /data-filter="friend" aria-pressed="true"/);
+  assert.match(html, /data-driver-kind="ai"[^>]* hidden/);
+  assert.match(html, /Top 3 der Gesamtwertung/);
+  assert.match(html, /Letzte Rennen/);
   assert.match(html, /Max &lt;Test&gt;/);
   assert.doesNotMatch(html, />Ohne Punkte</);
 });

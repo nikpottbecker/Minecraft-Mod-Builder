@@ -177,6 +177,140 @@ input:focus, select:focus { outline: none; border-color: var(--f1-red); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
 }
+
+/* Championship dashboard */
+:root {
+  --race-red: #ff2638; --race-red-deep: #b90b1d; --race-bg: #071015; --race-panel: #0b141a;
+  --race-line: #26323a; --race-muted: #a5aeb7; --race-cyan: #25c5ca;
+}
+body { background: var(--race-bg); }
+body::before { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .22;
+  background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: 48px 48px; mask-image: linear-gradient(to bottom, #000, transparent 70%); }
+header.topbar { min-height: 68px; padding: 0 28px; background: rgba(6,13,18,.94); border-bottom: 1px solid var(--race-line); box-shadow: none; }
+header.topbar h1 { font-style: italic; letter-spacing: .4px; }
+header.topbar h1 span { color: var(--race-red); text-shadow: none; }
+.brand-check { display: inline-grid; grid-template-columns: repeat(2, 8px); gap: 2px; margin-right: 10px; transform: skewX(-16deg); vertical-align: 2px; }
+.brand-check i { display: block; width: 8px; height: 8px; background: var(--race-red); }
+.brand-check i:nth-child(2), .brand-check i:nth-child(3) { opacity: .6; }
+nav a, header.topbar a.btn { margin-left: 24px; padding: 24px 0 20px; border-width: 3px; }
+nav a[aria-current="page"] { border-color: var(--race-red); }
+main.dashboard-main { max-width: none; padding: 0 0 54px; }
+.dashboard-shell { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+.leader-stage { position: relative; overflow: hidden; border-bottom: 1px solid var(--race-line); background:
+  linear-gradient(105deg, rgba(255,38,56,.08), transparent 34%), radial-gradient(circle at 88% 0, rgba(255,38,56,.1), transparent 32%); }
+.leader-stage::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .12;
+  background: repeating-linear-gradient(135deg, transparent 0 70px, rgba(255,255,255,.12) 70px 71px); }
+.leader-grid { position: relative; display: grid; grid-template-columns: minmax(300px,.85fr) minmax(520px,1.15fr); gap: 56px; align-items: end; padding-top: 42px; padding-bottom: 42px; }
+.champ-label { margin: 0 0 8px; color: var(--race-muted); font-size: .72rem; font-weight: 700; letter-spacing: 2.1px; text-transform: uppercase; }
+.leader-name { margin: 0; font-size: clamp(3.4rem,7vw,6.4rem); line-height: .8; letter-spacing: -2px; font-style: italic; text-transform: uppercase; }
+.leader-score { display: flex; align-items: baseline; gap: 12px; margin-top: 22px; font-family: "Titillium Web", sans-serif; font-style: italic; text-transform: uppercase; }
+.leader-score strong { color: var(--race-red); font-size: clamp(3rem,6vw,5.1rem); line-height: .8; }
+.leader-score span { font-size: clamp(1.3rem,2.7vw,2rem); font-weight: 800; }
+.leader-metrics { display: flex; margin-top: 32px; }
+.leader-metric { min-width: 110px; padding-right: 24px; margin-right: 24px; border-right: 1px solid #75808a; }
+.leader-metric:last-child { border: 0; margin: 0; }
+.leader-metric strong { display: block; font: 800 1.65rem/1 "Titillium Web", sans-serif; }
+.leader-metric span { display: block; margin-top: 6px; color: var(--race-muted); font-size: .65rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
+.podium-title { margin: 0 0 14px; color: var(--race-muted); font-size: .72rem; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; }
+.podium-rail { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+.podium-card { position: relative; min-height: 178px; padding: 22px 20px 18px 28px; overflow: hidden; background: linear-gradient(145deg, rgba(17,27,34,.98), rgba(8,15,20,.98)); border: 1px solid var(--race-line); border-top: 3px solid var(--podium); transform: skewX(-4deg); }
+.podium-card > * { transform: skewX(4deg); }
+.podium-card .podium-rank { color: var(--podium); font: 900 2.35rem/1 "Titillium Web", sans-serif; }
+.podium-card .podium-name { display: block; min-height: 43px; margin: 16px 0 8px; font: 800 1.15rem/1.05 "Titillium Web", sans-serif; text-transform: uppercase; }
+.podium-card .podium-points { color: #fff; font: 900 2rem/1 "Titillium Web", sans-serif; }
+.podium-card .podium-points small { color: var(--race-muted); font-size: .65rem; letter-spacing: 1px; text-transform: uppercase; }
+.dashboard-section { padding: 34px 0; border-bottom: 1px solid var(--race-line); }
+.section-grid { display: grid; grid-template-columns: minmax(0,1.65fr) minmax(310px,.75fr); gap: 0; }
+.section-grid > section:first-child { padding-right: 34px; border-right: 1px solid var(--race-line); }
+.section-grid > section:last-child { padding-left: 34px; }
+.section-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 20px; }
+.section-heading { margin: 0; font-size: 1.55rem; line-height: 1; letter-spacing: .3px; text-transform: uppercase; }
+.section-heading::before { content: '/'; display: inline-block; margin-right: 10px; color: var(--race-red); font-weight: 900; transform: skewX(-12deg); }
+.section-kicker { margin: 6px 0 0; color: var(--race-muted); font-size: .76rem; }
+.filter-control { display: inline-flex; border: 1px solid var(--race-line); border-radius: 7px; overflow: hidden; }
+.filter-control button { min-width: 92px; padding: 9px 13px; border: 0; border-right: 1px solid var(--race-line); background: #0c151b; color: var(--race-muted); font: 700 .72rem "Inter", sans-serif; cursor: pointer; }
+.filter-control button:last-child { border: 0; }
+.filter-control button[aria-pressed="true"] { background: var(--race-red); color: white; }
+.timing-table { width: 100%; table-layout: fixed; }
+.timing-table th, .timing-table td { padding: 10px 12px; border-color: var(--race-line); }
+.timing-table th { font-size: .64rem; }
+.timing-table tbody tr { border-left: 3px solid transparent; }
+.timing-table tbody tr:hover { background: rgba(255,38,56,.06); border-left-color: var(--race-red); }
+.timing-table .col-pos { width: 58px; }
+.timing-table .col-stat { width: 82px; text-align: center; }
+.timing-table .col-points { width: 90px; text-align: right; }
+.timing-table td.stat { text-align: center; font-variant-numeric: tabular-nums; }
+.timing-table td.points { text-align: right; color: var(--race-red); font-size: 1.12rem; }
+.filter-empty { display: none; padding: 24px 12px; color: var(--race-muted); text-align: center; border-bottom: 1px solid var(--race-line); }
+.team-list { margin: 0; padding: 0; list-style: none; }
+.team-row { display: grid; grid-template-columns: 34px 5px minmax(0,1fr) auto; align-items: center; gap: 13px; min-height: 55px; border-bottom: 1px solid var(--race-line); }
+.team-rank { font: 800 1.1rem "Titillium Web", sans-serif; }
+.team-stripe { width: 5px; height: 28px; background: var(--team-color); box-shadow: 0 0 10px color-mix(in srgb, var(--team-color) 45%, transparent); }
+.team-name { min-width: 0; font-weight: 700; }
+.team-drivers { display: block; overflow: hidden; color: var(--race-muted); font-size: .68rem; font-weight: 400; text-overflow: ellipsis; white-space: nowrap; }
+.team-points { color: #fff; font: 900 1.15rem "Titillium Web", sans-serif; }
+.chart-panel { padding-top: 4px; }
+.chart-wrap.dashboard-chart { border: 1px solid var(--race-line); border-radius: 8px; background: linear-gradient(180deg, rgba(12,21,27,.75), rgba(7,16,21,.35)); }
+.dashboard-chart svg { min-width: 660px; }
+.chart-note { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 10px; }
+.scroll-cue { display: none; color: var(--race-muted); font-size: .7rem; }
+.race-list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--race-line); }
+.race-row { display: grid; grid-template-columns: 110px minmax(0,1fr) minmax(140px,.8fr) auto; align-items: center; gap: 16px; min-height: 58px; border-bottom: 1px solid var(--race-line); }
+.race-date { color: var(--race-muted); font-size: .82rem; font-variant-numeric: tabular-nums; }
+.race-row strong { font-size: .92rem; }
+.race-track { color: var(--race-muted); font-size: .8rem; }
+.row-action { display: inline-flex; align-items: center; gap: 8px; color: var(--race-red); font-size: .78rem; font-weight: 800; text-decoration: none; }
+.row-action svg { width: 16px; transition: transform .15s ease; }
+.row-action:hover svg { transform: translateX(3px); }
+.replay-row { grid-template-columns: 110px minmax(0,1fr) auto; }
+.play-icon { display: inline-flex; align-items: center; justify-content: center; width: 25px; height: 25px; border: 1px solid #6c7780; border-radius: 50%; color: #fff; }
+.play-icon svg { width: 10px; height: 10px; }
+.dashboard-foot { padding-top: 24px; color: var(--race-muted); font-size: .72rem; text-align: center; }
+
+@media (max-width: 900px) {
+  .leader-grid { grid-template-columns: 1fr; gap: 34px; }
+  .section-grid { grid-template-columns: 1fr; }
+  .section-grid > section:first-child { padding: 0 0 34px; border-right: 0; border-bottom: 1px solid var(--race-line); }
+  .section-grid > section:last-child { padding: 34px 0 0; }
+}
+@media (max-width: 640px) {
+  header.topbar { min-height: auto; padding: 13px 16px 0; }
+  header.topbar h1 { font-size: 1.05rem; }
+  .brand-check { margin-right: 6px; transform: skewX(-16deg) scale(.8); }
+  nav { margin-top: 8px; }
+  nav a, header.topbar a.btn { display: inline-flex; align-items: center; min-height: 44px; padding: 9px 0 10px; font-size: .78rem; }
+  .dashboard-shell { padding-left: 16px; padding-right: 16px; }
+  .leader-grid { padding-top: 30px; padding-bottom: 26px; }
+  .leader-name { font-size: clamp(3rem,17vw,4.5rem); }
+  .leader-metrics { margin-top: 26px; }
+  .leader-metric { min-width: 0; flex: 1; margin-right: 14px; padding-right: 14px; }
+  .leader-metric strong { font-size: 1.35rem; }
+  .leader-metric span { font-size: .56rem; }
+  .podium-rail { gap: 7px; }
+  .podium-card { min-height: 122px; padding: 13px 8px 12px 14px; transform: none; }
+  .podium-card > * { transform: none; }
+  .podium-card .podium-rank { font-size: 1.4rem; }
+  .podium-card .podium-name { min-height: 33px; margin: 9px 0 5px; font-size: .78rem; }
+  .podium-card .podium-points { font-size: 1.4rem; }
+  .dashboard-section { padding: 28px 0; }
+  .section-head { align-items: stretch; flex-direction: column; gap: 14px; }
+  .section-heading { font-size: 1.3rem; }
+  .filter-control { display: grid; grid-template-columns: repeat(3,1fr); width: 100%; }
+  .filter-control button { min-width: 0; min-height: 44px; }
+  .timing-table .desktop-stat { display: none; }
+  .timing-table .col-pos { width: 44px; }
+  .timing-table .col-points { width: 64px; }
+  .timing-table th, .timing-table td { padding: 10px 7px; }
+  .timing-table td:nth-child(2) { min-width: 0; }
+  .mobile-driver-stats { display: block; }
+  .scroll-cue { display: inline; }
+  .race-row, .replay-row { grid-template-columns: 82px minmax(0,1fr) auto; gap: 10px; }
+  .race-track { display: none; }
+  .row-action span.label { display: none; }
+  .row-action { justify-content: flex-end; min-width: 44px; min-height: 44px; }
+  .race-date { font-size: .72rem; }
+}
 `;
 
 function esc(s) {
@@ -187,7 +321,7 @@ function aiBadge(isAi) {
   return isAi ? '<span class="ai-badge">KI</span>' : '';
 }
 
-function layout({ title = 'F1 Rangliste', isAdmin = false, active = '', body = '' }) {
+function layout({ title = 'F1 Rangliste', isAdmin = false, active = '', mainClass = '', body = '' }) {
   return `<!DOCTYPE html>
 <html lang="de">
 <head>
@@ -200,7 +334,7 @@ function layout({ title = 'F1 Rangliste', isAdmin = false, active = '', body = '
 </head>
 <body>
 <header class="topbar">
-  <h1><a href="/" aria-label="Zur F1 Freunde-Rangliste"><span>F1</span> Freunde-Rangliste</a></h1>
+  <h1><a href="/" aria-label="Zur F1 Freunde-Rangliste"><span class="brand-check" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>F1</span> Freunde</a></h1>
   <nav aria-label="Hauptnavigation">
     <a href="/"${active === 'standings' ? ' aria-current="page"' : ''}>Rangliste</a>
     <a href="/news"${active === 'news' ? ' aria-current="page"' : ''}>News</a>
@@ -214,7 +348,7 @@ function layout({ title = 'F1 Rangliste', isAdmin = false, active = '', body = '
     }
   </nav>
 </header>
-<main>${body}</main>
+<main${mainClass ? ` class="${esc(mainClass)}"` : ''}>${body}</main>
 </body>
 </html>`;
 }
@@ -227,27 +361,35 @@ function youtubeId(url) {
   return m ? m[1] : null;
 }
 
-function renderReplaysGallery(races) {
+function arrowIcon() {
+  return '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+
+function playIcon() {
+  return '<span class="play-icon" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3 2l7 4-7 4V2z" fill="currentColor"/></svg></span>';
+}
+
+function formatDate(value) {
+  if (!value) return '–';
+  const [year, month, day] = String(value).split('-');
+  return year && month && day ? `${day}.${month}.${year}` : esc(value);
+}
+
+function renderReplaysList(races) {
   const withVideo = races.filter((r) => r.video_url);
   if (withVideo.length === 0) {
     return `<p class="muted">Noch keine Rennaufzeichnungen verlinkt.</p>`;
   }
-  const cards = withVideo
+  const rows = withVideo
     .map((r) => {
-      const vid = youtubeId(r.video_url);
-      const thumb = vid
-        ? `<img src="https://img.youtube.com/vi/${esc(vid)}/hqdefault.jpg" alt="" loading="lazy" />`
-        : `<div style="aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;color:var(--f1-muted);">&#9654;</div>`;
-      return `<a class="replay-card" href="${esc(r.video_url)}" target="_blank" rel="noopener">
-        ${thumb}
-        <div class="replay-info">
-          <strong>${esc(r.name)}</strong>
-          <span>${esc(r.race_date || '')}${r.track ? ' · ' + esc(r.track) : ''}</span>
-        </div>
-      </a>`;
+      return `<li class="race-row replay-row">
+        <span class="race-date">${formatDate(r.race_date)}</span>
+        <strong>${esc(r.name)}</strong>
+        <a class="row-action" href="${esc(r.video_url)}" target="_blank" rel="noopener">${playIcon()}<span class="label">Aufzeichnung ansehen</span>${arrowIcon()}</a>
+      </li>`;
     })
     .join('');
-  return `<div class="replay-grid">${cards}</div>`;
+  return `<ul class="race-list">${rows}</ul>`;
 }
 
 function renderHighlights(race, results) {
@@ -301,18 +443,23 @@ export function renderTelemetryStatus(status) {
 
 function renderPointsChart(progression) {
   const { races: orderedRaces } = progression;
-  const driversWithPoints = progression.drivers.filter((d) => d.series.some((value) => value > 0));
-  const drivers = driversWithPoints.length > 0 ? driversWithPoints : progression.drivers;
+  const chartPalette = ['#ff2638', '#25c5ca', '#c9d3dd'];
+  const rankedDrivers = progression.drivers
+    .filter((d) => d.series.some((value) => value > 0))
+    .sort((a, b) => (b.series.at(-1) || 0) - (a.series.at(-1) || 0));
+  const drivers = (rankedDrivers.length > 0 ? rankedDrivers : progression.drivers)
+    .slice(0, 3)
+    .map((driver, index) => ({ ...driver, chartColor: chartPalette[index] }));
   if (orderedRaces.length < 2) {
     return `<p class="muted">Sobald mindestens zwei Rennen eingetragen sind, erscheint hier der Punkteverlauf.</p>`;
   }
 
-  const width = 680;
-  const height = 260;
-  const padLeft = 34;
-  const padRight = 12;
-  const padTop = 14;
-  const padBottom = 26;
+  const width = 920;
+  const height = 280;
+  const padLeft = 46;
+  const padRight = 28;
+  const padTop = 28;
+  const padBottom = 48;
   const plotW = width - padLeft - padRight;
   const plotH = height - padTop - padBottom;
 
@@ -334,145 +481,202 @@ function renderPointsChart(progression) {
   const xLabels = orderedRaces
     .map((r, i) => {
       if (orderedRaces.length > 12 && i % Math.ceil(orderedRaces.length / 12) !== 0) return '';
-      return `<text x="${x(i)}" y="${height - 6}" text-anchor="middle" font-size="10" fill="var(--f1-muted)">${i + 1}</text>`;
+      return `<text x="${x(i)}" y="${height - 20}" text-anchor="middle" font-size="10" fill="var(--f1-muted)">${i + 1}</text>
+        <text x="${x(i)}" y="${height - 6}" text-anchor="middle" font-size="9" fill="var(--f1-muted)">${formatDate(r.race_date)}</text>`;
     })
     .join('');
 
   const lines = drivers
-    .map((d) => {
+    .map((d, driverIndex) => {
       const points = d.series.map((v, i) => `${x(i)},${y(v)}`).join(' ');
       const dots = d.series
-        .map(
-          (v, i) =>
-            `<circle cx="${x(i)}" cy="${y(v)}" r="2.6" fill="${esc(d.color)}"><title>${esc(d.name)} · ${esc(
+        .map((v, i) => {
+          const labelX = x(i) + (i === 0 ? 13 : i === d.series.length - 1 ? -13 : 0);
+          return `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="${d.chartColor}"><title>${esc(d.name)} · ${esc(
               orderedRaces[i].name
-            )}: ${v} Punkte</title></circle>`
-        )
+            )}: ${v} Punkte</title></circle><text x="${labelX}" y="${y(v) + (driverIndex === 2 ? 16 : -9)}" text-anchor="middle" font-size="11" font-weight="700" fill="${d.chartColor}">${v}</text>`;
+        })
         .join('');
-      return `<polyline points="${points}" fill="none" stroke="${esc(d.color)}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />${dots}`;
+      return `<polyline points="${points}" fill="none" stroke="${d.chartColor}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" />${dots}`;
     })
     .join('');
 
   const legend = drivers
     .map(
       (d) =>
-        `<span><span class="swatch" style="background:${esc(d.color)}"></span>${esc(d.name)}</span>`
+        `<span><span class="swatch" style="background:${d.chartColor}"></span>${esc(d.name)}${aiBadge(d.is_ai)}</span>`
     )
     .join('');
 
   return `
-  <div class="chart-wrap">
+  <div class="chart-wrap dashboard-chart">
     <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Punkteverlauf pro Fahrer">
       ${gridLines}
       ${lines}
       ${xLabels}
     </svg>
   </div>
-  <div class="chart-legend">${legend}</div>
-  <p class="muted" style="margin-top:8px;">Rennen in chronologischer Reihenfolge · angezeigt werden Fahrer mit Punkten.</p>`;
+  <div class="chart-note"><div class="chart-legend">${legend}</div><span class="scroll-cue">Seitlich scrollen →</span></div>`;
 }
 
 function renderTeamStandings(teamStandings) {
   if (teamStandings.length === 0) {
     return `<p class="muted">Noch keine Fahrer mit einem Team versehen. Team im Admin-Bereich beim Fahrer eintragen.</p>`;
   }
+  const teamColor = (name) => {
+    const value = String(name || '').toLowerCase();
+    if (value.includes('mercedes')) return '#27d2c9';
+    if (value.includes('ferrari')) return '#ff2638';
+    if (value.includes('aston')) return '#20b486';
+    if (value.includes('mclaren')) return '#ff8700';
+    if (value.includes('red bull')) return '#4b72e8';
+    if (value.includes('williams')) return '#28a9e8';
+    if (value.includes('alpine')) return '#ee70b7';
+    if (value.includes('haas')) return '#d5d8de';
+    if (value.includes('sauber') || value.includes('kick')) return '#52e252';
+    if (value.includes('racing bulls') || value.includes('visa')) return '#8db8ff';
+    return '#8b96a0';
+  };
   const rows = teamStandings
     .map((t, i) => {
       const driverNames = t.drivers
         .map((d) => `${esc(d.name)}${aiBadge(d.is_ai)} (${d.points})`)
         .join(', ');
-      return `
-    <tr class="pos-${i + 1}">
-      <td><span class="pos-badge">${i + 1}</span></td>
-      <td><strong>${esc(t.team)}</strong><br /><span class="muted" style="font-size:0.78rem;">${driverNames}</span></td>
-      <td>${t.wins}</td>
-      <td>${t.podiums}</td>
-      <td class="points">${t.points}</td>
-    </tr>`;
+      return `<li class="team-row" style="--team-color:${teamColor(t.team)}">
+        <span class="team-rank">${i + 1}</span><span class="team-stripe" aria-hidden="true"></span>
+        <span class="team-name">${esc(t.team)}<span class="team-drivers">${driverNames}</span></span>
+        <strong class="team-points">${t.points}</strong>
+      </li>`;
     })
     .join('');
-  return `<div class="table-wrap"><table class="teams-table">
-    <thead><tr><th>#</th><th>Team</th><th>Siege</th><th>Podien</th><th>Punkte</th></tr></thead>
-    <tbody>${rows}</tbody>
-  </table></div>`;
+  return `<ol class="team-list">${rows}</ol>`;
 }
 
 export function renderIndex({ standings, teamStandings, races, progression, isAdmin }) {
   const seasonYear = races.find((r) => r.race_date)?.race_date?.slice(0, 4) || new Date().getFullYear();
   const activeDrivers = standings.filter((s) => s.races > 0).length;
   const leaderGap = Math.max(0, (standings[0]?.points || 0) - (standings[1]?.points || 0));
+  const podiumColors = ['#ffd45b', '#c9d3dd', '#e89155'];
+  let friendRank = 0;
+  let aiRank = 0;
   const rows = standings
-    .map(
-      (s, i) => `
-    <tr class="pos-${i + 1}">
-      <td><span class="pos-badge">${i + 1}</span></td>
+    .map((s, i) => {
+      const kind = s.is_ai ? 'ai' : 'friend';
+      const groupRank = s.is_ai ? ++aiRank : ++friendRank;
+      return `
+    <tr class="pos-${i + 1}" data-driver-kind="${kind}" data-rank-overall="${i + 1}" data-rank-group="${groupRank}"${s.is_ai ? ' hidden' : ''}>
+      <td class="stat"><span class="row-position">${groupRank}</span></td>
       <td><span class="driver-color" style="background:${esc(s.color)}"></span>${esc(s.name)}${aiBadge(s.is_ai)}
         <span class="mobile-driver-stats">${s.races} Rennen · ${s.wins} Siege · ${s.podiums} Podien</span></td>
-      <td>${s.races}</td>
-      <td>${s.wins}</td>
-      <td>${s.podiums}</td>
+      <td class="stat desktop-stat">${s.races}</td>
+      <td class="stat desktop-stat">${s.wins}</td>
+      <td class="stat desktop-stat">${s.podiums}</td>
       <td class="points">${s.points}</td>
-    </tr>`
-    )
+    </tr>`;
+    })
     .join('');
 
   const raceRows = races
     .map(
-      (r) => `
-    <tr>
-      <td>${esc(r.race_date || '-')}</td>
-      <td><a class="race-link" href="/races/${r.id}">${esc(r.name)}</a></td>
-      <td>${esc(r.track || '-')}</td>
-    </tr>`
+      (r) => `<li class="race-row">
+        <span class="race-date">${formatDate(r.race_date)}</span>
+        <strong>${esc(r.name)}</strong>
+        <span class="race-track">${esc(r.track || 'Strecke nicht hinterlegt')}</span>
+        <a class="row-action" href="/races/${r.id}"><span class="label">Ergebnis ansehen</span>${arrowIcon()}</a>
+      </li>`
     )
     .join('');
 
+  const podium = standings.slice(0, 3).map((driver, index) => `<article class="podium-card" style="--podium:${podiumColors[index]}">
+    <span class="podium-rank">${index + 1}</span>
+    <strong class="podium-name">${esc(driver.name)}${aiBadge(driver.is_ai)}</strong>
+    <span class="podium-points">${driver.points} <small>Punkte</small></span>
+  </article>`).join('');
+
   const body = `
-  <section class="card season-hero" aria-labelledby="season-title">
-    <div>
-      <p class="eyebrow">Meisterschaft ${esc(seasonYear)}</p>
-      <h2 id="season-title">${standings[0] ? esc(standings[0].name) : 'Startaufstellung'}</h2>
-      <p class="hero-subtitle">${standings[0] ? `führt mit <strong>${standings[0].points} Punkten</strong>.` : 'Die Saison wartet auf das erste Ergebnis.'}</p>
-    </div>
-    <div class="season-stats" aria-label="Saisonübersicht">
-      <div class="season-stat"><strong>${races.length}</strong><span>Rennen</span></div>
-      <div class="season-stat"><strong>${activeDrivers}</strong><span>Aktive Fahrer</span></div>
-      <div class="season-stat"><strong>${standings[0]?.wins || 0}</strong><span>Siege des Leaders</span></div>
-      <div class="season-stat"><strong>${leaderGap}</strong><span>Punkte Vorsprung</span></div>
+  <section class="leader-stage" aria-labelledby="season-title">
+    <div class="dashboard-shell leader-grid">
+      <div>
+        <p class="champ-label">Meisterschaft ${esc(seasonYear)} · Spitzenreiter</p>
+        <h2 class="leader-name" id="season-title">${standings[0] ? esc(standings[0].name) : 'Startaufstellung'}</h2>
+        <div class="leader-score"><strong>${standings[0]?.points || 0}</strong><span>Punkte</span></div>
+        <div class="leader-metrics" aria-label="Saisonübersicht">
+          <div class="leader-metric"><strong>${races.length}</strong><span>Rennen</span></div>
+          <div class="leader-metric"><strong>${activeDrivers}</strong><span>Aktive Fahrer</span></div>
+          <div class="leader-metric"><strong>${leaderGap}</strong><span>Punkte Vorsprung</span></div>
+        </div>
+      </div>
+      <div>
+        <p class="podium-title">Top 3 der Gesamtwertung</p>
+        <div class="podium-rail">${podium}</div>
+      </div>
     </div>
   </section>
-  <div class="card">
-    <h2>Fahrerwertung</h2>
-    ${
-      standings.length === 0
-        ? `<p class="muted">Noch keine Fahrer angelegt. ${isAdmin ? '<a href="/admin">Jetzt im Admin-Bereich anlegen</a>.' : ''}</p>`
-        : `<div class="table-wrap"><table class="standings-table">
-      <thead><tr><th>#</th><th>Fahrer</th><th>Rennen</th><th>Siege</th><th>Podien</th><th>Punkte</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table></div>`
-    }
+  <div class="dashboard-shell">
+    <div class="dashboard-section section-grid">
+      <section aria-labelledby="drivers-heading">
+        <div class="section-head">
+          <div><h2 class="section-heading" id="drivers-heading">Fahrerwertung</h2><p class="section-kicker"><span id="driver-count">${friendRank}</span> Fahrer angezeigt</p></div>
+          <div class="filter-control" role="group" aria-label="Fahrerwertung filtern">
+            <button type="button" data-filter="friend" aria-pressed="true">Freunde</button>
+            <button type="button" data-filter="all" aria-pressed="false">Gesamtfeld</button>
+            <button type="button" data-filter="ai" aria-pressed="false">KI</button>
+          </div>
+        </div>
+        ${standings.length === 0
+          ? `<p class="muted">Noch keine Fahrer angelegt. ${isAdmin ? '<a href="/admin">Jetzt im Admin-Bereich anlegen</a>.' : ''}</p>`
+          : `<div class="table-wrap"><table class="timing-table standings-table">
+            <thead><tr><th class="col-pos">Pos.</th><th>Fahrer</th><th class="col-stat desktop-stat">Rennen</th><th class="col-stat desktop-stat">Siege</th><th class="col-stat desktop-stat">Podien</th><th class="col-points">Punkte</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table><p class="filter-empty" id="filter-empty">Keine Fahrer in dieser Auswahl.</p></div>`}
+      </section>
+      <section aria-labelledby="teams-heading">
+        <div class="section-head"><div><h2 class="section-heading" id="teams-heading">Teamwertung</h2><p class="section-kicker">Konstrukteurswertung</p></div></div>
+        ${renderTeamStandings(teamStandings)}
+      </section>
+    </div>
+
+    <section class="dashboard-section chart-panel" aria-labelledby="chart-heading">
+      <div class="section-head"><div><h2 class="section-heading" id="chart-heading">Punkteverlauf</h2><p class="section-kicker">Entwicklung der Top 3 nach jedem Rennen</p></div></div>
+      ${renderPointsChart(progression)}
+    </section>
+
+    <section class="dashboard-section" aria-labelledby="races-heading">
+      <div class="section-head"><div><h2 class="section-heading" id="races-heading">Letzte Rennen</h2><p class="section-kicker">Alle eingetragenen Ergebnisse</p></div></div>
+      ${races.length === 0 ? '<p class="muted">Noch keine Rennen eingetragen.</p>' : `<ul class="race-list">${raceRows}</ul>`}
+    </section>
+
+    <section class="dashboard-section" aria-labelledby="replays-heading">
+      <div class="section-head"><div><h2 class="section-heading" id="replays-heading">Rennaufzeichnungen</h2><p class="section-kicker">Die Saison noch einmal ansehen</p></div></div>
+      ${renderReplaysList(races)}
+    </section>
+    <footer class="dashboard-foot">F1 Freunde-Rangliste · Saison ${esc(seasonYear)}</footer>
   </div>
-  <div class="card">
-    <h2>Team-Wertung</h2>
-    ${renderTeamStandings(teamStandings)}
-  </div>
-  <div class="card">
-    <h2>Punkteverlauf</h2>
-    ${renderPointsChart(progression)}
-  </div>
-  <div class="card">
-    <h2>Rennen</h2>
-    ${
-      races.length === 0
-        ? `<p class="muted">Noch keine Rennen eingetragen.</p>`
-        : `<div class="table-wrap"><table><thead><tr><th>Datum</th><th>Rennen</th><th>Strecke</th></tr></thead><tbody>${raceRows}</tbody></table></div>`
-    }
-  </div>
-  <div class="card">
-    <h2>Rennaufzeichnungen</h2>
-    ${renderReplaysGallery(races)}
-  </div>`;
-  return layout({ title: 'F1 Rangliste', isAdmin, active: 'standings', body });
+  <script>
+  (() => {
+    const buttons = [...document.querySelectorAll('[data-filter]')];
+    const rows = [...document.querySelectorAll('[data-driver-kind]')];
+    const count = document.getElementById('driver-count');
+    const empty = document.getElementById('filter-empty');
+    const applyFilter = (filter) => {
+      let visible = 0;
+      for (const row of rows) {
+        const matches = filter === 'all' || row.dataset.driverKind === filter;
+        row.hidden = !matches;
+        if (matches) {
+          visible += 1;
+          row.querySelector('.row-position').textContent = filter === 'all' ? row.dataset.rankOverall : row.dataset.rankGroup;
+        }
+      }
+      for (const button of buttons) button.setAttribute('aria-pressed', String(button.dataset.filter === filter));
+      if (count) count.textContent = String(visible);
+      if (empty) empty.style.display = visible ? 'none' : 'block';
+    };
+    for (const button of buttons) button.addEventListener('click', () => applyFilter(button.dataset.filter));
+    applyFilter('friend');
+  })();
+  </script>`;
+  return layout({ title: 'F1 Rangliste', isAdmin, active: 'standings', mainClass: 'dashboard-main', body });
 }
 
 export function renderRace({ race, results, POINTS, FASTEST_LAP_BONUS, isAdmin }) {

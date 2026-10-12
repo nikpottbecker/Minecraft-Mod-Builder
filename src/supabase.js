@@ -117,7 +117,7 @@ export function computeProgression(drivers, races, results) {
 
   return {
     races: orderedRaces,
-    drivers: drivers.map((d) => ({ id: d.id, name: d.name, color: d.color, series: series[d.id] })),
+    drivers: drivers.map((d) => ({ id: d.id, name: d.name, color: d.color, is_ai: !!d.is_ai, series: series[d.id] })),
   };
 }
 
