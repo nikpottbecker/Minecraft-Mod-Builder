@@ -58,6 +58,14 @@ enum PoseMatcher {
         }
     }
 
+    /// The reference as the live person is copying it: mirrored when that matches better.
+    static func alignedReference(live: BodyPose, liveAspect: CGFloat, reference: BodyPose, referenceAspect: CGFloat) -> BodyPose {
+        let mirroredReference = reference.mirrored()
+        let direct = compare(live, liveAspect, reference, referenceAspect) ?? 0
+        let mirrored = compare(live, liveAspect, mirroredReference, referenceAspect) ?? 0
+        return mirrored > direct ? mirroredReference : reference
+    }
+
     private static func compare(_ a: BodyPose, _ aspectA: CGFloat, _ b: BodyPose, _ aspectB: CGFloat) -> Double? {
         var total = 0.0
         var count = 0

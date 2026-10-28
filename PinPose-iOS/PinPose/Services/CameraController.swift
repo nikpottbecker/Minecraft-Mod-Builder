@@ -9,6 +9,8 @@ final class CameraController: NSObject, ObservableObject {
     @Published private(set) var livePose: BodyPose?
     @Published private(set) var liveFrameSize = CGSize(width: 1080, height: 1440)
     @Published private(set) var matchScore: Double?
+    /// The current coaching hint, only published once it has been stable for a few frames.
+    @Published private(set) var coachHint: PoseHint?
     @Published private(set) var zoomPresets: [Double] = [1]
     @Published private(set) var currentZoom: Double = 1
     @Published private(set) var exposureBias: Float = 0
@@ -39,6 +41,9 @@ final class CameraController: NSObject, ObservableObject {
     private var referenceAspect: CGFloat = 0.75
     private var lastPoseTime = Date.distantPast
     private var smoothedScore: Double?
+    private var candidateHint: PoseHint?
+    private var candidateCount = 0
+    private var stableHint: PoseHint?
 
     /// Sets the reference to match against and the settings to start with.
     func prepare(referencePose: BodyPose?, referenceAspect: CGFloat, zoom: Double, exposureBias: Float) {
@@ -275,11 +280,40 @@ extension CameraController: AVCaptureVideoDataOutputSampleBufferDelegate {
             smoothedScore = nil
         }
 
+        var rawHint: PoseHint?
+        if let pose, let referencePose {
+            rawHint = PoseCoach.hint(live: pose, liveAspect: size.width / size.height,
+                                     reference: referencePose, referenceAspect: referenceAspect, score: score)
+        }
+        let hint = stabilized(rawHint)
+
         DispatchQueue.main.async {
             self.livePose = pose
             self.liveFrameSize = size
             self.matchScore = score
+            if self.coachHint != hint { self.coachHint = hint }
         }
+    }
+}
+
+extension CameraController {
+    /// A new hint only replaces the shown one after 3 identical frames (~0.4 s), so the text does not flicker.
+    /// "Hold" and "nobody in frame" switch immediately.
+    fileprivate func stabilized(_ hint: PoseHint?) -> PoseHint? {
+        if hint == nil || hint == .hold {
+            candidateHint = nil
+            candidateCount = 0
+            stableHint = hint
+            return hint
+        }
+        if hint == candidateHint {
+            candidateCount += 1
+        } else {
+            candidateHint = hint
+            candidateCount = 1
+        }
+        if candidateCount >= 3 { stableHint = hint }
+        return stableHint
     }
 }
 

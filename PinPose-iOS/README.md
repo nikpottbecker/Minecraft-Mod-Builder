@@ -22,6 +22,7 @@ Du gibst ein Pinterest-Bild ein, und die App zeigt dir:
 - **Auto-Auslöser**: löst aus, sobald du die Pose ~1 Sekunde hältst (Vibration, wenn sie einrastet)
 - Pinkes Pose-Skelett der Vorlage und dein Live-Skelett darüber
 - **Pose-Match in %** live (grün ab 85 %), spiegelverkehrt zählt auch
+- **Live-Coaching**: die wichtigste Korrektur direkt im Sucher („Linke Hand höher“, „Rechten Ellbogen weiter nach außen“, „Schultern gerader halten“), auf Wunsch als Sprachansage – praktisch mit Stativ und Selbstauslöser
 - Empfohlener Zoom und empfohlene Belichtung sind schon eingestellt
 - Drittel-Raster, Tap-to-Focus, Blitz, Front-/Rückkamera, Selbstauslöser (3 s / 10 s)
 - Tipps zum Durchtippen direkt im Sucher

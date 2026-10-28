@@ -34,6 +34,10 @@ struct CameraView: View {
     @State private var lastAutoCapture = Date.distantPast
     @State private var wasMatching = false
 
+    @State private var coaching = true
+    @State private var speakHints = false
+    @State private var voice = CoachVoice()
+
     private var tips: [Advice] {
         look.analysis.poseAdvice + look.analysis.cameraAdvice.prefix(3)
     }
@@ -82,6 +86,7 @@ struct CameraView: View {
         }
         .onDisappear {
             UIApplication.shared.isIdleTimerDisabled = false
+            voice.stop()
             camera.stop()
         }
         .onChange(of: camera.position) { _, position in
@@ -90,6 +95,12 @@ struct CameraView: View {
         }
         .onChange(of: camera.matchScore) { _, score in
             handleMatch(score)
+        }
+        .onChange(of: camera.coachHint) { _, hint in
+            if coaching, speakHints, let hint { voice.say(hint.text) }
+        }
+        .onChange(of: speakHints) { _, enabled in
+            if !enabled { voice.stop() }
         }
         .onChange(of: camera.lastPhotoScore) { _, score in
             if let score { store.recordScore(score, for: look.id) }
@@ -177,8 +188,15 @@ struct CameraView: View {
             topBar
             if adjustingOverlay {
                 adjustBanner
-            } else if showTips, !tips.isEmpty {
-                tipCard
+            } else {
+                if coaching, let hint = camera.coachHint {
+                    CoachHintPill(hint: hint)
+                        .transition(.opacity.combined(with: .scale(scale: 0.95)))
+                        .animation(.easeInOut(duration: 0.2), value: hint)
+                }
+                if showTips, !tips.isEmpty {
+                    tipCard
+                }
             }
             Spacer()
             bottomPanel
@@ -213,6 +231,10 @@ struct CameraView: View {
                 Toggle(isOn: $showSkeleton) { Label("Pose-Skelett", systemImage: "figure.stand") }
                 Toggle(isOn: $showGrid) { Label("Raster", systemImage: "squareshape.split.3x3") }
                 Toggle(isOn: $showTips) { Label("Tipps", systemImage: "lightbulb") }
+                if look.analysis.pose != nil {
+                    Toggle(isOn: $coaching) { Label("Live-Coaching", systemImage: "figure.wave") }
+                    Toggle(isOn: $speakHints) { Label("Coaching ansagen", systemImage: "speaker.wave.2") }
+                }
                 if silhouette != nil {
                     Picker("Vorlage als", selection: $overlayStyle) {
                         ForEach(OverlayStyle.allCases) { style in
@@ -500,6 +522,29 @@ private enum OverlayStyle: String, CaseIterable, Identifiable {
         case .photo: return "photo"
         case .silhouette: return "person.fill"
         }
+    }
+}
+
+/// The live correction shown below the match score, green when the pose should be held.
+private struct CoachHintPill: View {
+    let hint: PoseHint
+
+    var body: some View {
+        let holding = hint == .hold
+        HStack(spacing: 8) {
+            Image(systemName: holding ? "checkmark.circle.fill" : "arrow.up.and.down.and.arrow.left.and.right")
+            Text(hint.text)
+                .lineLimit(2)
+                .multilineTextAlignment(.leading)
+        }
+        .font(.headline)
+        .foregroundStyle(.white)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background((holding ? Color.green : Color.black).opacity(holding ? 0.85 : 0.55),
+                    in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Coaching: \(hint.text)")
     }
 }
 
