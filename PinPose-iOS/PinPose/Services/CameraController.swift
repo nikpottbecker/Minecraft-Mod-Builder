@@ -282,7 +282,9 @@ extension CameraController: AVCaptureVideoDataOutputSampleBufferDelegate {
 
         var rawHint: PoseHint?
         if let pose, let referencePose {
-            rawHint = PoseCoach.hint(live: pose, liveAspect: size.width / size.height,
+            // A mirrored (selfie) frame makes Vision swap left and right; undo that so "Linke Hand" is the real left hand.
+            let anatomicalPose = connection.isVideoMirrored ? pose.mirrored() : pose
+            rawHint = PoseCoach.hint(live: anatomicalPose, liveAspect: size.width / size.height,
                                      reference: referencePose, referenceAspect: referenceAspect, score: score)
         }
         let hint = stabilized(rawHint)

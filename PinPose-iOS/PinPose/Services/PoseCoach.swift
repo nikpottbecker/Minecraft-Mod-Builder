@@ -161,6 +161,7 @@ final class CoachVoice {
         let changed = text != lastText
         guard changed ? now.timeIntervalSince(lastSpoken) > 1.2 : now.timeIntervalSince(lastSpoken) > 4 else { return }
         guard !synthesizer.isSpeaking else { return }
+        activateAudioSession()
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = AVSpeechSynthesisVoice(language: "de-DE")
         utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 1.05
@@ -171,5 +172,13 @@ final class CoachVoice {
 
     func stop() {
         synthesizer.stopSpeaking(at: .immediate)
+        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+    }
+
+    /// Playback category so the hints are audible with the ring/silent switch on; other audio is only ducked.
+    private func activateAudioSession() {
+        let session = AVAudioSession.sharedInstance()
+        try? session.setCategory(.playback, mode: .voicePrompt, options: [.duckOthers])
+        try? session.setActive(true)
     }
 }
