@@ -1,3 +1,5 @@
+import CoreImage
+import CoreImage.CIFilterBuiltins
 import ImageIO
 import UIKit
 import Vision
@@ -13,6 +15,8 @@ enum AnalysisError: LocalizedError {
 struct AnalysisResult {
     var image: UIImage
     var analysis: ShotAnalysis
+    /// The person cut out of the reference as a tinted, transparent overlay.
+    var silhouette: UIImage?
 }
 
 /// Runs Vision and pixel analysis on a reference photo.
@@ -23,7 +27,8 @@ enum ImageAnalyzer {
             let image = raw.uprightResized(maxSide: 2048)
             guard let cgImage = image.cgImage else { throw AnalysisError.unreadableImage }
             let analysis = try ImageAnalyzer.analyze(cgImage: cgImage, exif: ExifInfo.read(from: data))
-            return AnalysisResult(image: image, analysis: analysis)
+            let silhouette = analysis.pose != nil ? ImageAnalyzer.silhouette(for: cgImage) : nil
+            return AnalysisResult(image: image, analysis: analysis, silhouette: silhouette)
         }.value
     }
 
@@ -87,6 +92,28 @@ enum ImageAnalyzer {
     }
 
     /// Brightness, color and sharpness statistics on a downscaled copy.
+    /// Cuts the person out of the image and fills them with the accent pink.
+    private static func silhouette(for cgImage: CGImage) -> UIImage? {
+        let request = VNGeneratePersonSegmentationRequest()
+        request.qualityLevel = .accurate
+        request.outputPixelFormat = kCVPixelFormatType_OneComponent8
+        let handler = VNImageRequestHandler(cgImage: cgImage, orientation: .up, options: [:])
+        guard (try? handler.perform([request])) != nil,
+              let mask = request.results?.first?.pixelBuffer else { return nil }
+
+        let extent = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
+        let rawMask = CIImage(cvPixelBuffer: mask)
+        let scaledMask = rawMask.transformed(by: CGAffineTransform(scaleX: extent.width / rawMask.extent.width,
+                                                                   y: extent.height / rawMask.extent.height))
+        let filter = CIFilter.blendWithMask()
+        filter.inputImage = CIImage(color: CIColor(red: 0.91, green: 0.24, blue: 0.5)).cropped(to: extent)
+        filter.backgroundImage = CIImage(color: CIColor.clear).cropped(to: extent)
+        filter.maskImage = scaledMask
+        guard let output = filter.outputImage,
+              let result = CIContext().createCGImage(output, from: extent) else { return nil }
+        return UIImage(cgImage: result)
+    }
+
     private static func computeStats(_ cgImage: CGImage, subject: CGRect?) -> ImageStats {
         let maxSide = 192.0
         let scale = min(1, maxSide / Double(max(cgImage.width, cgImage.height)))

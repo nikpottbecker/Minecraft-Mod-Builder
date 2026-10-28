@@ -11,12 +11,15 @@ Du gibst ein Pinterest-Bild ein, und die App zeigt dir:
   die originalen EXIF-Daten.
 - **Licht & Stimmung** – Golden Hour, Gegenlicht, Blitz-Look, weiches Licht usw. und konkrete Werte
   für die Nachbearbeitung in der Fotos-App.
+- **Licht heute bei dir** – Golden Hour morgens/abends und blaue Stunde für deinen Standort.
 - **Bildaufbau** – Ausschnitt (Ganzkörper, Knie, Hüfte, Porträt), Position nach der Drittel-Regel, Platz über dem Kopf.
 - **Orte in deiner Nähe** – Die App erkennt die Kulisse (Strand, Café, Wald, Altstadt, Blumen …) und sucht
   passende Spots auf der Karte, inklusive Entfernung und Route. Wenn das Bild GPS-Daten hat, wird auch der Original-Ort angezeigt.
 
 ### Nachshoot-Kamera
-- Vorlage halbtransparent über dem Kamerabild (Deckkraft einstellbar)
+- Vorlage halbtransparent über dem Kamerabild (Deckkraft einstellbar) – als Foto oder als ausgeschnittene **Silhouette**
+- Vorlage **spiegeln** (bei Selfies automatisch) sowie **verschieben & zoomen** mit den Fingern
+- **Auto-Auslöser**: löst aus, sobald du die Pose ~1 Sekunde hältst (Vibration, wenn sie einrastet)
 - Pinkes Pose-Skelett der Vorlage und dein Live-Skelett darüber
 - **Pose-Match in %** live (grün ab 85 %), spiegelverkehrt zählt auch
 - Empfohlener Zoom und empfohlene Belichtung sind schon eingestellt
@@ -68,6 +71,9 @@ PinPose/
     PinterestImporter.swift   Pin-Link → Bild
     CameraController.swift    AVFoundation-Kamera, Live-Pose, Foto speichern
     PlaceFinder.swift         Standort + Apple-Maps-Suche
+    SunCalculator.swift       Sonnenauf-/untergang, Golden Hour
     LookStore.swift           Speichern der Looks (JSON + JPEG)
   Views/                      SwiftUI-Oberfläche
 ```
+
+Siehe auch [MARKTRECHERCHE.md](./MARKTRECHERCHE.md) – Konkurrenz-Apps und wie sich PinPose abhebt.

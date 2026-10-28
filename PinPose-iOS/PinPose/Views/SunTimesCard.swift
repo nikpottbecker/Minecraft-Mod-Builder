@@ -1,0 +1,68 @@
+import SwiftUI
+
+/// Today's golden hour and blue hour at the user's location.
+struct SunTimesCard: View {
+    /// Highlights the evening golden hour when the reference was shot in it.
+    var highlightGoldenHour = false
+
+    @StateObject private var locator = PlaceFinder()
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Label("Licht heute bei dir", systemImage: "sun.horizon.fill")
+                .font(.title3.bold())
+
+            Group {
+                if let location = locator.userLocation,
+                   let times = SunCalculator.sunTimes(on: Date(), latitude: location.coordinate.latitude,
+                                                      longitude: location.coordinate.longitude) {
+                    VStack(spacing: 8) {
+                        row(icon: "sunrise.fill", title: "Golden Hour morgens", interval: times.morningGoldenHour)
+                        row(icon: "sunset.fill", title: "Golden Hour abends", interval: times.eveningGoldenHour,
+                            highlighted: highlightGoldenHour)
+                        row(icon: "moon.haze.fill", title: "Blaue Stunde", interval: times.eveningBlueHour)
+                    }
+                } else if locator.locationDenied {
+                    Text("Erlaube den Standortzugriff, um die Golden Hour für deinen Ort zu berechnen.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                } else if locator.userLocation != nil {
+                    Text("An deinem Ort geht die Sonne heute nicht auf oder unter.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                } else {
+                    Button {
+                        locator.locate()
+                    } label: {
+                        Label("Golden Hour für meinen Ort berechnen", systemImage: "location.fill")
+                    }
+                }
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        }
+    }
+
+    private func row(icon: String, title: String, interval: DateInterval, highlighted: Bool = false) -> some View {
+        HStack {
+            Image(systemName: icon)
+                .foregroundStyle(Color.orange)
+                .frame(width: 24)
+            Text(title)
+                .font(.subheadline.weight(highlighted ? .bold : .regular))
+            if highlighted {
+                Text("wie im Bild")
+                    .font(.caption2.bold())
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(Color.accentColor, in: Capsule())
+            }
+            Spacer()
+            Text("\(interval.start.formatted(date: .omitted, time: .shortened)) – \(interval.end.formatted(date: .omitted, time: .shortened))")
+                .font(.subheadline.monospacedDigit())
+                .foregroundStyle(.secondary)
+        }
+    }
+}

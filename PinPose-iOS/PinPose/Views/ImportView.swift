@@ -117,7 +117,7 @@ struct ImportView: View {
         status = "Analysiere Pose, Licht & Kamera …"
         do {
             let result = try await ImageAnalyzer.analyze(data: data)
-            let look = store.add(image: result.image, analysis: result.analysis)
+            let look = store.add(image: result.image, analysis: result.analysis, silhouette: result.silhouette)
             isWorking = false
             onFinished(look)
         } catch {

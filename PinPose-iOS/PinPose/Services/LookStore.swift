@@ -29,12 +29,24 @@ final class LookStore: ObservableObject {
         return image
     }
 
+    /// The cut-out person of the reference, if one was created on import.
+    func silhouette(for look: Look) -> UIImage? {
+        let key = "\(look.id.uuidString)-mask" as NSString
+        if let cached = cache.object(forKey: key) { return cached }
+        guard let image = UIImage(contentsOfFile: folder.appendingPathComponent(Self.silhouetteFileName(for: look.id)).path) else { return nil }
+        cache.setObject(image, forKey: key)
+        return image
+    }
+
     @discardableResult
-    func add(image: UIImage, analysis: ShotAnalysis) -> Look {
+    func add(image: UIImage, analysis: ShotAnalysis, silhouette: UIImage? = nil) -> Look {
         let look = Look(id: UUID(), title: Self.defaultTitle(for: analysis), createdAt: Date(),
                         analysis: analysis, bestScore: nil)
         if let data = image.jpegData(compressionQuality: 0.9) {
             try? data.write(to: folder.appendingPathComponent(look.imageFileName), options: .atomic)
+        }
+        if let silhouette, let data = silhouette.pngData() {
+            try? data.write(to: folder.appendingPathComponent(Self.silhouetteFileName(for: look.id)), options: .atomic)
         }
         cache.setObject(image, forKey: look.id.uuidString as NSString)
         looks.insert(look, at: 0)
@@ -44,6 +56,7 @@ final class LookStore: ObservableObject {
 
     func delete(_ look: Look) {
         try? FileManager.default.removeItem(at: folder.appendingPathComponent(look.imageFileName))
+        try? FileManager.default.removeItem(at: folder.appendingPathComponent(Self.silhouetteFileName(for: look.id)))
         cache.removeObject(forKey: look.id.uuidString as NSString)
         looks.removeAll { $0.id == look.id }
         save()
@@ -71,6 +84,10 @@ final class LookStore: ObservableObject {
     private func save() {
         guard let data = try? JSONEncoder().encode(looks) else { return }
         try? data.write(to: indexURL, options: .atomic)
+    }
+
+    private static func silhouetteFileName(for id: UUID) -> String {
+        "\(id.uuidString)-mask.png"
     }
 
     private static func defaultTitle(for analysis: ShotAnalysis) -> String {

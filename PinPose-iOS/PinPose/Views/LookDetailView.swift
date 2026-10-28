@@ -78,6 +78,7 @@ struct LookDetailView: View {
                 AdviceSection(title: "So posierst du", icon: "figure.stand", advice: analysis.poseAdvice)
                 AdviceSection(title: "Kamera-Einstellungen", icon: "camera.fill", advice: analysis.cameraAdvice)
                 AdviceSection(title: "Licht & Stimmung", icon: "sun.max.fill", advice: analysis.lightAdvice)
+                SunTimesCard(highlightGoldenHour: analysis.lightAdvice.contains { $0.title == "Golden Hour" })
                 AdviceSection(title: "Bildaufbau", icon: "square.grid.3x3", advice: analysis.compositionAdvice)
                 PlacesSection(places: analysis.places, exif: analysis.exif)
 
@@ -134,7 +135,7 @@ struct LookDetailView: View {
             }
         }
         .fullScreenCover(isPresented: $showCamera) {
-            CameraView(look: look, referenceImage: image)
+            CameraView(look: look, referenceImage: image, silhouette: store.silhouette(for: look))
                 .environmentObject(store)
         }
     }

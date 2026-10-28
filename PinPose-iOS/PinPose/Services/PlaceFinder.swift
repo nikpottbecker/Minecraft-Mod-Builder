@@ -25,7 +25,7 @@ final class PlaceFinder: NSObject, ObservableObject, CLLocationManagerDelegate {
         errorMessage = nil
         defer { isSearching = false }
 
-        requestLocation()
+        locate()
         let location = await waitForLocation(timeout: 6)
 
         let request = MKLocalSearch.Request()
@@ -59,7 +59,8 @@ final class PlaceFinder: NSObject, ObservableObject, CLLocationManagerDelegate {
         item.placemark.location?.distance(from: location) ?? .greatestFiniteMagnitude
     }
 
-    private func requestLocation() {
+    /// Asks for permission if needed and requests a single location fix.
+    func locate() {
         switch manager.authorizationStatus {
         case .notDetermined:
             manager.requestWhenInUseAuthorization()

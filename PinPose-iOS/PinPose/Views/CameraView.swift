@@ -4,6 +4,7 @@ import SwiftUI
 struct CameraView: View {
     let look: Look
     let referenceImage: UIImage?
+    var silhouette: UIImage?
 
     @EnvironmentObject private var store: LookStore
     @Environment(\.dismiss) private var dismiss
@@ -20,6 +21,19 @@ struct CameraView: View {
     @State private var flashScreen = false
     @State private var showCompare = false
 
+    @State private var overlayStyle: OverlayStyle = .photo
+    @State private var mirrorOverlay = false
+    @State private var adjustingOverlay = false
+    @State private var overlayScale: CGFloat = 1
+    @State private var overlayOffset: CGSize = .zero
+    @GestureState private var pinchScale: CGFloat = 1
+    @GestureState private var dragOffset: CGSize = .zero
+
+    @State private var autoCapture = false
+    @State private var matchingSince: Date?
+    @State private var lastAutoCapture = Date.distantPast
+    @State private var wasMatching = false
+
     private var tips: [Advice] {
         look.analysis.poseAdvice + look.analysis.cameraAdvice.prefix(3)
     }
@@ -33,6 +47,10 @@ struct CameraView: View {
 
             overlays
                 .ignoresSafeArea()
+
+            if adjustingOverlay {
+                adjustLayer
+            }
 
             controls
 
@@ -66,6 +84,13 @@ struct CameraView: View {
             UIApplication.shared.isIdleTimerDisabled = false
             camera.stop()
         }
+        .onChange(of: camera.position) { _, position in
+            // A selfie preview is mirrored, so mirror the reference too.
+            mirrorOverlay = position == .front
+        }
+        .onChange(of: camera.matchScore) { _, score in
+            handleMatch(score)
+        }
         .onChange(of: camera.lastPhotoScore) { _, score in
             if let score { store.recordScore(score, for: look.id) }
         }
@@ -80,20 +105,27 @@ struct CameraView: View {
     private var overlays: some View {
         GeometryReader { geo in
             ZStack {
-                if showGhost, let referenceImage {
-                    Image(uiImage: referenceImage)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: geo.size.width, height: geo.size.height)
-                        .clipped()
-                        .opacity(ghostOpacity)
+                ZStack {
+                    if showGhost, let ghost = ghostImage {
+                        Image(uiImage: ghost)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: geo.size.width, height: geo.size.height)
+                            .opacity(overlayStyle == .silhouette ? max(ghostOpacity, 0.3) : ghostOpacity)
+                    }
+                    if showSkeleton, let pose = look.analysis.pose {
+                        PoseSkeletonView(pose: pose, imageSize: look.analysis.imageSize, contentMode: .fill,
+                                         color: .pink, lineWidth: 6)
+                    }
                 }
+                .scaleEffect(x: mirrorOverlay ? -1 : 1, y: 1)
+                .scaleEffect(overlayScale * pinchScale)
+                .offset(x: overlayOffset.width + dragOffset.width, y: overlayOffset.height + dragOffset.height)
+                .frame(width: geo.size.width, height: geo.size.height)
+                .clipped()
+
                 if showGrid {
                     GridOverlay()
-                }
-                if showSkeleton, let pose = look.analysis.pose {
-                    PoseSkeletonView(pose: pose, imageSize: look.analysis.imageSize, contentMode: .fill,
-                                     color: .pink, lineWidth: 6)
                 }
                 if let live = camera.livePose {
                     PoseSkeletonView(pose: live, imageSize: camera.liveFrameSize, contentMode: .fill,
@@ -103,6 +135,30 @@ struct CameraView: View {
             .frame(width: geo.size.width, height: geo.size.height)
         }
         .allowsHitTesting(false)
+    }
+
+    private var ghostImage: UIImage? {
+        overlayStyle == .silhouette ? (silhouette ?? referenceImage) : referenceImage
+    }
+
+    /// Captures pinch and drag while the user positions the reference.
+    private var adjustLayer: some View {
+        Color.clear
+            .contentShape(Rectangle())
+            .ignoresSafeArea()
+            .gesture(
+                SimultaneousGesture(
+                    MagnifyGesture()
+                        .updating($pinchScale) { value, state, _ in state = value.magnification }
+                        .onEnded { value in overlayScale = min(max(overlayScale * value.magnification, 0.4), 3) },
+                    DragGesture()
+                        .updating($dragOffset) { value, state, _ in state = value.translation }
+                        .onEnded { value in
+                            overlayOffset.width += value.translation.width
+                            overlayOffset.height += value.translation.height
+                        }
+                )
+            )
     }
 
     private var matchColor: Color {
@@ -119,7 +175,9 @@ struct CameraView: View {
     private var controls: some View {
         VStack(spacing: 10) {
             topBar
-            if showTips, !tips.isEmpty {
+            if adjustingOverlay {
+                adjustBanner
+            } else if showTips, !tips.isEmpty {
                 tipCard
             }
             Spacer()
@@ -155,6 +213,20 @@ struct CameraView: View {
                 Toggle(isOn: $showSkeleton) { Label("Pose-Skelett", systemImage: "figure.stand") }
                 Toggle(isOn: $showGrid) { Label("Raster", systemImage: "squareshape.split.3x3") }
                 Toggle(isOn: $showTips) { Label("Tipps", systemImage: "lightbulb") }
+                if silhouette != nil {
+                    Picker("Vorlage als", selection: $overlayStyle) {
+                        ForEach(OverlayStyle.allCases) { style in
+                            Label(style.label, systemImage: style.icon).tag(style)
+                        }
+                    }
+                }
+                Toggle(isOn: $mirrorOverlay) { Label("Vorlage spiegeln", systemImage: "arrow.left.and.right.righttriangle.left.righttriangle.right") }
+                Button {
+                    showGhost = true
+                    adjustingOverlay = true
+                } label: {
+                    Label("Vorlage verschieben & zoomen", systemImage: "arrow.up.and.down.and.arrow.left.and.right")
+                }
             } label: {
                 CameraIconLabel(systemName: "slider.horizontal.3")
             }
@@ -172,6 +244,32 @@ struct CameraView: View {
             .accessibilityLabel("Kamera wechseln")
         }
         .padding(.top, 8)
+    }
+
+    private var adjustBanner: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "hand.draw.fill")
+                .font(.headline)
+                .foregroundStyle(.pink)
+            Text("Mit einem Finger verschieben, mit zwei Fingern zoomen.")
+                .font(.caption)
+            Spacer(minLength: 0)
+            Button("Zurücksetzen") {
+                withAnimation {
+                    overlayScale = 1
+                    overlayOffset = .zero
+                }
+            }
+            .font(.caption.bold())
+            Button("Fertig") { adjustingOverlay = false }
+                .font(.caption.bold())
+                .buttonStyle(.borderedProminent)
+        }
+        .foregroundStyle(.white)
+        .tint(.pink)
+        .padding(12)
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .environment(\.colorScheme, .dark)
     }
 
     private var tipCard: some View {
@@ -228,6 +326,12 @@ struct CameraView: View {
                 Text(String(format: "%+.1f", camera.exposureBias))
                     .font(.caption.monospacedDigit())
                     .frame(width: 34)
+            }
+
+            HStack(spacing: 8) {
+                ChipToggle(title: "Auto-Auslöser", systemImage: "figure.stand", isOn: $autoCapture)
+                    .disabled(look.analysis.pose == nil)
+                ChipToggle(title: "Spiegeln", systemImage: "arrow.left.and.right", isOn: $mirrorOverlay)
             }
 
             HStack(spacing: 8) {
@@ -345,6 +449,30 @@ struct CameraView: View {
         }
     }
 
+    /// Haptic when the pose locks in, and hands-free capture after holding it.
+    private func handleMatch(_ score: Double?) {
+        let matching = (score ?? 0) >= 0.85
+        if matching && !wasMatching {
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
+        }
+        wasMatching = matching
+
+        guard autoCapture, matching, countdown == nil else {
+            matchingSince = nil
+            return
+        }
+        let now = Date()
+        guard let since = matchingSince else {
+            matchingSince = now
+            return
+        }
+        if now.timeIntervalSince(since) >= 0.8, now.timeIntervalSince(lastAutoCapture) > 3 {
+            lastAutoCapture = now
+            matchingSince = nil
+            capture()
+        }
+    }
+
     private func capture() {
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         camera.capturePhoto()
@@ -352,6 +480,46 @@ struct CameraView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
             withAnimation(.easeIn(duration: 0.25)) { flashScreen = false }
         }
+    }
+}
+
+private enum OverlayStyle: String, CaseIterable, Identifiable {
+    case photo, silhouette
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .photo: return "Foto"
+        case .silhouette: return "Silhouette"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .photo: return "photo"
+        case .silhouette: return "person.fill"
+        }
+    }
+}
+
+private struct ChipToggle: View {
+    let title: String
+    let systemImage: String
+    @Binding var isOn: Bool
+
+    var body: some View {
+        Button {
+            isOn.toggle()
+        } label: {
+            Label(title, systemImage: systemImage)
+                .font(.caption.bold())
+                .foregroundStyle(isOn ? Color.black : Color.white)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 7)
+                .background(isOn ? Color.yellow : Color.black.opacity(0.45), in: Capsule())
+        }
+        .accessibilityAddTraits(isOn ? .isSelected : [])
     }
 }
 
