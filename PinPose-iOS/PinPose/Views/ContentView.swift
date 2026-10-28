@@ -1,0 +1,205 @@
+import SwiftUI
+
+struct ContentView: View {
+    @EnvironmentObject private var store: LookStore
+    @State private var path: [UUID] = []
+    @State private var showImport = false
+
+    var body: some View {
+        NavigationStack(path: $path) {
+            Group {
+                if store.looks.isEmpty {
+                    EmptyLibraryView { showImport = true }
+                } else {
+                    LibraryGrid()
+                }
+            }
+            .navigationTitle("PinPose")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showImport = true
+                    } label: {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.title2)
+                    }
+                    .accessibilityLabel("Bild hinzufügen")
+                }
+            }
+            .navigationDestination(for: UUID.self) { id in
+                LookDetailView(lookID: id)
+            }
+        }
+        .sheet(isPresented: $showImport) {
+            ImportView { look in
+                showImport = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    path.append(look.id)
+                }
+            }
+            .environmentObject(store)
+        }
+    }
+}
+
+private struct LibraryGrid: View {
+    @EnvironmentObject private var store: LookStore
+    private let columns = [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)]
+
+    var body: some View {
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 12) {
+                ForEach(store.looks) { look in
+                    NavigationLink(value: look.id) {
+                        LookCard(look: look, image: store.image(for: look))
+                    }
+                    .buttonStyle(.plain)
+                    .contextMenu {
+                        Button(role: .destructive) {
+                            store.delete(look)
+                        } label: {
+                            Label("Löschen", systemImage: "trash")
+                        }
+                    }
+                }
+            }
+            .padding()
+        }
+    }
+}
+
+private struct LookCard: View {
+    let look: Look
+    let image: UIImage?
+
+    var body: some View {
+        ZStack(alignment: .bottomLeading) {
+            Group {
+                if let image {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                } else {
+                    Color.secondary.opacity(0.2)
+                }
+            }
+            .frame(height: 230)
+            .frame(maxWidth: .infinity)
+            .clipped()
+
+            LinearGradient(colors: [.clear, .black.opacity(0.7)], startPoint: .center, endPoint: .bottom)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(look.title)
+                    .font(.subheadline.bold())
+                    .lineLimit(1)
+                if let framing = look.analysis.framing {
+                    Text(framing.label)
+                        .font(.caption2)
+                        .opacity(0.85)
+                }
+            }
+            .foregroundStyle(.white)
+            .padding(10)
+        }
+        .overlay(alignment: .topTrailing) {
+            if let score = look.bestScore {
+                ScoreBadge(score: score, compact: true)
+                    .padding(8)
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+    }
+}
+
+private struct EmptyLibraryView: View {
+    var onAdd: () -> Void
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 24) {
+                Image(systemName: "camera.on.rectangle.fill")
+                    .font(.system(size: 64))
+                    .foregroundStyle(Color.accentColor.gradient)
+                    .padding(.top, 40)
+
+                VStack(spacing: 8) {
+                    Text("Pinterest-Bilder nachshooten")
+                        .font(.title2.bold())
+                    Text("Füg ein Bild hinzu und PinPose zeigt dir Pose, Kamera-Einstellungen, Licht und passende Orte in deiner Nähe.")
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.horizontal)
+
+                VStack(alignment: .leading, spacing: 16) {
+                    StepRow(number: 1, title: "Bild einfügen", detail: "Pin-Link kopieren oder Bild aus Fotos wählen.")
+                    StepRow(number: 2, title: "Analyse ansehen", detail: "Pose, Zoom, Belichtung, Licht & Orte.")
+                    StepRow(number: 3, title: "Nachshooten", detail: "Kamera mit Vorlage als Overlay und Live-Pose-Match.")
+                }
+                .padding()
+                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .padding(.horizontal)
+
+                Button(action: onAdd) {
+                    Label("Erstes Bild hinzufügen", systemImage: "plus")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 6)
+                }
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.capsule)
+                .controlSize(.large)
+                .padding(.horizontal)
+            }
+            .padding(.bottom, 32)
+        }
+    }
+}
+
+private struct StepRow: View {
+    let number: Int
+    let title: String
+    let detail: String
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 14) {
+            Text("\(number)")
+                .font(.headline)
+                .foregroundStyle(.white)
+                .frame(width: 32, height: 32)
+                .background(Color.accentColor, in: Circle())
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title).font(.headline)
+                Text(detail).font(.subheadline).foregroundStyle(.secondary)
+            }
+        }
+    }
+}
+
+/// Pose match percentage with a traffic-light color.
+struct ScoreBadge: View {
+    let score: Double
+    var compact = false
+
+    var color: Color {
+        switch score {
+        case 0.85...: return .green
+        case 0.65...: return .orange
+        default: return .pink
+        }
+    }
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: "figure.stand")
+            Text("\(Int((score * 100).rounded())) %")
+                .monospacedDigit()
+        }
+        .font(compact ? .caption2.bold() : .subheadline.bold())
+        .foregroundStyle(.white)
+        .padding(.horizontal, compact ? 8 : 12)
+        .padding(.vertical, compact ? 4 : 6)
+        .background(color, in: Capsule())
+    }
+}
