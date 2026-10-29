@@ -108,43 +108,69 @@ struct CameraView: View {
     }
 
     private func withChangeHandlers<Content: View>(_ content: Content) -> some View {
+        withCoachHandlers(withLifecycle(content))
+    }
+
+    private func withLifecycle<Content: View>(_ content: Content) -> some View {
         content
-        .onAppear {
-            UIApplication.shared.isIdleTimerDisabled = true
-            camera.prepare(referencePose: look.analysis.pose,
-                           referenceAspect: look.analysis.aspect,
-                           zoom: look.analysis.recommendedZoom,
-                           exposureBias: look.analysis.recommendedExposureBias)
-            camera.start()
-        }
-        .onDisappear {
-            UIApplication.shared.isIdleTimerDisabled = false
-            voice.stop()
-            camera.stop()
-        }
-        .onChange(of: camera.position) { _, position in
-            // A selfie preview is mirrored, so mirror the reference too.
-            mirrorOverlay = position == .front
-        }
-        .onChange(of: framingKey, initial: true) { _, key in
-            camera.setFramingGuide(enabled: key.scale == 1 && key.offset == .zero, referenceMirrored: key.mirrored)
-        }
-        .onChange(of: camera.matchScore) { _, score in
-            handleMatch(score)
-        }
-        .onChange(of: camera.coachHint) { _, hint in
-            if coaching, speakHints, let hint { voice.say(hint.text) }
-        }
-        .onChange(of: speakHints) { _, enabled in
-            if !enabled { voice.stop() }
-        }
-        .onChange(of: camera.lastPhoto) { _, photo in
-            guard let photo else { return }
-            let previousBest = store.look(id: look.id)?.bestScore
-            let score = camera.lastPhotoScore
-            store.addShot(photo, score: score, for: look.id)
-            showToast(for: score, previousBest: previousBest)
-        }
+            .onAppear(perform: cameraAppeared)
+            .onDisappear(perform: cameraDisappeared)
+            .onChange(of: camera.position) { _, position in
+                // A selfie preview is mirrored, so mirror the reference too.
+                mirrorOverlay = position == .front
+            }
+            .onChange(of: framingKey, initial: true) { _, key in
+                updateFramingGuide(key)
+            }
+    }
+
+    private func withCoachHandlers<Content: View>(_ content: Content) -> some View {
+        content
+            .onChange(of: camera.matchScore) { _, score in
+                handleMatch(score)
+            }
+            .onChange(of: camera.coachHint) { _, hint in
+                speak(hint)
+            }
+            .onChange(of: speakHints) { _, enabled in
+                if !enabled { voice.stop() }
+            }
+            .onChange(of: camera.lastPhoto) { _, photo in
+                recordShot(photo)
+            }
+    }
+
+    private func cameraAppeared() {
+        UIApplication.shared.isIdleTimerDisabled = true
+        camera.prepare(referencePose: look.analysis.pose,
+                       referenceAspect: look.analysis.aspect,
+                       zoom: look.analysis.recommendedZoom,
+                       exposureBias: look.analysis.recommendedExposureBias)
+        camera.start()
+    }
+
+    private func cameraDisappeared() {
+        UIApplication.shared.isIdleTimerDisabled = false
+        voice.stop()
+        camera.stop()
+    }
+
+    private func updateFramingGuide(_ key: FramingGuideKey) {
+        let untouched: Bool = key.scale == 1 && key.offset == CGSize.zero
+        camera.setFramingGuide(enabled: untouched, referenceMirrored: key.mirrored)
+    }
+
+    private func speak(_ hint: PoseHint?) {
+        guard coaching, speakHints, let hint else { return }
+        voice.say(hint.text)
+    }
+
+    private func recordShot(_ photo: UIImage?) {
+        guard let photo else { return }
+        let previousBest = store.look(id: look.id)?.bestScore
+        let score = camera.lastPhotoScore
+        store.addShot(photo, score: score, for: look.id)
+        showToast(for: score, previousBest: previousBest)
     }
 
     // MARK: Overlays
