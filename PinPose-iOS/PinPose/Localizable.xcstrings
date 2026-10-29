@@ -71,6 +71,26 @@
         }
       }
     },
+    "Abend / Blaue Stunde": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Evening / blue hour"
+          }
+        }
+      }
+    },
+    "Abends oder drinnen mit Lichterkette, Kerzen oder Lampen. Belichtung runter, Handy ruhig halten.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In the evening or indoors with fairy lights, candles or lamps. Lower the exposure and hold the phone steady."
+          }
+        }
+      }
+    },
     "Alle %lld Looks nachgeshootet": {
       "localizations": {
         "en": {
@@ -91,12 +111,52 @@
         }
       }
     },
+    "Alles ist scharf – kein Porträtmodus nötig. Live Photo kann aus bleiben.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everything is sharp – no portrait mode needed. Live Photo can stay off."
+          }
+        }
+      }
+    },
     "Alles läuft auf deinem iPhone. Kein Konto, keine Uploads.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Everything runs on your iPhone. No account, no uploads."
+          }
+        }
+      }
+    },
+    "Allrounder für fast jeden Look": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Works for almost any look"
+          }
+        }
+      }
+    },
+    "Altstadt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Old town"
+          }
+        }
+      }
+    },
+    "Altstadt & Straßen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Old town & streets"
           }
         }
       }
@@ -211,12 +271,42 @@
         }
       }
     },
+    "Ausschnitt: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Framing: %@"
+          }
+        }
+      }
+    },
+    "Aussichtspunkt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Viewpoint"
+          }
+        }
+      }
+    },
     "Auto": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Auto"
+          }
+        }
+      }
+    },
+    "Auto im Bild": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Car in the picture"
           }
         }
       }
@@ -231,12 +321,92 @@
         }
       }
     },
+    "Beide Beine locker nebeneinander, Gewicht leicht auf einem Bein.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both legs relaxed side by side, weight slightly on one leg."
+          }
+        }
+      }
+    },
+    "Beide Knie gebeugt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both knees bent"
+          }
+        }
+      }
+    },
+    "Beine": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Legs"
+          }
+        }
+      }
+    },
+    "Beine überkreuzen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cross your legs"
+          }
+        }
+      }
+    },
     "Belichtung": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Exposure"
+          }
+        }
+      }
+    },
+    "Belichtung %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exposure %@"
+          }
+        }
+      }
+    },
+    "Belichtung ±0": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exposure ±0"
+          }
+        }
+      }
+    },
+    "Berge & Aussicht": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mountains & views"
+          }
+        }
+      }
+    },
+    "Berge oder Felsen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mountains or rocks"
           }
         }
       }
@@ -251,12 +421,42 @@
         }
       }
     },
+    "Beug dein linkes Knie leicht und dreh es etwas nach innen – das andere Bein trägt das Gewicht.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bend your left knee slightly and turn it in a little – the other leg carries the weight."
+          }
+        }
+      }
+    },
+    "Beug dein rechtes Knie leicht und dreh es etwas nach innen – das andere Bein trägt das Gewicht.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bend your right knee slightly and turn it in a little – the other leg carries the weight."
+          }
+        }
+      }
+    },
     "Bewegung wirkt natürlich": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Movement looks natural"
+          }
+        }
+      }
+    },
+    "Bewölkter Himmel oder Schatten unter Bäumen/Gebäuden – gleichmäßig und schmeichelhaft.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cloudy sky or shade under trees/buildings – even and flattering."
           }
         }
       }
@@ -351,12 +551,92 @@
         }
       }
     },
+    "Blende das Vorlagenbild in der Kamera ein und richte Horizont und Linien daran aus.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show the original in the camera and line up the horizon and lines with it."
+          }
+        }
+      }
+    },
+    "Blick in die Kamera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Look into the camera"
+          }
+        }
+      }
+    },
+    "Blick nach unten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Look down"
+          }
+        }
+      }
+    },
+    "Blick zur Seite": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Look to the side"
+          }
+        }
+      }
+    },
     "Blitz": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Flash"
+          }
+        }
+      }
+    },
+    "Blitz-Look": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Flash look"
+          }
+        }
+      }
+    },
+    "Blumen & Gärten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Flowers & gardens"
+          }
+        }
+      }
+    },
+    "Blumen im Bild": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Flowers in the picture"
+          }
+        }
+      }
+    },
+    "Botanischer Garten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Botanical garden"
           }
         }
       }
@@ -371,12 +651,72 @@
         }
       }
     },
+    "Brücke": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bridge"
+          }
+        }
+      }
+    },
+    "Brücke im Bild": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bridge in the picture"
+          }
+        }
+      }
+    },
     "Business- und Profilbild": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Business & profile picture"
+          }
+        }
+      }
+    },
+    "Bäume und Natur": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trees and nature"
+          }
+        }
+      }
+    },
+    "Ca. 1 Stunde vor Sonnenuntergang (oder nach Sonnenaufgang). Die tiefe Sonne gibt warmes, weiches Licht.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About 1 hour before sunset (or after sunrise). The low sun gives warm, soft light."
+          }
+        }
+      }
+    },
+    "Café": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Café"
+          }
+        }
+      }
+    },
+    "Café- oder Food-Stimmung": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Café or food vibe"
           }
         }
       }
@@ -427,6 +767,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "The picture couldn't be read. Try another one."
+          }
+        }
+      }
+    },
+    "Das Gesicht ist von der Kamera weggedreht.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The face is turned away from the camera."
+          }
+        }
+      }
+    },
+    "Das ist das typische Pinterest-Format.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That's the typical Pinterest format."
           }
         }
       }
@@ -491,12 +851,102 @@
         }
       }
     },
+    "Der Hintergrund ist stark unscharf. Porträtmodus an, Tiefe auf ca. f/2 stellen. Mindestens 3 m Abstand zwischen Person und Hintergrund.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The background is very blurry. Turn on portrait mode and set depth to about f/2. Keep at least 3 m between the person and the background."
+          }
+        }
+      }
+    },
     "Der Klassiker für Outfit-Fotos": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "The classic for outfit shots"
+          }
+        }
+      }
+    },
+    "Der Kopf ist nah am oberen Bildrand – eng geschnitten.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The head is close to the top edge – a tight crop."
+          }
+        }
+      }
+    },
+    "Die Füße sind ganz unten im Bild – aufpassen, dass sie nicht abgeschnitten werden.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The feet are at the very bottom – make sure they don't get cut off."
+          }
+        }
+      }
+    },
+    "Die Knie sind angezogen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The knees are pulled up."
+          }
+        }
+      }
+    },
+    "Die Lichtquelle ist hinter der Person. Stell dich mit dem Rücken zur Sonne und tippe zum Belichten auf das Gesicht.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The light is behind the person. Stand with your back to the sun and tap the face to expose."
+          }
+        }
+      }
+    },
+    "Die Person ist viel heller als der dunkle Hintergrund – typischer Blitz-Look. In der Kamera den Blitz anschalten.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The person is much brighter than the dark background – a typical flash look. Turn on the flash in the camera."
+          }
+        }
+      }
+    },
+    "Die Person steht genau in der Bildmitte.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The person stands right in the centre."
+          }
+        }
+      }
+    },
+    "Die Schulter auf der linken Bildseite ist tiefer – lass eine Schulter locker fallen, das wirkt lässig.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The shoulder on the left of the picture is lower – let one shoulder drop, it looks relaxed."
+          }
+        }
+      }
+    },
+    "Die Schulter auf der rechten Bildseite ist tiefer – lass eine Schulter locker fallen, das wirkt lässig.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The shoulder on the right of the picture is lower – let one shoulder drop, it looks relaxed."
           }
         }
       }
@@ -521,12 +971,72 @@
         }
       }
     },
+    "Direkte Sonne": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Direct sun"
+          }
+        }
+      }
+    },
+    "Dreh deinen Körper etwa 45° von der Kamera weg – wirkt schlanker und natürlicher.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn your body about 45° away from the camera – it looks slimmer and more natural."
+          }
+        }
+      }
+    },
+    "Dreh den Kopf etwa %lld° zur Seite und schau an der Kamera vorbei.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn your head about %lld° to the side and look past the camera."
+          }
+        }
+      }
+    },
+    "Dreh der Kamera den Rücken zu und schau über die Schulter zurück.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn your back to the camera and look back over your shoulder."
+          }
+        }
+      }
+    },
+    "Dreh der Kamera den Rücken zu – z. B. Blick in die Landschaft.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn your back to the camera – e.g. looking out at the view."
+          }
+        }
+      }
+    },
     "Du hast ein Bild gespeichert, das du genau so haben willst? PinPose zeigt dir, wie es entstanden ist.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Saved a picture you want exactly like that? PinPose shows you how it was made."
+          }
+        }
+      }
+    },
+    "Ein Fuß angehoben": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One foot raised"
           }
         }
       }
@@ -557,6 +1067,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Show the introduction again"
+          }
+        }
+      }
+    },
+    "Einkaufsstraße": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shopping street"
           }
         }
       }
@@ -711,12 +1231,32 @@
         }
       }
     },
+    "Farblook: %@, %@, %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Color look: %1$@, %2$@, %3$@"
+          }
+        }
+      }
+    },
     "Fertig": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Done"
+          }
+        }
+      }
+    },
+    "Format %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Format %@"
           }
         }
       }
@@ -771,12 +1311,52 @@
         }
       }
     },
+    "Fotografiere im Hochformat und schneide danach auf %@ zu.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shoot in portrait and crop to %@ afterwards."
+          }
+        }
+      }
+    },
+    "Fotografiere im Querformat und schneide danach auf %@ zu.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shoot in landscape and crop to %@ afterwards."
+          }
+        }
+      }
+    },
     "Fotos": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Photos"
+          }
+        }
+      }
+    },
+    "Freibad": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Outdoor pool"
+          }
+        }
+      }
+    },
+    "Frontal zur Kamera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Facing the camera"
           }
         }
       }
@@ -801,6 +1381,46 @@
         }
       }
     },
+    "Führ den Arm vor den Körper – z. B. an den anderen Arm, die Tasche oder die Jacke.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bring the arm in front of the body – e.g. to the other arm, the bag or the jacket."
+          }
+        }
+      }
+    },
+    "Führ die Hand ans Gesicht – sanft ans Kinn, an die Wange oder in die Haare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bring the hand to your face – gently to the chin, the cheek or into the hair."
+          }
+        }
+      }
+    },
+    "Für ein Porträt wirkt %@ natürlicher – keine verzerrte Nase, schöner Hintergrund.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For a portrait %@ looks more natural – no distorted nose, a nicer background."
+          }
+        }
+      }
+    },
+    "Füße am Bildrand": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feet at the edge"
+          }
+        }
+      }
+    },
     "GPS-Daten aus dem Bild": {
       "localizations": {
         "en": {
@@ -821,6 +1441,56 @@
         }
       }
     },
+    "Ganzkörper mit %@ – lieber ein paar Schritte zurückgehen statt digital zu zoomen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Full body at %@ – better take a few steps back than zoom digitally."
+          }
+        }
+      }
+    },
+    "Gegenlicht": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backlight"
+          }
+        }
+      }
+    },
+    "Geh langsam in die Pose und mach Serienbilder (Auslöser gedrückt halten) – kleine Bewegungen wirken natürlicher als Stillstand.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move slowly into the pose and shoot a burst (hold the shutter) – small movements look more natural than standing still."
+          }
+        }
+      }
+    },
+    "Geh leicht in die Knie oder lauf locker auf die Kamera zu (Walking-Shot).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bend your knees a little or walk casually towards the camera (walking shot)."
+          }
+        }
+      }
+    },
+    "Gesicht abgewandt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Face turned away"
+          }
+        }
+      }
+    },
     "Gespeichert": {
       "localizations": {
         "en": {
@@ -837,6 +1507,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Saved · %@"
+          }
+        }
+      }
+    },
+    "Gewicht auf ein Bein, Schultern locker, Hände beschäftigen (Haare, Jacke, Tasche).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weight on one leg, shoulders relaxed, keep your hands busy (hair, jacket, bag)."
+          }
+        }
+      }
+    },
+    "Golden Hour": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Golden hour"
           }
         }
       }
@@ -891,6 +1581,26 @@
         }
       }
     },
+    "Graffiti / Wandbild": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Graffiti / mural"
+          }
+        }
+      }
+    },
+    "Großer Schritt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Big step"
+          }
+        }
+      }
+    },
     "Gut! Schau dir Arme und Beine in der Vorlage nochmal an.": {
       "localizations": {
         "en": {
@@ -911,12 +1621,32 @@
         }
       }
     },
+    "Halbnah mit %@: Die Proportionen bleiben natürlich.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Medium shot at %@: the proportions stay natural."
+          }
+        }
+      }
+    },
     "Halte das iPhone weiter weg, bis du ganz im Bild bist.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Hold the iPhone further away until you're fully in frame."
+          }
+        }
+      }
+    },
+    "Halte die Kamera etwa auf Brust- bis Augenhöhe der Person und gerade (Raster nutzen).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold the camera at about chest to eye height of the person and keep it level (use the grid)."
           }
         }
       }
@@ -941,12 +1671,92 @@
         }
       }
     },
+    "Hand in die Hüfte stützen, Ellbogen nach außen – so entsteht Luft zwischen Arm und Körper.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rest the hand on the hip, elbow out – it leaves space between arm and body."
+          }
+        }
+      }
+    },
+    "Hand locker an die Hüfte oder in die Hosentasche.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hand relaxed on the hip or in the pocket."
+          }
+        }
+      }
+    },
+    "Heb das Kinn leicht an und schau nach oben.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lift your chin slightly and look up."
+          }
+        }
+      }
+    },
+    "Heb den linken Arm über den Kopf – z. B. Hand in die Haare oder locker an den Hinterkopf.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raise your left arm above your head – e.g. hand in the hair or resting on the back of the head."
+          }
+        }
+      }
+    },
+    "Heb den rechten Arm über den Kopf – z. B. Hand in die Haare oder locker an den Hinterkopf.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raise your right arm above your head – e.g. hand in the hair or resting on the back of the head."
+          }
+        }
+      }
+    },
+    "Heb einen Fuß leicht an (Zehenspitze) oder geh in die Bewegung.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lift one foot slightly (on tiptoe) or move into a step."
+          }
+        }
+      }
+    },
     "Helligkeit, Kontrast, Farben und Weißabgleich wie im Original.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Brightness, contrast, colors and white balance like the original."
+          }
+        }
+      }
+    },
+    "Hinsetzen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sit down"
+          }
+        }
+      }
+    },
+    "Historisches Gebäude": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Historic building"
           }
         }
       }
@@ -981,6 +1791,16 @@
         }
       }
     },
+    "Hüfte zur Seite (S-Kurve)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hip to the side (S-curve)"
+          }
+        }
+      }
+    },
     "Ich": {
       "localizations": {
         "en": {
@@ -997,6 +1817,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Found in the picture"
+          }
+        }
+      }
+    },
+    "Im Bild wurde keine Pose gefunden. Nutze das halbtransparente Vorlagenbild in der Kamera, um den Bildausschnitt nachzubauen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No pose was found in the picture. Use the see-through original in the camera to rebuild the framing."
           }
         }
       }
@@ -1061,6 +1891,16 @@
         }
       }
     },
+    "Innenraum – kannst du zu Hause nachstellen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Indoors – you can recreate it at home"
+          }
+        }
+      }
+    },
     "Jetzt nachshooten": {
       "localizations": {
         "en": {
@@ -1101,6 +1941,36 @@
         }
       }
     },
+    "Kamera auf Brusthöhe": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Camera at chest height"
+          }
+        }
+      }
+    },
+    "Kamera auf Hüft- oder Kniehöhe, leicht nach oben neigen – das macht lange Beine. Person steht nah am unteren Bildrand.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Camera at hip or knee height, tilted slightly up – it makes long legs. The person stands near the bottom edge."
+          }
+        }
+      }
+    },
+    "Kamera erhöht": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Camera raised"
+          }
+        }
+      }
+    },
     "Kamera etwas nach links schwenken": {
       "localizations": {
         "en": {
@@ -1117,6 +1987,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pan the camera a little right"
+          }
+        }
+      }
+    },
+    "Kamera etwas über Augenhöhe halten und leicht nach unten neigen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold the camera a little above eye height and tilt it slightly down."
+          }
+        }
+      }
+    },
+    "Kamera tief halten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold the camera low"
           }
         }
       }
@@ -1141,6 +2031,16 @@
         }
       }
     },
+    "Kaum Platz über dem Kopf": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Little room above the head"
+          }
+        }
+      }
+    },
     "Kein Kamerazugriff": {
       "localizations": {
         "en": {
@@ -1161,12 +2061,42 @@
         }
       }
     },
+    "Keine Person erkannt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No person found"
+          }
+        }
+      }
+    },
     "Keine Vorlage zur Hand? Nimm eine dieser Posen, PinPose coacht dich genauso durch.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "No picture at hand? Pick one of these poses – PinPose coaches you just the same."
+          }
+        }
+      }
+    },
+    "Kinn hoch": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chin up"
+          }
+        }
+      }
+    },
+    "Kontrast %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contrast %@"
           }
         }
       }
@@ -1191,6 +2121,16 @@
         }
       }
     },
+    "Kopf neigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tilt your head"
+          }
+        }
+      }
+    },
     "Kopf und Schultern füllen das Bild.": {
       "localizations": {
         "en": {
@@ -1201,12 +2141,62 @@
         }
       }
     },
+    "Kunst-Kulisse": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Art backdrop"
+          }
+        }
+      }
+    },
+    "Kurz nach Sonnenuntergang. Nachtmodus oder Blitz verwenden.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Just after sunset. Use night mode or the flash."
+          }
+        }
+      }
+    },
     "Lange drücken für Pose-Ideen": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Long press for pose ideas"
+          }
+        }
+      }
+    },
+    "Lass den Arm locker hängen – leicht vom Körper weg, damit er nicht flach wirkt.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Let the arm hang loosely – slightly away from the body so it doesn't look flat."
+          }
+        }
+      }
+    },
+    "Leicht schräg (ca. 45°)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slightly angled (about 45°)"
+          }
+        }
+      }
+    },
+    "Leichte Unschärfe (f/2.8–4)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slight blur (f/2.8–4)"
           }
         }
       }
@@ -1291,6 +2281,16 @@
         }
       }
     },
+    "Linker Arm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Left arm"
+          }
+        }
+      }
+    },
     "Linkes Knie": {
       "localizations": {
         "en": {
@@ -1371,6 +2371,16 @@
         }
       }
     },
+    "Mit %@ passt der Ausschnitt bis zu den Knien.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At %@ the frame fits down to the knees."
+          }
+        }
+      }
+    },
     "Mit Farblook in Fotos sichern": {
       "localizations": {
         "en": {
@@ -1391,6 +2401,36 @@
         }
       }
     },
+    "Museum": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Museum"
+          }
+        }
+      }
+    },
+    "Museum / Galerie": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Museum / gallery"
+          }
+        }
+      }
+    },
+    "Nachbearbeitung in der Fotos-App (Bearbeiten → Anpassen): %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit in the Photos app (Edit → Adjust): %@."
+          }
+        }
+      }
+    },
     "Nachgeshootet": {
       "localizations": {
         "en": {
@@ -1407,6 +2447,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Recreate with a live coach"
+          }
+        }
+      }
+    },
+    "Natürlich bleiben": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stay natural"
+          }
+        }
+      }
+    },
+    "Neige deinen Kopf leicht zur Seite (ca. %lld°).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tilt your head slightly to the side (about %lld°)."
           }
         }
       }
@@ -1437,6 +2497,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Shoot again"
+          }
+        }
+      }
+    },
+    "Normaler Fotomodus": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Normal photo mode"
+          }
+        }
+      }
+    },
+    "Normales Tageslicht. Am schönsten, wenn das Licht schräg von vorne kommt (z. B. Fenster neben der Kamera).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Normal daylight. Nicest when the light comes from the front at an angle (e.g. a window next to the camera)."
           }
         }
       }
@@ -1501,6 +2581,16 @@
         }
       }
     },
+    "Original-Brennweite ca. %lld mm (Kleinbild) – entspricht am iPhone etwa %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Original focal length about %1$lld mm (full frame) – roughly %2$@ on the iPhone."
+          }
+        }
+      }
+    },
     "Original-Ort": {
       "localizations": {
         "en": {
@@ -1517,6 +2607,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Show original spot"
+          }
+        }
+      }
+    },
+    "Originale Kameradaten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Original camera data"
           }
         }
       }
@@ -1551,6 +2651,46 @@
         }
       }
     },
+    "Park": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Park"
+          }
+        }
+      }
+    },
+    "Park oder Wiese": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Park or meadow"
+          }
+        }
+      }
+    },
+    "Parkhaus": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parking garage"
+          }
+        }
+      }
+    },
+    "Parkhaus-Dach": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parking garage rooftop"
+          }
+        }
+      }
+    },
     "Passende Orte finden": {
       "localizations": {
         "en": {
@@ -1577,6 +2717,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Perfect light for “%@”. Grab your iPhone and go!"
+          }
+        }
+      }
+    },
+    "Person links": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Person on the left"
+          }
+        }
+      }
+    },
+    "Person mittig": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Person in the centre"
+          }
+        }
+      }
+    },
+    "Person rechts": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Person on the right"
           }
         }
       }
@@ -1671,12 +2841,62 @@
         }
       }
     },
+    "Platziere die Person auf der linken Drittel-Linie, rechts bleibt Raum für die Umgebung.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Place the person on the left third line and leave room on the right for the surroundings."
+          }
+        }
+      }
+    },
+    "Platziere die Person auf der rechten Drittel-Linie, links bleibt Raum für die Umgebung.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Place the person on the right third line and leave room on the left for the surroundings."
+          }
+        }
+      }
+    },
+    "Pool im Bild": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pool in the picture"
+          }
+        }
+      }
+    },
     "Porträt": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Portrait"
+          }
+        }
+      }
+    },
+    "Porträtmodus (f/1.8–2.2)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Portrait mode (f/1.8–2.2)"
+          }
+        }
+      }
+    },
+    "Porträtmodus mit Tiefe ca. f/2.8–4 – oder einfach mehr Abstand zum Hintergrund und 2× Zoom.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Portrait mode with depth around f/2.8–4 – or simply more distance to the background and 2× zoom."
           }
         }
       }
@@ -1761,12 +2981,32 @@
         }
       }
     },
+    "Profi-Trick": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pro tip"
+          }
+        }
+      }
+    },
     "Raster": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Grid"
+          }
+        }
+      }
+    },
+    "Raster nutzen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use the grid"
           }
         }
       }
@@ -1801,12 +3041,32 @@
         }
       }
     },
+    "Rechter Arm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Right arm"
+          }
+        }
+      }
+    },
     "Rechtes Knie": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Right knee"
+          }
+        }
+      }
+    },
+    "Rodelberg": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sledding hill"
           }
         }
       }
@@ -1831,12 +3091,62 @@
         }
       }
     },
+    "Rücken zur Kamera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back to the camera"
+          }
+        }
+      }
+    },
+    "Schau direkt in die Linse – Kinn leicht nach vorne und unten.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Look straight into the lens – chin slightly forward and down."
+          }
+        }
+      }
+    },
     "Schließen": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Close"
+          }
+        }
+      }
+    },
+    "Schloss": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Castle"
+          }
+        }
+      }
+    },
+    "Schloss & Historisches": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Castles & history"
+          }
+        }
+      }
+    },
+    "Schnee im Bild": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Snow in the picture"
           }
         }
       }
@@ -1861,12 +3171,62 @@
         }
       }
     },
+    "Schultern schräg": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shoulders tilted"
+          }
+        }
+      }
+    },
     "Schultern schräger halten": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Tilt the shoulders more"
+          }
+        }
+      }
+    },
+    "Schwimmbad": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Swimming pool"
+          }
+        }
+      }
+    },
+    "Schöne Fassaden und Gassen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pretty facades and alleys"
+          }
+        }
+      }
+    },
+    "See": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lake"
+          }
+        }
+      }
+    },
+    "See oder Fluss": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lake or river"
           }
         }
       }
@@ -1881,6 +3241,16 @@
         }
       }
     },
+    "Seitlich zur Kamera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Side on to the camera"
+          }
+        }
+      }
+    },
     "Selbstauslöser": {
       "localizations": {
         "en": {
@@ -1891,12 +3261,72 @@
         }
       }
     },
+    "Senk den Blick – z. B. auf den Boden, deine Hände oder dein Outfit.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lower your gaze – e.g. to the ground, your hands or your outfit."
+          }
+        }
+      }
+    },
+    "Setz dich hin – z. B. auf eine Mauer, Treppe, Bank oder den Boden.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sit down – e.g. on a wall, stairs, a bench or the ground."
+          }
+        }
+      }
+    },
+    "Shopping-Kulisse": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shopping backdrop"
+          }
+        }
+      }
+    },
+    "Shopping-Straße": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shopping street"
+          }
+        }
+      }
+    },
     "Sichern": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Save"
+          }
+        }
+      }
+    },
+    "Sie füllt ca. %lld % der Bildhöhe.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "They fill about %lld % of the frame height."
+          }
+        }
+      }
+    },
+    "Sie füllt ca. %lld %% der Bildhöhe.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "They fill about %lld %% of the frame height."
           }
         }
       }
@@ -1931,6 +3361,16 @@
         }
       }
     },
+    "Sonnenuntergang-Spot": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sunset spot"
+          }
+        }
+      }
+    },
     "Spiegeln": {
       "localizations": {
         "en": {
@@ -1941,12 +3381,142 @@
         }
       }
     },
+    "Stadt-Kulisse": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "City backdrop"
+          }
+        }
+      }
+    },
+    "Standbein & Spielbein": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standing leg & free leg"
+          }
+        }
+      }
+    },
     "Standort nur für Golden Hour und Orte in der Nähe – er wird nicht gespeichert.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Location is only used for golden hour and nearby spots – it is never stored."
+          }
+        }
+      }
+    },
+    "Starte mit %@ und vergleiche mit der Vorlage.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start with %@ and compare with the original."
+          }
+        }
+      }
+    },
+    "Stell dich gerade zur Kamera, Schultern locker nach hinten und unten.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stand straight to the camera, shoulders relaxed back and down."
+          }
+        }
+      }
+    },
+    "Stell dich im Profil zur Kamera – die Schultern zeigen nicht zur Linse.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stand in profile to the camera – the shoulders don't point at the lens."
+          }
+        }
+      }
+    },
+    "Stell dich im Profil zur Kamera.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stand in profile to the camera."
+          }
+        }
+      }
+    },
+    "Stell die Füße weit auseinander oder mach einen großen Schritt – wirkt dynamisch.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Put your feet wide apart or take a big step – it looks dynamic."
+          }
+        }
+      }
+    },
+    "Stell ein Bein vor das andere und kreuze die Füße – das macht die Silhouette schmal.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Put one leg in front of the other and cross your feet – it makes a slim silhouette."
+          }
+        }
+      }
+    },
+    "Strand": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beach"
+          }
+        }
+      }
+    },
+    "Strand oder Meer im Bild": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beach or sea in the picture"
+          }
+        }
+      }
+    },
+    "Streck den linken Arm zur Seite aus.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stretch your left arm out to the side."
+          }
+        }
+      }
+    },
+    "Streck den rechten Arm zur Seite aus.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stretch your right arm out to the side."
+          }
+        }
+      }
+    },
+    "Street Art": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Street art"
           }
         }
       }
@@ -1971,6 +3541,66 @@
         }
       }
     },
+    "Sättigung %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saturation %@"
+          }
+        }
+      }
+    },
+    "Tageslicht": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daylight"
+          }
+        }
+      }
+    },
+    "Tagsüber bei Sonnenschein, harte Schatten. Achte auf Schatten im Gesicht – Sonnenbrille oder Hut helfen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daytime sunshine with hard shadows. Watch for shadows on the face – sunglasses or a hat help."
+          }
+        }
+      }
+    },
+    "Tippe auf das Gesicht und zieh den Sonnen-Regler nach oben (ca. %@ EV). In der PinPose-Kamera ist das schon voreingestellt.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap the face and drag the sun slider up (about %@ EV). The PinPose camera already has this preset."
+          }
+        }
+      }
+    },
+    "Tippe auf das Gesicht und zieh den Sonnen-Regler nach unten (ca. %@ EV). In der PinPose-Kamera ist das schon voreingestellt.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap the face and drag the sun slider down (about %@ EV). The PinPose camera already has this preset."
+          }
+        }
+      }
+    },
+    "Tippe auf das Gesicht – damit sitzen Fokus und Belichtung auf der Person.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap the face – so focus and exposure are on the person."
+          }
+        }
+      }
+    },
     "Tipps": {
       "localizations": {
         "en": {
@@ -1987,6 +3617,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Title"
+          }
+        }
+      }
+    },
+    "Treppe": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stairs"
+          }
+        }
+      }
+    },
+    "Treppe im Bild": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stairs in the picture"
           }
         }
       }
@@ -2021,12 +3671,52 @@
         }
       }
     },
+    "Verlagere dein Gewicht auf ein Bein, sodass die Hüfte auf der linken Bildseite höher ist.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shift your weight onto one leg so the hip on the left of the picture is higher."
+          }
+        }
+      }
+    },
+    "Verlagere dein Gewicht auf ein Bein, sodass die Hüfte auf der rechten Bildseite höher ist.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shift your weight onto one leg so the hip on the right of the picture is higher."
+          }
+        }
+      }
+    },
     "Version": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Version"
+          }
+        }
+      }
+    },
+    "Viel Himmel oder Umgebung über der Person zeigen – die Person ist eher klein im unteren Bildteil.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show lots of sky or surroundings above the person – they are fairly small in the lower part."
+          }
+        }
+      }
+    },
+    "Viel Raum über dem Kopf": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lots of room above the head"
           }
         }
       }
@@ -2101,6 +3791,36 @@
         }
       }
     },
+    "Wald": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Forest"
+          }
+        }
+      }
+    },
+    "Warmes Kunstlicht": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warm artificial light"
+          }
+        }
+      }
+    },
+    "Wasser im Hintergrund": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Water in the background"
+          }
+        }
+      }
+    },
     "Weiches Licht": {
       "localizations": {
         "en": {
@@ -2117,6 +3837,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Next"
+          }
+        }
+      }
+    },
+    "Weiter Himmel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wide sky"
           }
         }
       }
@@ -2151,6 +3881,46 @@
         }
       }
     },
+    "Wiese oder Park": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meadow or park"
+          }
+        }
+      }
+    },
+    "Winkel den linken Arm an (ca. %lld°), die Hand entspannt.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bend your left arm (about %lld°), hand relaxed."
+          }
+        }
+      }
+    },
+    "Winkel den rechten Arm an (ca. %lld°), die Hand entspannt.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bend your right arm (about %lld°), hand relaxed."
+          }
+        }
+      }
+    },
+    "Winterlandschaft": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Winter landscape"
+          }
+        }
+      }
+    },
     "Wird in Fotos gespeichert …": {
       "localizations": {
         "en": {
@@ -2171,12 +3941,42 @@
         }
       }
     },
+    "Wärme %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warmth %@"
+          }
+        }
+      }
+    },
     "Zoom": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Zoom"
+          }
+        }
+      }
+    },
+    "Zoom: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zoom: %@"
+          }
+        }
+      }
+    },
+    "Zuhause": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At home"
           }
         }
       }
@@ -2191,12 +3991,92 @@
         }
       }
     },
+    "ausgewogen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "balanced"
+          }
+        }
+      }
+    },
+    "dunkel & moody": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "dark & moody"
+          }
+        }
+      }
+    },
+    "entsättigt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "desaturated"
+          }
+        }
+      }
+    },
+    "hell & airy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "light & airy"
+          }
+        }
+      }
+    },
     "höher": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "higher"
+          }
+        }
+      }
+    },
+    "kräftige Farben": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "vivid colors"
+          }
+        }
+      }
+    },
+    "kühl": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cool"
+          }
+        }
+      }
+    },
+    "natürliche Farben": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "natural colors"
+          }
+        }
+      }
+    },
+    "neutral": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "neutral"
           }
         }
       }
@@ -2217,6 +4097,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "lower"
+          }
+        }
+      }
+    },
+    "warm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "warm"
           }
         }
       }

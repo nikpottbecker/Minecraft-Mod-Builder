@@ -13,7 +13,6 @@ Neue Ideen unten bei „Später“ eintragen.
 
 - [ ] Zwei Personen im Bild erkennen und beide Posen vergleichen
 - [ ] Moodboard: mehrere Looks zu einem Shooting-Plan mit Ort und Uhrzeit bündeln
-- [ ] Englisch Teil 2: Analyse-Texte aus PoseDescriber und ShotAdvisor (String(localized:)); bis dahin sind die Tipp-Karten auf Englisch noch deutsch
 
 ## Später
 
@@ -21,6 +20,8 @@ Neue Ideen unten bei „Später“ eintragen.
 - [ ] TestFlight-Verteilung automatisieren
 
 ## Erledigt
+
+- [x] Englisch Teil 2: alle Analyse-Texte (Pose, Kamera, Licht, Bildaufbau, Orte inkl. Karten-Suchbegriffe); Seiten-Sätze als ganze Sätze statt zusammengesetzter Wörter
 
 - [x] Englisch Teil 1: String Catalog (Localizable + InfoPlist) für Oberfläche, Onboarding, Coach-Hinweise, Pose-Ideen, Mitteilungen; Logik vergleicht Icons statt deutscher Texte; Tests laufen auf Deutsch (Scheme)
 
