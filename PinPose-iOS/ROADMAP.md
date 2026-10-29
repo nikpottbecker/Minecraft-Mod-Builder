@@ -13,7 +13,6 @@ Neue Ideen unten bei „Später“ eintragen.
 
 - [ ] Zwei Personen im Bild erkennen und beide Posen vergleichen
 - [ ] Moodboard: mehrere Looks zu einem Shooting-Plan mit Ort und Uhrzeit bündeln
-- [ ] Bearbeitungs-Preset: Farblook aus der Analyse direkt auf das eigene Foto anwenden (Core Image)
 - [ ] Englische Übersetzung (String Catalog)
 
 ## Später
@@ -22,6 +21,8 @@ Neue Ideen unten bei „Später“ eintragen.
 - [ ] TestFlight-Verteilung automatisieren
 
 ## Erledigt
+
+- [x] Farblook der Vorlage aufs eigene Foto (Belichtung, Kontrast, Sättigung, Weißabgleich; Stärke-Regler; auch in der Collage)
 
 - [x] Unit-Tests (Target PinPoseTests) für PoseMatcher, PoseCoach, BodyPose, ShotAdvisor, SunCalculator, PinterestImporter, Look-Migration und Collage; laufen in GitHub Actions im Simulator
 

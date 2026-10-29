@@ -193,3 +193,35 @@ final class CollageRendererTests: XCTestCase {
         XCTAssertEqual(collage.size.height * collage.scale, 1350)
     }
 }
+
+final class ColorMatcherTests: XCTestCase {
+    private func flat(_ r: UInt8, _ g: UInt8, _ b: UInt8, count: Int = 16) -> [UInt8] {
+        Array((0..<count).flatMap { _ in [r, g, b, 255] })
+    }
+
+    func testSameStatsNeedNoChange() throws {
+        let stats = try XCTUnwrap(ColorMatcher.stats(rgba: flat(120, 100, 80) + flat(200, 180, 160)))
+        let adjustment = ColorMatcher.adjustment(from: stats, to: stats)
+        XCTAssertEqual(adjustment.exposure, 0, accuracy: 0.001)
+        XCTAssertEqual(adjustment.contrast, 1, accuracy: 0.001)
+        XCTAssertEqual(adjustment.saturation, 1, accuracy: 0.001)
+        XCTAssertEqual(adjustment.redGain, 1, accuracy: 0.001)
+    }
+
+    func testDarkerReferenceLowersExposureAndWarmerAddsRed() throws {
+        let photo = try XCTUnwrap(ColorMatcher.stats(rgba: flat(150, 150, 150) + flat(170, 170, 170)))
+        let reference = try XCTUnwrap(ColorMatcher.stats(rgba: flat(90, 60, 40) + flat(110, 80, 60)))
+        let adjustment = ColorMatcher.adjustment(from: photo, to: reference)
+        XCTAssertLessThan(adjustment.exposure, 0)
+        XCTAssertGreaterThan(adjustment.redGain, 1)
+        XCTAssertLessThan(adjustment.blueGain, 1)
+        XCTAssertGreaterThanOrEqual(adjustment.redGain, 0.82)
+        XCTAssertLessThanOrEqual(adjustment.redGain, 1.22)
+    }
+
+    func testStrengthZeroIsIdentity() {
+        let adjustment = ColorMatcher.Adjustment(exposure: 0.8, contrast: 1.3, saturation: 0.5,
+                                                 redGain: 1.2, greenGain: 0.9, blueGain: 0.85)
+        XCTAssertEqual(adjustment.scaled(by: 0), .identity)
+    }
+}
