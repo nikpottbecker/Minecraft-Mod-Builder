@@ -57,7 +57,7 @@ enum PinterestImporter {
     }
 
     /// Image URLs in order of preference: highest resolution first.
-    private static func imageCandidates(in html: String) -> [URL] {
+    static func imageCandidates(in html: String) -> [URL] {
         var found: [String] = []
         let patterns = [
             #"<meta[^>]+property=["']og:image["'][^>]*content=["']([^"']+)["']"#,

@@ -7,7 +7,6 @@ Neue Ideen unten bei „Später“ eintragen.
 
 - [ ] Erster Test auf dem echten iPhone: Kamera, Pose-Skelett, Match-%, Silhouette, Karte, Golden Hour. Gefundene Bugs hier als eigene Punkte eintragen.
 - [ ] Share Extension: In der Pinterest-App „Teilen → PinPose“ öffnet direkt die Analyse (App Group für die Übergabe)
-- [ ] Unit-Tests für PoseMatcher, PoseCoach, PoseDescriber, ShotAdvisor, SunCalculator und PinterestImporter (HTML-Parsing)
 - [ ] Live-Coaching auf dem iPhone testen: Schwellen (25° Gliedmaßen, 12° Schultern/Hüfte/Kopf) und Wortwahl anpassen; prüfen, ob die Ansagen bei stummgeschaltetem iPhone hörbar sind
 
 ## Danach
@@ -23,6 +22,8 @@ Neue Ideen unten bei „Später“ eintragen.
 - [ ] TestFlight-Verteilung automatisieren
 
 ## Erledigt
+
+- [x] Unit-Tests (Target PinPoseTests) für PoseMatcher, PoseCoach, BodyPose, ShotAdvisor, SunCalculator, PinterestImporter, Look-Migration und Collage; laufen in GitHub Actions im Simulator
 
 - [x] Analyse: „Dein Shot-Plan“ (Zoom, Kamera, Licht, Ort) oben, Tipp-Abschnitte eingeklappt
 - [x] Kamera aufgeräumt: Regler nur auf Tippen (Vorlage/Belichtung), Einstellungen bleiben gespeichert, ein Hinweis zur Zeit, Rückmeldung nach jedem Foto („Neuer Bestwert“)
