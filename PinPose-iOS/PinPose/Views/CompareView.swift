@@ -5,9 +5,12 @@ struct CompareView: View {
     let reference: UIImage?
     let photo: UIImage?
     let score: Double?
-    let saved: Bool
+    /// nil hides the "saved to Fotos" line, e.g. for older shots.
+    var saved: Bool?
+    var doneTitle = "Weiter shooten"
 
     @Environment(\.dismiss) private var dismiss
+    @State private var collage: UIImage?
 
     var body: some View {
         NavigationStack {
@@ -28,17 +31,30 @@ struct CompareView: View {
                         }
                     }
 
-                    Label(saved ? "In deinen Fotos gespeichert" : "Wird in Fotos gespeichert …",
-                          systemImage: saved ? "checkmark.circle.fill" : "arrow.down.circle")
-                        .font(.subheadline)
-                        .foregroundStyle(saved ? Color.green : Color.secondary)
+                    if let saved {
+                        Label(saved ? "In deinen Fotos gespeichert" : "Wird in Fotos gespeichert …",
+                              systemImage: saved ? "checkmark.circle.fill" : "arrow.down.circle")
+                            .font(.subheadline)
+                            .foregroundStyle(saved ? Color.green : Color.secondary)
+                    }
 
-                    if let photo {
-                        ShareLink(item: Image(uiImage: photo), preview: SharePreview("Mein PinPose-Foto", image: Image(uiImage: photo))) {
-                            Label("Teilen", systemImage: "square.and.arrow.up")
+                    if let collage {
+                        ShareLink(item: Image(uiImage: collage),
+                                  preview: SharePreview("Vorher/Nachher mit PinPose", image: Image(uiImage: collage))) {
+                            Label("Vorher/Nachher teilen", systemImage: "square.and.arrow.up")
+                                .font(.headline)
                                 .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(.borderedProminent)
+                        .buttonBorderShape(.capsule)
+                        .controlSize(.large)
+                    }
+                    if let photo {
+                        ShareLink(item: Image(uiImage: photo), preview: SharePreview("Mein PinPose-Foto", image: Image(uiImage: photo))) {
+                            Label("Nur mein Foto teilen", systemImage: "photo")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
                         .buttonBorderShape(.capsule)
                         .controlSize(.large)
                     }
@@ -49,8 +65,12 @@ struct CompareView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Weiter shooten") { dismiss() }
+                    Button(doneTitle) { dismiss() }
                 }
+            }
+            .task(id: photo) {
+                guard let reference, let photo else { return }
+                collage = CollageRenderer.render(reference: reference, photo: photo, score: score)
             }
         }
     }

@@ -14,7 +14,6 @@ Neue Ideen unten bei „Später“ eintragen.
 
 - [ ] Zwei Personen im Bild erkennen und beide Posen vergleichen
 - [ ] Moodboard: mehrere Looks zu einem Shooting-Plan mit Ort und Uhrzeit bündeln
-- [ ] Vorher/Nachher-Collage (Vorlage + eigenes Foto) zum Teilen
 - [ ] Bearbeitungs-Preset: Farblook aus der Analyse direkt auf das eigene Foto anwenden (Core Image)
 - [ ] Englische Übersetzung (String Catalog)
 
@@ -24,6 +23,9 @@ Neue Ideen unten bei „Später“ eintragen.
 - [ ] TestFlight-Verteilung automatisieren
 
 ## Erledigt
+
+- [x] Eigene Fotos pro Look gespeichert (Verlauf, bestes Foto markiert), Bibliothek zeigt „Offen“ und Fortschritt
+- [x] Vorher/Nachher-Collage (4:5, mit Pose-Match und PinPose-Schriftzug) zum Teilen
 
 - [x] Onboarding beim ersten Start (3 Seiten, überspringbar, endet direkt im Import)
 - [x] Kopierter Link wird erkannt: Banner „Link kopiert – direkt analysieren?“ (ohne Einfüge-Abfrage von iOS)

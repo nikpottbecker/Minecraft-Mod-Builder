@@ -10,6 +10,7 @@ struct LookDetailView: View {
     @State private var isRenaming = false
     @State private var newTitle = ""
     @State private var confirmDelete = false
+    @State private var openShot: Shot?
 
     var body: some View {
         if let look = store.look(id: lookID) {
@@ -75,6 +76,10 @@ struct LookDetailView: View {
                 .buttonBorderShape(.capsule)
                 .controlSize(.large)
 
+                if look.isRecreated {
+                    ShotStrip(look: look) { openShot = $0 }
+                }
+
                 AdviceSection(title: "So posierst du", icon: "figure.stand", advice: analysis.poseAdvice)
                 AdviceSection(title: "Kamera-Einstellungen", icon: "camera.fill", advice: analysis.cameraAdvice)
                 AdviceSection(title: "Licht & Stimmung", icon: "sun.max.fill", advice: analysis.lightAdvice)
@@ -134,9 +139,70 @@ struct LookDetailView: View {
                 store.delete(look)
             }
         }
+        .sheet(item: $openShot) { shot in
+            CompareView(reference: image, photo: store.image(for: shot), score: shot.score, doneTitle: "Fertig")
+        }
         .fullScreenCover(isPresented: $showCamera) {
             CameraView(look: look, referenceImage: image, silhouette: store.silhouette(for: look))
                 .environmentObject(store)
+        }
+    }
+}
+
+/// The photos the user already took for this look, newest first.
+private struct ShotStrip: View {
+    @EnvironmentObject private var store: LookStore
+    let look: Look
+    var onOpen: (Shot) -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Label("Deine Fotos", systemImage: "photo.stack")
+                    .font(.title3.bold())
+                Spacer()
+                Text("\(look.shots.count)")
+                    .font(.subheadline.monospacedDigit())
+                    .foregroundStyle(.secondary)
+            }
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    ForEach(look.shots) { shot in
+                        Button { onOpen(shot) } label: {
+                            ZStack(alignment: .bottomTrailing) {
+                                Group {
+                                    if let image = store.image(for: shot) {
+                                        Image(uiImage: image).resizable().scaledToFill()
+                                    } else {
+                                        Color.secondary.opacity(0.2)
+                                    }
+                                }
+                                .frame(width: 96, height: 128)
+                                .clipped()
+                                if let score = shot.score {
+                                    ScoreBadge(score: score, compact: true).padding(5)
+                                }
+                            }
+                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .overlay {
+                                if shot.id == look.bestShot?.id, look.shots.count > 1 {
+                                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                        .stroke(Color.accentColor, lineWidth: 3)
+                                }
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .contextMenu {
+                            Button(role: .destructive) {
+                                store.deleteShot(shot, from: look.id)
+                            } label: {
+                                Label("Foto entfernen", systemImage: "trash")
+                            }
+                        }
+                        .accessibilityLabel(shot.score.map { "Foto mit \(Int($0 * 100)) Prozent" } ?? "Foto")
+                    }
+                }
+            }
         }
     }
 }

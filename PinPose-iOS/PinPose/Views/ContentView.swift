@@ -141,10 +141,14 @@ private struct LibraryGrid: View {
 
     var body: some View {
         ScrollView {
+            LibraryProgress(looks: store.looks)
+                .padding(.horizontal)
+                .padding(.top, 4)
             LazyVGrid(columns: columns, spacing: 12) {
                 ForEach(store.looks) { look in
                     NavigationLink(value: look.id) {
-                        LookCard(look: look, image: store.image(for: look))
+                        LookCard(look: look, image: store.image(for: look),
+                                 latestShot: look.shots.first.flatMap { store.image(for: $0) })
                     }
                     .buttonStyle(.plain)
                     .contextMenu {
@@ -161,9 +165,31 @@ private struct LibraryGrid: View {
     }
 }
 
+/// Small progress line above the grid: open looks pull people back in.
+private struct LibraryProgress: View {
+    let looks: [Look]
+
+    var body: some View {
+        let done = looks.filter(\.isRecreated).count
+        let open = looks.count - done
+        HStack(spacing: 10) {
+            ProgressView(value: Double(done), total: Double(max(looks.count, 1)))
+                .tint(.accentColor)
+                .frame(maxWidth: 90)
+            Text(open == 0 ? "Alle \(looks.count) Looks nachgeshootet 🎉"
+                           : "\(done) von \(looks.count) nachgeshootet · \(open) \(open == 1 ? "wartet" : "warten") noch")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            Spacer(minLength: 0)
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
 private struct LookCard: View {
     let look: Look
     let image: UIImage?
+    var latestShot: UIImage?
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
@@ -194,10 +220,31 @@ private struct LookCard: View {
             }
             .foregroundStyle(.white)
             .padding(10)
+            .padding(.trailing, latestShot == nil ? 0 : 52)
         }
         .overlay(alignment: .topTrailing) {
             if let score = look.bestScore {
                 ScoreBadge(score: score, compact: true)
+                    .padding(8)
+            } else if !look.isRecreated {
+                Text("Offen")
+                    .font(.caption2.bold())
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(.black.opacity(0.45), in: Capsule())
+                    .padding(8)
+            }
+        }
+        .overlay(alignment: .bottomTrailing) {
+            if let latestShot {
+                Image(uiImage: latestShot)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 44, height: 58)
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(.white, lineWidth: 2))
+                    .shadow(radius: 4)
                     .padding(8)
             }
         }

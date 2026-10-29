@@ -102,8 +102,8 @@ struct CameraView: View {
         .onChange(of: speakHints) { _, enabled in
             if !enabled { voice.stop() }
         }
-        .onChange(of: camera.lastPhotoScore) { _, score in
-            if let score { store.recordScore(score, for: look.id) }
+        .onChange(of: camera.lastPhoto) { _, photo in
+            if let photo { store.addShot(photo, score: camera.lastPhotoScore, for: look.id) }
         }
         .sheet(isPresented: $showCompare) {
             CompareView(reference: referenceImage, photo: camera.lastPhoto,

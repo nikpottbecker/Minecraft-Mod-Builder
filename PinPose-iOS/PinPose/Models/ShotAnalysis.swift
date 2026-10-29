@@ -98,6 +98,13 @@ struct ShotAnalysis: Codable {
     var imageSize: CGSize { CGSize(width: imageWidth, height: imageHeight) }
 }
 
+/// One photo the user took while recreating a look.
+struct Shot: Codable, Identifiable, Hashable {
+    var id: UUID
+    var createdAt: Date
+    var score: Double?
+}
+
 /// A saved reference photo plus its analysis.
 struct Look: Codable, Identifiable {
     var id: UUID
@@ -105,6 +112,17 @@ struct Look: Codable, Identifiable {
     var createdAt: Date
     var analysis: ShotAnalysis
     var bestScore: Double?
+    /// Optional so libraries saved before shots existed still decode.
+    var savedShots: [Shot]?
 
     var imageFileName: String { "\(id.uuidString).jpg" }
+
+    /// Newest first.
+    var shots: [Shot] { savedShots ?? [] }
+    var isRecreated: Bool { !shots.isEmpty }
+
+    /// The shot with the best pose match, or the newest one.
+    var bestShot: Shot? {
+        shots.max { ($0.score ?? -1, $0.createdAt) < ($1.score ?? -1, $1.createdAt) }
+    }
 }

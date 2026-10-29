@@ -54,7 +54,43 @@ final class LookStore: ObservableObject {
         return look
     }
 
+    /// Keeps a photo the user took for this look (a smaller copy; the original is in Fotos).
+    @discardableResult
+    func addShot(_ image: UIImage, score: Double?, for id: UUID) -> Shot? {
+        guard let index = looks.firstIndex(where: { $0.id == id }) else { return nil }
+        let shot = Shot(id: UUID(), createdAt: Date(), score: score)
+        let stored = image.uprightResized(maxSide: 1600)
+        if let data = stored.jpegData(compressionQuality: 0.85) {
+            try? data.write(to: folder.appendingPathComponent(Self.shotFileName(shot.id)), options: .atomic)
+        }
+        cache.setObject(stored, forKey: shot.id.uuidString as NSString)
+        looks[index].savedShots = [shot] + looks[index].shots
+        if let score, score > (looks[index].bestScore ?? 0) { looks[index].bestScore = score }
+        save()
+        return shot
+    }
+
+    func image(for shot: Shot) -> UIImage? {
+        let key = shot.id.uuidString as NSString
+        if let cached = cache.object(forKey: key) { return cached }
+        guard let image = UIImage(contentsOfFile: folder.appendingPathComponent(Self.shotFileName(shot.id)).path) else { return nil }
+        cache.setObject(image, forKey: key)
+        return image
+    }
+
+    func deleteShot(_ shot: Shot, from id: UUID) {
+        guard let index = looks.firstIndex(where: { $0.id == id }) else { return }
+        try? FileManager.default.removeItem(at: folder.appendingPathComponent(Self.shotFileName(shot.id)))
+        cache.removeObject(forKey: shot.id.uuidString as NSString)
+        looks[index].savedShots = looks[index].shots.filter { $0.id != shot.id }
+        looks[index].bestScore = looks[index].shots.compactMap(\.score).max()
+        save()
+    }
+
     func delete(_ look: Look) {
+        for shot in look.shots {
+            try? FileManager.default.removeItem(at: folder.appendingPathComponent(Self.shotFileName(shot.id)))
+        }
         try? FileManager.default.removeItem(at: folder.appendingPathComponent(look.imageFileName))
         try? FileManager.default.removeItem(at: folder.appendingPathComponent(Self.silhouetteFileName(for: look.id)))
         cache.removeObject(forKey: look.id.uuidString as NSString)
@@ -69,12 +105,6 @@ final class LookStore: ObservableObject {
         save()
     }
 
-    func recordScore(_ score: Double, for id: UUID) {
-        guard let index = looks.firstIndex(where: { $0.id == id }), score > (looks[index].bestScore ?? 0) else { return }
-        looks[index].bestScore = score
-        save()
-    }
-
     private func load() {
         guard let data = try? Data(contentsOf: indexURL),
               let decoded = try? JSONDecoder().decode([Look].self, from: data) else { return }
@@ -84,6 +114,10 @@ final class LookStore: ObservableObject {
     private func save() {
         guard let data = try? JSONEncoder().encode(looks) else { return }
         try? data.write(to: indexURL, options: .atomic)
+    }
+
+    private static func shotFileName(_ id: UUID) -> String {
+        "shot-\(id.uuidString).jpg"
     }
 
     private static func silhouetteFileName(for id: UUID) -> String {
