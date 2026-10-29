@@ -67,18 +67,6 @@ struct LookDetailView: View {
                     }
                 }
 
-                Button {
-                    showCamera = true
-                } label: {
-                    Label("Jetzt nachshooten", systemImage: "camera.fill")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 8)
-                }
-                .buttonStyle(.borderedProminent)
-                .buttonBorderShape(.capsule)
-                .controlSize(.large)
-
                 ShotPlanCard(analysis: analysis)
 
                 if look.isRecreated {
@@ -114,6 +102,23 @@ struct LookDetailView: View {
                 }
             }
             .padding()
+        }
+        .safeAreaInset(edge: .bottom) {
+            Button {
+                showCamera = true
+            } label: {
+                Label(look.isRecreated ? "Nochmal shooten" : "Jetzt nachshooten", systemImage: "camera.fill")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+            }
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.capsule)
+            .controlSize(.large)
+            .padding(.horizontal)
+            .padding(.top, 8)
+            .padding(.bottom, 4)
+            .background(.bar)
         }
         .navigationTitle(look.title)
         .navigationBarTitleDisplayMode(.inline)

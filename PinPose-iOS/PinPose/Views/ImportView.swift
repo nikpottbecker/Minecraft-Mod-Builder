@@ -135,20 +135,60 @@ struct ImportView: View {
     }
 }
 
+/// Shows the analysis steps ticking off one by one, so the wait feels like work being done for you.
 private struct AnalyzingOverlay: View {
     let status: String
+
+    private let steps = [
+        ("figure.stand", "Pose erkennen"),
+        ("camera.aperture", "Kamera & Zoom berechnen"),
+        ("sun.max.fill", "Licht & Farben messen"),
+        ("mappin.and.ellipse", "Passende Orte finden"),
+    ]
+    @State private var done = 0
 
     var body: some View {
         ZStack {
             Rectangle().fill(.ultraThinMaterial).ignoresSafeArea()
-            VStack(spacing: 16) {
-                ProgressView()
-                    .controlSize(.large)
+            VStack(spacing: 22) {
                 Text(status)
                     .font(.headline)
                     .multilineTextAlignment(.center)
+                VStack(alignment: .leading, spacing: 14) {
+                    ForEach(steps.indices, id: \.self) { index in
+                        HStack(spacing: 12) {
+                            ZStack {
+                                if index < done {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundStyle(.green)
+                                        .transition(.scale.combined(with: .opacity))
+                                } else if index == done {
+                                    ProgressView()
+                                } else {
+                                    Image(systemName: "circle")
+                                        .foregroundStyle(.tertiary)
+                                }
+                            }
+                            .font(.title3)
+                            .frame(width: 28)
+                            Label(steps[index].1, systemImage: steps[index].0)
+                                .font(.subheadline.weight(index <= done ? .semibold : .regular))
+                                .foregroundStyle(index <= done ? .primary : .secondary)
+                        }
+                    }
+                }
+                .padding(20)
+                .background(.background.opacity(0.6), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             }
             .padding()
         }
+        .task {
+            // Paced a little below the real analysis time; the last step stays open until the result is there.
+            for step in 1..<steps.count {
+                try? await Task.sleep(nanoseconds: 550_000_000)
+                withAnimation(.spring(duration: 0.3)) { done = step }
+            }
+        }
+        .sensoryFeedback(.increase, trigger: done)
     }
 }

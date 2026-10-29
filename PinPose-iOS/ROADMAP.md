@@ -17,10 +17,12 @@ Neue Ideen unten bei „Später“ eintragen.
 
 ## Später
 
-- [ ] App-Store-Texte und Screenshots (Datenschutz-Manifest ist da)
+- [ ] App-Store-Screenshots (Texte in APPSTORE.md, Datenschutz-Manifest ist da)
 - [ ] TestFlight-Verteilung automatisieren
 
 ## Erledigt
+
+- [x] Analyse-Wartezeit als abhakende Schritte; „Jetzt nachshooten“ fest unten in der Look-Ansicht; App-Store-Texte (APPSTORE.md)
 
 - [x] Coach korrigiert auch Abstand und Position („Einen Schritt zurück“, „Kamera etwas nach links schwenken“); Auto-Auslöser wartet, bis der Ausschnitt passt
 
