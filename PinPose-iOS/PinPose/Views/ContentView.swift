@@ -4,6 +4,11 @@ struct ContentView: View {
     @EnvironmentObject private var store: LookStore
     @State private var path: [UUID] = []
     @State private var showImport = false
+    @State private var importLink: String?
+    @State private var clipboardHasLink = false
+    @AppStorage("onboardingDone") private var onboardingDone = false
+    @AppStorage("dismissedClipboardChange") private var dismissedClipboardChange = -1
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -12,6 +17,25 @@ struct ContentView: View {
                     EmptyLibraryView { showImport = true }
                 } else {
                     LibraryGrid()
+                }
+            }
+            .safeAreaInset(edge: .top) {
+                if clipboardHasLink {
+                    ClipboardBanner(
+                        onPaste: { text in
+                            dismissedClipboardChange = UIPasteboard.general.changeCount
+                            withAnimation { clipboardHasLink = false }
+                            importLink = text
+                            showImport = true
+                        },
+                        onDismiss: {
+                            dismissedClipboardChange = UIPasteboard.general.changeCount
+                            withAnimation { clipboardHasLink = false }
+                        }
+                    )
+                    .padding(.horizontal)
+                    .padding(.bottom, 6)
+                    .transition(.move(edge: .top).combined(with: .opacity))
                 }
             }
             .navigationTitle("PinPose")
@@ -30,8 +54,20 @@ struct ContentView: View {
                 LookDetailView(lookID: id)
             }
         }
-        .sheet(isPresented: $showImport) {
-            ImportView { look in
+        .task { await checkClipboard() }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { Task { await checkClipboard() } }
+        }
+        .fullScreenCover(isPresented: Binding(get: { !onboardingDone }, set: { if !$0 { onboardingDone = true } })) {
+            OnboardingView { addPicture in
+                onboardingDone = true
+                if addPicture {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { showImport = true }
+                }
+            }
+        }
+        .sheet(isPresented: $showImport, onDismiss: { importLink = nil }) {
+            ImportView(initialLink: importLink) { look in
                 showImport = false
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                     path.append(look.id)
@@ -39,6 +75,63 @@ struct ContentView: View {
             }
             .environmentObject(store)
         }
+    }
+}
+
+extension ContentView {
+    /// Looks for a copied link without reading it, so iOS does not show the paste prompt.
+    /// The link itself is only read when the user taps the system paste button.
+    fileprivate func checkClipboard() async {
+        let pasteboard = UIPasteboard.general
+        guard onboardingDone, !showImport, pasteboard.changeCount != dismissedClipboardChange,
+              pasteboard.hasStrings || pasteboard.hasURLs else {
+            if clipboardHasLink { withAnimation { clipboardHasLink = false } }
+            return
+        }
+        let patterns = (try? await pasteboard.detectedPatterns(for: [\UIPasteboard.DetectedValues.probableWebURL])) ?? []
+        let found = !patterns.isEmpty
+        if found != clipboardHasLink { withAnimation(.spring) { clipboardHasLink = found } }
+    }
+}
+
+/// Offers to analyse a link the user just copied in Pinterest.
+private struct ClipboardBanner: View {
+    var onPaste: (String) -> Void
+    var onDismiss: () -> Void
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "link")
+                .font(.headline)
+                .foregroundStyle(.white)
+                .frame(width: 36, height: 36)
+                .background(Color.accentColor.gradient, in: Circle())
+            VStack(alignment: .leading, spacing: 1) {
+                Text("Link kopiert")
+                    .font(.subheadline.bold())
+                Text("Direkt analysieren?")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 0)
+            PasteButton(payloadType: String.self) { strings in
+                guard let text = strings.first else { return }
+                DispatchQueue.main.async { onPaste(text) }
+            }
+            .labelStyle(.titleOnly)
+            .buttonBorderShape(.capsule)
+            .tint(.accentColor)
+            Button(action: onDismiss) {
+                Image(systemName: "xmark")
+                    .font(.caption.bold())
+                    .foregroundStyle(.secondary)
+                    .frame(width: 28, height: 28)
+            }
+            .accessibilityLabel("Ausblenden")
+        }
+        .padding(10)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .shadow(color: .black.opacity(0.08), radius: 8, y: 2)
     }
 }
 

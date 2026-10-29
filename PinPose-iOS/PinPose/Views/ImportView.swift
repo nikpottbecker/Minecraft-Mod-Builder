@@ -4,6 +4,8 @@ import SwiftUI
 struct ImportView: View {
     @EnvironmentObject private var store: LookStore
     @Environment(\.dismiss) private var dismiss
+    /// A link to load right away, e.g. one PinPose found in the clipboard.
+    var initialLink: String?
     var onFinished: (Look) -> Void
 
     @State private var pickerItem: PhotosPickerItem?
@@ -64,6 +66,12 @@ struct ImportView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Abbrechen") { dismiss() }
+                }
+            }
+            .task {
+                if let initialLink, !initialLink.isEmpty, linkText.isEmpty {
+                    linkText = initialLink
+                    await importLink()
                 }
             }
             .onChange(of: pickerItem) { _, item in
