@@ -12,7 +12,13 @@ final class LookStore: ObservableObject {
 
     init() {
         let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        folder = documents.appendingPathComponent("Looks", isDirectory: true)
+        if ScreenshotMode.current != nil {
+            // Fresh sample library on every screenshot run.
+            folder = documents.appendingPathComponent("ScreenshotLooks", isDirectory: true)
+            try? FileManager.default.removeItem(at: folder)
+        } else {
+            folder = documents.appendingPathComponent("Looks", isDirectory: true)
+        }
         try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         load()
     }

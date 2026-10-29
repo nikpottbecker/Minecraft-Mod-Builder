@@ -231,7 +231,7 @@ struct ShotAdvisor {
             String(localized: "Wärme \(signed(clamp(warmth * 200, -40, 40)))"),
         ]
         result.append(Advice(icon: "paintpalette.fill", title: String(localized: "Farblook: \(tone), \(saturation), \(brightness)"),
-                             detail: String(localized: "Nachbearbeitung in der Fotos-App (Bearbeiten → Anpassen): \(edits.joined(separator: ", "))."))
+                             detail: String(localized: "Nachbearbeitung in der Fotos-App (Bearbeiten → Anpassen): \(edits.joined(separator: ", ")).")))
         return result
     }
 

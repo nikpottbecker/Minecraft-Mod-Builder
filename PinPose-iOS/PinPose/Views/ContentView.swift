@@ -81,6 +81,7 @@ struct ContentView: View {
             }
         }
         .task { await checkClipboard() }
+        .task { openScreenshotScreen() }
         .onChange(of: reminders.lookToOpen) { _, id in
             guard let id, store.look(id: id) != nil else { return }
             reminders.lookToOpen = nil
@@ -121,6 +122,19 @@ struct ContentView: View {
 }
 
 extension ContentView {
+    /// Opens the screen a screenshot run asks for (debug builds only).
+    fileprivate func openScreenshotScreen() {
+        guard let mode = ScreenshotMode.current else { return }
+        ScreenshotMode.seed(store)
+        switch mode {
+        case .detail: if let first = store.looks.last { path = [first.id] }
+        case .ideas: showIdeas = true
+        case .about: showAbout = true
+        case .compare: if let look = store.looks.first(where: \.isRecreated) { path = [look.id] }
+        default: break
+        }
+    }
+
     /// Looks for a copied link without reading it, so iOS does not show the paste prompt.
     /// The link itself is only read when the user taps the system paste button.
     fileprivate func checkClipboard() async {

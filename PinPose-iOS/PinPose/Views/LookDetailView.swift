@@ -152,6 +152,12 @@ struct LookDetailView: View {
                 store.delete(look)
             }
         }
+        .task {
+            if ScreenshotMode.current == .compare, openShot == nil {
+                try? await Task.sleep(nanoseconds: 600_000_000)
+                openShot = store.look(id: lookID)?.bestShot
+            }
+        }
         .sheet(item: $openShot) { shot in
             CompareView(reference: image, photo: store.image(for: shot), score: shot.score, doneTitle: String(localized: "Fertig"))
         }

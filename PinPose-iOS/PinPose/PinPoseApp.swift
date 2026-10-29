@@ -8,6 +8,7 @@ struct PinPoseApp: App {
     init() {
         // The notification delegate has to exist before a tapped reminder is delivered.
         _ = Reminders.shared
+        ScreenshotMode.prepareDefaults()
     }
 
     var body: some Scene {
