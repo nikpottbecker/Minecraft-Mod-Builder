@@ -45,6 +45,18 @@ struct CameraView: View {
     }
 
     var body: some View {
+        withChangeHandlers(layers)
+            .sheet(isPresented: $showCompare) {
+                CompareView(reference: referenceImage, photo: camera.lastPhoto,
+                            score: camera.lastPhotoScore, saved: camera.savedToLibrary)
+            }
+    }
+
+    private var framingKey: FramingGuideKey {
+        FramingGuideKey(scale: overlayScale, offset: overlayOffset, mirrored: mirrorOverlay)
+    }
+
+    private var layers: some View {
         ZStack {
             Color.black.ignoresSafeArea()
 
@@ -93,6 +105,10 @@ struct CameraView: View {
             }
         }
         .statusBarHidden()
+    }
+
+    private func withChangeHandlers<Content: View>(_ content: Content) -> some View {
+        content
         .onAppear {
             UIApplication.shared.isIdleTimerDisabled = true
             camera.prepare(referencePose: look.analysis.pose,
@@ -110,7 +126,7 @@ struct CameraView: View {
             // A selfie preview is mirrored, so mirror the reference too.
             mirrorOverlay = position == .front
         }
-        .onChange(of: FramingGuideKey(scale: overlayScale, offset: overlayOffset, mirrored: mirrorOverlay), initial: true) { _, key in
+        .onChange(of: framingKey, initial: true) { _, key in
             camera.setFramingGuide(enabled: key.scale == 1 && key.offset == .zero, referenceMirrored: key.mirrored)
         }
         .onChange(of: camera.matchScore) { _, score in
@@ -128,10 +144,6 @@ struct CameraView: View {
             let score = camera.lastPhotoScore
             store.addShot(photo, score: score, for: look.id)
             showToast(for: score, previousBest: previousBest)
-        }
-        .sheet(isPresented: $showCompare) {
-            CompareView(reference: referenceImage, photo: camera.lastPhoto,
-                        score: camera.lastPhotoScore, saved: camera.savedToLibrary)
         }
     }
 
