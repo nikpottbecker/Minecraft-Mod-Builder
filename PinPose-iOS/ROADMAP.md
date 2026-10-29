@@ -24,6 +24,9 @@ Neue Ideen unten bei „Später“ eintragen.
 
 ## Erledigt
 
+- [x] Analyse: „Dein Shot-Plan“ (Zoom, Kamera, Licht, Ort) oben, Tipp-Abschnitte eingeklappt
+- [x] Kamera aufgeräumt: Regler nur auf Tippen (Vorlage/Belichtung), Einstellungen bleiben gespeichert, ein Hinweis zur Zeit, Rückmeldung nach jedem Foto („Neuer Bestwert“)
+
 - [x] Eigene Fotos pro Look gespeichert (Verlauf, bestes Foto markiert), Bibliothek zeigt „Offen“ und Fortschritt
 - [x] Vorher/Nachher-Collage (4:5, mit Pose-Match und PinPose-Schriftzug) zum Teilen
 

@@ -11,17 +11,19 @@ struct CameraView: View {
     @StateObject private var camera = CameraController()
 
     @State private var showGhost = true
-    @State private var ghostOpacity = 0.35
+    @AppStorage("camera.ghostOpacity") private var ghostOpacity = 0.35
     @State private var showSkeleton = true
-    @State private var showGrid = true
-    @State private var showTips = true
+    @AppStorage("camera.showGrid") private var showGrid = true
+    @AppStorage("camera.showTips") private var showTips = true
+    @State private var activeSlider: CameraSlider?
     @State private var tipIndex = 0
     @State private var timerSeconds = 0
     @State private var countdown: Int?
     @State private var flashScreen = false
     @State private var showCompare = false
+    @State private var shotToast: String?
 
-    @State private var overlayStyle: OverlayStyle = .photo
+    @AppStorage("camera.overlayStyle") private var overlayStyle: OverlayStyle = .photo
     @State private var mirrorOverlay = false
     @State private var adjustingOverlay = false
     @State private var overlayScale: CGFloat = 1
@@ -29,13 +31,13 @@ struct CameraView: View {
     @GestureState private var pinchScale: CGFloat = 1
     @GestureState private var dragOffset: CGSize = .zero
 
-    @State private var autoCapture = false
+    @AppStorage("camera.autoCapture") private var autoCapture = false
     @State private var matchingSince: Date?
     @State private var lastAutoCapture = Date.distantPast
     @State private var wasMatching = false
 
-    @State private var coaching = true
-    @State private var speakHints = false
+    @AppStorage("camera.coaching") private var coaching = true
+    @AppStorage("camera.speakHints") private var speakHints = false
     @State private var voice = CoachVoice()
 
     private var tips: [Advice] {
@@ -65,6 +67,21 @@ struct CameraView: View {
                     .shadow(radius: 12)
                     .transition(.scale.combined(with: .opacity))
                     .id(countdown)
+            }
+
+            if let shotToast {
+                VStack {
+                    Spacer()
+                    Text(shotToast)
+                        .font(.subheadline.bold())
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .background(.black.opacity(0.7), in: Capsule())
+                        .padding(.bottom, 260)
+                }
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+                .allowsHitTesting(false)
             }
 
             if flashScreen {
@@ -103,7 +120,11 @@ struct CameraView: View {
             if !enabled { voice.stop() }
         }
         .onChange(of: camera.lastPhoto) { _, photo in
-            if let photo { store.addShot(photo, score: camera.lastPhotoScore, for: look.id) }
+            guard let photo else { return }
+            let previousBest = store.look(id: look.id)?.bestScore
+            let score = camera.lastPhotoScore
+            store.addShot(photo, score: score, for: look.id)
+            showToast(for: score, previousBest: previousBest)
         }
         .sheet(isPresented: $showCompare) {
             CompareView(reference: referenceImage, photo: camera.lastPhoto,
@@ -194,7 +215,9 @@ struct CameraView: View {
                         .transition(.opacity.combined(with: .scale(scale: 0.95)))
                         .animation(.easeInOut(duration: 0.2), value: hint)
                 }
-                if showTips, !tips.isEmpty {
+                if camera.livePose == nil, look.analysis.pose != nil, !camera.authorizationDenied {
+                    setupHint
+                } else if showTips, !tips.isEmpty, !(coaching && camera.coachHint != nil) {
                     tipCard
                 }
             }
@@ -215,8 +238,8 @@ struct CameraView: View {
             if let score = camera.matchScore {
                 ScoreBadge(score: score)
                     .animation(.easeInOut, value: score)
-            } else if look.analysis.pose != nil {
-                Text(camera.livePose == nil ? "Keine Person im Bild" : "Pose wird verglichen …")
+            } else if look.analysis.pose != nil, camera.livePose != nil {
+                Text("Pose wird verglichen …")
                     .font(.caption.bold())
                     .foregroundStyle(.white)
                     .padding(.horizontal, 10)
@@ -331,28 +354,43 @@ struct CameraView: View {
 
     private var bottomPanel: some View {
         VStack(spacing: 12) {
-            if showGhost, referenceImage != nil {
+            switch activeSlider {
+            case .opacity:
                 HStack(spacing: 10) {
                     Image(systemName: "photo")
                     Slider(value: $ghostOpacity, in: 0...0.8)
-                    Text("Vorlage")
-                        .font(.caption)
+                    Text("\(Int(ghostOpacity * 100)) %")
+                        .font(.caption.monospacedDigit())
+                        .frame(width: 40)
                 }
-            }
-
-            HStack(spacing: 10) {
-                Image(systemName: "sun.max.fill")
-                Slider(value: Binding(get: { Double(camera.exposureBias) },
-                                      set: { camera.setExposureBias(Float($0)) }),
-                       in: -2...2, step: 0.1)
-                Text(String(format: "%+.1f", camera.exposureBias))
-                    .font(.caption.monospacedDigit())
-                    .frame(width: 34)
+                .transition(.opacity)
+            case .exposure:
+                HStack(spacing: 10) {
+                    Image(systemName: "sun.max.fill")
+                    Slider(value: Binding(get: { Double(camera.exposureBias) },
+                                          set: { camera.setExposureBias(Float($0)) }),
+                           in: -2...2, step: 0.1)
+                    Text(String(format: "%+.1f", camera.exposureBias))
+                        .font(.caption.monospacedDigit())
+                        .frame(width: 40)
+                }
+                .transition(.opacity)
+            case nil:
+                EmptyView()
             }
 
             HStack(spacing: 8) {
-                ChipToggle(title: "Auto-Auslöser", systemImage: "figure.stand", isOn: $autoCapture)
-                    .disabled(look.analysis.pose == nil)
+                if look.analysis.pose != nil {
+                    ChipToggle(title: "Auto", systemImage: "figure.stand", isOn: $autoCapture)
+                        .accessibilityLabel("Auto-Auslöser")
+                }
+                if showGhost, referenceImage != nil {
+                    ChipToggle(title: "Vorlage", systemImage: "photo",
+                               isOn: sliderBinding(.opacity))
+                }
+                ChipToggle(title: String(format: "%+.1f", camera.exposureBias), systemImage: "sun.max.fill",
+                           isOn: sliderBinding(.exposure))
+                    .accessibilityLabel("Belichtung")
                 ChipToggle(title: "Spiegeln", systemImage: "arrow.left.and.right", isOn: $mirrorOverlay)
             }
 
@@ -430,6 +468,29 @@ struct CameraView: View {
         .background(.black.opacity(0.4), in: RoundedRectangle(cornerRadius: 26, style: .continuous))
     }
 
+    private func sliderBinding(_ slider: CameraSlider) -> Binding<Bool> {
+        Binding(get: { activeSlider == slider },
+                set: { on in withAnimation(.easeInOut(duration: 0.2)) { activeSlider = on ? slider : nil } })
+    }
+
+    /// Shown until a person is in the frame: the one thing to do first.
+    private var setupHint: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "figure.stand.line.dotted.figure.stand")
+                .font(.headline)
+                .foregroundStyle(.pink)
+            Text(camera.position == .front
+                 ? "Halte das iPhone weiter weg, bis du ganz im Bild bist."
+                 : "Bring die Person ins Bild – am besten so groß wie in der Vorlage.")
+                .font(.subheadline)
+            Spacer(minLength: 0)
+        }
+        .foregroundStyle(.white)
+        .padding(12)
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .environment(\.colorScheme, .dark)
+    }
+
     private var permissionHint: some View {
         VStack(spacing: 12) {
             Image(systemName: "camera.fill")
@@ -495,6 +556,28 @@ struct CameraView: View {
         }
     }
 
+    private func showToast(for score: Double?, previousBest: Double?) {
+        let text: String
+        if let score {
+            let percent = "\(Int((score * 100).rounded())) %"
+            if let previousBest, score > previousBest + 0.005 {
+                text = "🏆 Neuer Bestwert: \(percent)"
+                UINotificationFeedbackGenerator().notificationOccurred(.success)
+            } else if previousBest == nil {
+                text = "Erstes Foto: \(percent) – tippe unten links zum Vergleichen"
+            } else {
+                text = "Gespeichert · \(percent)"
+            }
+        } else {
+            text = "Gespeichert"
+        }
+        withAnimation(.spring) { shotToast = text }
+        let shown = text
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            if shotToast == shown { withAnimation { shotToast = nil } }
+        }
+    }
+
     private func capture() {
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         camera.capturePhoto()
@@ -503,6 +586,10 @@ struct CameraView: View {
             withAnimation(.easeIn(duration: 0.25)) { flashScreen = false }
         }
     }
+}
+
+private enum CameraSlider {
+    case opacity, exposure
 }
 
 private enum OverlayStyle: String, CaseIterable, Identifiable {

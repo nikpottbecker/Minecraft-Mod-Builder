@@ -76,11 +76,13 @@ struct LookDetailView: View {
                 .buttonBorderShape(.capsule)
                 .controlSize(.large)
 
+                ShotPlanCard(analysis: analysis)
+
                 if look.isRecreated {
                     ShotStrip(look: look) { openShot = $0 }
                 }
 
-                AdviceSection(title: "So posierst du", icon: "figure.stand", advice: analysis.poseAdvice)
+                AdviceSection(title: "So posierst du", icon: "figure.stand", advice: analysis.poseAdvice, preview: 4)
                 AdviceSection(title: "Kamera-Einstellungen", icon: "camera.fill", advice: analysis.cameraAdvice)
                 AdviceSection(title: "Licht & Stimmung", icon: "sun.max.fill", advice: analysis.lightAdvice)
                 SunTimesCard(highlightGoldenHour: analysis.lightAdvice.contains { $0.title == "Golden Hour" })
@@ -207,18 +209,93 @@ private struct ShotStrip: View {
     }
 }
 
+/// The four facts that matter most, so the user can start without reading every card.
+private struct ShotPlanCard: View {
+    let analysis: ShotAnalysis
+
+    private struct Item: Identifiable {
+        let icon: String
+        let label: String
+        let value: String
+        var id: String { label }
+    }
+
+    private var items: [Item] {
+        var result = [Item(icon: "plus.magnifyingglass", label: "Zoom", value: ShotAdvisor.zoomLabel(analysis.recommendedZoom))]
+        if let height = analysis.cameraAdvice.first(where: { $0.title.hasPrefix("Kamera ") }) {
+            let rest = height.title.replacingOccurrences(of: "Kamera ", with: "")
+            result.append(Item(icon: "camera.viewfinder", label: "Kamera", value: rest.prefix(1).uppercased() + rest.dropFirst()))
+        } else if let framing = analysis.framing {
+            result.append(Item(icon: "person.crop.rectangle", label: "Ausschnitt", value: framing.label))
+        }
+        if let light = analysis.lightAdvice.first {
+            result.append(Item(icon: light.icon, label: "Licht", value: light.title))
+        }
+        if let place = analysis.places.first {
+            result.append(Item(icon: place.icon, label: "Ort", value: place.title))
+        }
+        return result
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Label("Dein Shot-Plan", systemImage: "checklist")
+                .font(.title3.bold())
+            LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
+                ForEach(items) { item in
+                    HStack(spacing: 10) {
+                        Image(systemName: item.icon)
+                            .font(.headline)
+                            .foregroundStyle(Color.accentColor)
+                            .frame(width: 26)
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text(item.label)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            Text(item.value)
+                                .font(.subheadline.bold())
+                                .lineLimit(2)
+                                .minimumScaleFactor(0.8)
+                        }
+                        Spacer(minLength: 0)
+                    }
+                    .padding(12)
+                    .frame(maxWidth: .infinity, minHeight: 64, alignment: .leading)
+                    .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .accessibilityElement(children: .combine)
+                }
+            }
+        }
+    }
+}
+
 struct AdviceSection: View {
     let title: String
     let icon: String
     let advice: [Advice]
+    /// How many cards are shown before "Mehr anzeigen".
+    var preview = 2
+
+    @State private var expanded = false
 
     var body: some View {
         if !advice.isEmpty {
             VStack(alignment: .leading, spacing: 10) {
                 Label(title, systemImage: icon)
                     .font(.title3.bold())
-                ForEach(advice) { item in
+                ForEach(expanded ? advice : Array(advice.prefix(preview))) { item in
                     AdviceCard(advice: item)
+                        .transition(.opacity.combined(with: .move(edge: .top)))
+                }
+                if advice.count > preview {
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.25)) { expanded.toggle() }
+                    } label: {
+                        Label(expanded ? "Weniger anzeigen" : "\(advice.count - preview) weitere anzeigen",
+                              systemImage: expanded ? "chevron.up" : "chevron.down")
+                            .font(.subheadline.bold())
+                    }
+                    .padding(.leading, 4)
                 }
             }
         }
