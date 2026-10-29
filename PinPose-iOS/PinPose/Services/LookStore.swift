@@ -39,8 +39,8 @@ final class LookStore: ObservableObject {
     }
 
     @discardableResult
-    func add(image: UIImage, analysis: ShotAnalysis, silhouette: UIImage? = nil) -> Look {
-        let look = Look(id: UUID(), title: Self.defaultTitle(for: analysis), createdAt: Date(),
+    func add(image: UIImage, analysis: ShotAnalysis, silhouette: UIImage? = nil, title: String? = nil) -> Look {
+        let look = Look(id: UUID(), title: title ?? Self.defaultTitle(for: analysis), createdAt: Date(),
                         analysis: analysis, bestScore: nil)
         if let data = image.jpegData(compressionQuality: 0.9) {
             try? data.write(to: folder.appendingPathComponent(look.imageFileName), options: .atomic)
@@ -85,6 +85,11 @@ final class LookStore: ObservableObject {
         looks[index].savedShots = looks[index].shots.filter { $0.id != shot.id }
         looks[index].bestScore = looks[index].shots.compactMap(\.score).max()
         save()
+    }
+
+    @discardableResult
+    func add(idea: PoseIdea) -> Look {
+        add(image: idea.referenceImage(), analysis: idea.analysis(), silhouette: idea.silhouette(), title: idea.title)
     }
 
     func delete(_ look: Look) {

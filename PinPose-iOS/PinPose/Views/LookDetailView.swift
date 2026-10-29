@@ -88,7 +88,9 @@ struct LookDetailView: View {
                 SunTimesCard(highlightGoldenHour: analysis.lightAdvice.contains { $0.title == "Golden Hour" },
                              look: look)
                 AdviceSection(title: "Bildaufbau", icon: "square.grid.3x3", advice: analysis.compositionAdvice)
-                PlacesSection(places: analysis.places, exif: analysis.exif)
+                if !analysis.places.isEmpty || analysis.exif?.coordinate != nil {
+                    PlacesSection(places: analysis.places, exif: analysis.exif)
+                }
 
                 if !analysis.sceneLabels.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {

@@ -22,6 +22,8 @@ Neue Ideen unten bei „Später“ eintragen.
 
 ## Erledigt
 
+- [x] Pose-Ideen: 6 eingebaute Posen (Figur + Silhouette), Start ohne eigenes Bild; leerer Startbildschirm ohne doppelte Erklärung
+
 - [x] Golden-Hour-Erinnerung pro Look (lokale Mitteilung 30 Min vorher, Tippen öffnet den Look)
 
 - [x] Farblook der Vorlage aufs eigene Foto (Belichtung, Kontrast, Sättigung, Weißabgleich; Stärke-Regler; auch in der Collage)

@@ -234,3 +234,25 @@ final class ReminderTests: XCTestCase {
         XCTAssertLessThan(start.timeIntervalSince(now), 3 * 24 * 3600)
     }
 }
+
+final class PoseIdeaTests: XCTestCase {
+    func testIdeasHaveFullBodyAndMatchThemselves() throws {
+        for idea in PoseIdea.all {
+            XCTAssertEqual(Framing(pose: idea.pose), .fullBody, idea.title)
+            let score = try XCTUnwrap(PoseMatcher.score(live: idea.pose, liveAspect: 0.75,
+                                                        reference: idea.pose, referenceAspect: 0.75))
+            XCTAssertEqual(score, 1, accuracy: 0.001, idea.title)
+            XCTAssertFalse(idea.analysis().poseAdvice.isEmpty, idea.title)
+        }
+    }
+
+    func testIdeasAreDistinct() {
+        let ids = PoseIdea.all.map(\.id)
+        XCTAssertEqual(Set(ids).count, ids.count)
+    }
+
+    func testReferenceImageSize() {
+        let image = PoseIdea.all[0].referenceImage()
+        XCTAssertEqual(image.size.width * image.scale, PoseIdea.imageSize.width)
+    }
+}

@@ -5,6 +5,7 @@ struct ContentView: View {
     @EnvironmentObject private var reminders: Reminders
     @State private var path: [UUID] = []
     @State private var showImport = false
+    @State private var showIdeas = false
     @State private var importLink: String?
     @State private var clipboardHasLink = false
     @AppStorage("onboardingDone") private var onboardingDone = false
@@ -15,7 +16,10 @@ struct ContentView: View {
         NavigationStack(path: $path) {
             Group {
                 if store.looks.isEmpty {
-                    EmptyLibraryView { showImport = true }
+                    EmptyLibraryView(onAdd: { showImport = true }, onIdea: { idea in
+                        let look = store.add(idea: idea)
+                        path.append(look.id)
+                    })
                 } else {
                     LibraryGrid()
                 }
@@ -42,13 +46,25 @@ struct ContentView: View {
             .navigationTitle("PinPose")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showImport = true
+                    Menu {
+                        Button {
+                            showImport = true
+                        } label: {
+                            Label("Pinterest-Bild hinzufügen", systemImage: "pin.fill")
+                        }
+                        Button {
+                            showIdeas = true
+                        } label: {
+                            Label("Pose-Idee wählen", systemImage: "figure.stand")
+                        }
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
+                    } primaryAction: {
+                        showImport = true
                     }
                     .accessibilityLabel("Bild hinzufügen")
+                    .accessibilityHint("Lange drücken für Pose-Ideen")
                 }
             }
             .navigationDestination(for: UUID.self) { id in
@@ -72,6 +88,13 @@ struct ContentView: View {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { showImport = true }
                 }
             }
+        }
+        .sheet(isPresented: $showIdeas) {
+            PoseIdeasView { look in
+                showIdeas = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { path.append(look.id) }
+            }
+            .environmentObject(store)
         }
         .sheet(isPresented: $showImport, onDismiss: { importLink = nil }) {
             ImportView(initialLink: importLink) { look in
@@ -261,6 +284,7 @@ private struct LookCard: View {
 
 private struct EmptyLibraryView: View {
     var onAdd: () -> Void
+    var onIdea: (PoseIdea) -> Void
 
     var body: some View {
         ScrollView {
@@ -273,19 +297,10 @@ private struct EmptyLibraryView: View {
                 VStack(spacing: 8) {
                     Text("Pinterest-Bilder nachshooten")
                         .font(.title2.bold())
-                    Text("Füg ein Bild hinzu und PinPose zeigt dir Pose, Kamera-Einstellungen, Licht und passende Orte in deiner Nähe.")
+                    Text("Füg ein Bild aus Pinterest hinzu. PinPose zeigt dir Pose, Kamera, Licht und Orte – und coacht dich live beim Nachshooten.")
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.secondary)
                 }
-                .padding(.horizontal)
-
-                VStack(alignment: .leading, spacing: 16) {
-                    StepRow(number: 1, title: "Bild einfügen", detail: "Pin-Link kopieren oder Bild aus Fotos wählen.")
-                    StepRow(number: 2, title: "Analyse ansehen", detail: "Pose, Zoom, Belichtung, Licht & Orte.")
-                    StepRow(number: 3, title: "Nachshooten", detail: "Kamera mit Vorlage als Overlay und Live-Pose-Match.")
-                }
-                .padding()
-                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
                 .padding(.horizontal)
 
                 Button(action: onAdd) {
@@ -298,28 +313,26 @@ private struct EmptyLibraryView: View {
                 .buttonBorderShape(.capsule)
                 .controlSize(.large)
                 .padding(.horizontal)
+
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Oder gleich mit einer Pose-Idee üben")
+                        .font(.headline)
+                        .padding(.horizontal)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 12) {
+                            ForEach(PoseIdea.all) { idea in
+                                Button { onIdea(idea) } label: {
+                                    PoseIdeaCard(idea: idea, compact: true)
+                                        .frame(width: 104)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                }
             }
             .padding(.bottom, 32)
-        }
-    }
-}
-
-private struct StepRow: View {
-    let number: Int
-    let title: String
-    let detail: String
-
-    var body: some View {
-        HStack(alignment: .top, spacing: 14) {
-            Text("\(number)")
-                .font(.headline)
-                .foregroundStyle(.white)
-                .frame(width: 32, height: 32)
-                .background(Color.accentColor, in: Circle())
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.headline)
-                Text(detail).font(.subheadline).foregroundStyle(.secondary)
-            }
         }
     }
 }
