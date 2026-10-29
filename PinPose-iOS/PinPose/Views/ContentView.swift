@@ -73,7 +73,7 @@ struct ContentView: View {
                         showImport = true
                     }
                     .accessibilityLabel("Bild hinzufügen")
-                    .accessibilityHint("Lange drücken für Pose-Ideen")
+                    .accessibilityHint(String(localized: "Lange drücken für Pose-Ideen"))
                 }
             }
             .navigationDestination(for: UUID.self) { id in
@@ -214,8 +214,8 @@ private struct LibraryProgress: View {
             ProgressView(value: Double(done), total: Double(max(looks.count, 1)))
                 .tint(.accentColor)
                 .frame(maxWidth: 90)
-            Text(open == 0 ? "Alle \(looks.count) Looks nachgeshootet"
-                           : "\(done) von \(looks.count) nachgeshootet · \(open) \(open == 1 ? "wartet" : "warten") noch")
+            Text(open == 0 ? String(localized: "Alle \(looks.count) Looks nachgeshootet")
+                           : String(localized: "\(done) von \(looks.count) nachgeshootet · \(open) offen"))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
             Spacer(minLength: 0)

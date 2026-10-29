@@ -42,8 +42,8 @@ final class Reminders: NSObject, ObservableObject {
         guard granted, let start = Self.nextGoldenHour(after: Date(), latitude: latitude, longitude: longitude) else { return nil }
 
         let content = UNMutableNotificationContent()
-        content.title = "Golden Hour in 30 Minuten ☀️"
-        content.body = "Perfektes Licht für „\(title)“. Schnapp dir dein iPhone und los!"
+        content.title = String(localized: "Golden Hour in 30 Minuten ☀️")
+        content.body = String(localized: "Perfektes Licht für „\(title)“. Schnapp dir dein iPhone und los!")
         content.sound = .default
         content.userInfo = ["lookID": lookID.uuidString]
 

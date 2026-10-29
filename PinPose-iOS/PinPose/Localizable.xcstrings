@@ -1,0 +1,2266 @@
+{
+  "sourceLanguage": "de",
+  "strings": {
+    "%lld % Pose-Match": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld % pose match"
+          }
+        }
+      }
+    },
+    "%lld %% Pose-Match": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld %% pose match"
+          }
+        }
+      }
+    },
+    "%lld von %lld nachgeshootet · %lld offen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld of %2$lld recreated · %3$lld open"
+          }
+        }
+      }
+    },
+    "%lld weitere anzeigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show %lld more"
+          }
+        }
+      }
+    },
+    "30 Min vor der Golden Hour erinnern": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remind me 30 min before golden hour"
+          }
+        }
+      }
+    },
+    "3D-Icons: 3dicons.co von realvjy (CC0)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3D icons: 3dicons.co by realvjy (CC0)"
+          }
+        }
+      }
+    },
+    "Abbrechen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
+    },
+    "Alle %lld Looks nachgeshootet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All %lld looks recreated"
+          }
+        }
+      }
+    },
+    "Alles aus einem Bild": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everything from one picture"
+          }
+        }
+      }
+    },
+    "Alles läuft auf deinem iPhone. Kein Konto, keine Uploads.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everything runs on your iPhone. No account, no uploads."
+          }
+        }
+      }
+    },
+    "Am besten im Schatten oder bei leichter Bewölkung – kein hartes Mittagslicht im Gesicht.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Best in the shade or under light clouds – no harsh midday sun on the face."
+          }
+        }
+      }
+    },
+    "An deinem Ort geht die Sonne heute nicht auf oder unter.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The sun doesn't rise or set at your location today."
+          }
+        }
+      }
+    },
+    "Analysiere Pose, Licht & Kamera …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Analyzing pose, light & camera …"
+          }
+        }
+      }
+    },
+    "Arme hoch": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arms up"
+          }
+        }
+      }
+    },
+    "Arme verschränkt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arms crossed"
+          }
+        }
+      }
+    },
+    "Auf Treppe, Mauer oder Bank": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On stairs, a wall or a bench"
+          }
+        }
+      }
+    },
+    "Auf der Pinterest-Seite wurde kein Bild gefunden. Speichere das Bild stattdessen in Fotos und wähle es dort aus.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No image found on the Pinterest page. Save the image to Photos instead and choose it there."
+          }
+        }
+      }
+    },
+    "Aus": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Off"
+          }
+        }
+      }
+    },
+    "Aus Fotos auswählen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose from Photos"
+          }
+        }
+      }
+    },
+    "Ausblenden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hide"
+          }
+        }
+      }
+    },
+    "Ausschnitt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Framing"
+          }
+        }
+      }
+    },
+    "Auto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auto"
+          }
+        }
+      }
+    },
+    "Auto-Auslöser": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auto shutter"
+          }
+        }
+      }
+    },
+    "Belichtung": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exposure"
+          }
+        }
+      }
+    },
+    "Bester Pose-Match": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Best pose match"
+          }
+        }
+      }
+    },
+    "Bewegung wirkt natürlich": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Movement looks natural"
+          }
+        }
+      }
+    },
+    "Bild aus Zwischenablage": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image from clipboard"
+          }
+        }
+      }
+    },
+    "Bild gespeichert?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved the image?"
+          }
+        }
+      }
+    },
+    "Bild hinzufügen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add picture"
+          }
+        }
+      }
+    },
+    "Bild wird geladen …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading picture …"
+          }
+        }
+      }
+    },
+    "Bildaufbau": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Composition"
+          }
+        }
+      }
+    },
+    "Bilder, Analysen und deine Fotos bleiben auf deinem iPhone.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pictures, analyses and your photos stay on your iPhone."
+          }
+        }
+      }
+    },
+    "Bis zu den Knien": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Down to the knees"
+          }
+        }
+      }
+    },
+    "Bitte teile nachgeshootete Fotos nur, wenn du die Rechte an der Vorlage hast oder sie als Inspiration kennzeichnest.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only share recreated photos if you have the rights to the original or credit it as inspiration."
+          }
+        }
+      }
+    },
+    "Blaue Stunde": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blue hour"
+          }
+        }
+      }
+    },
+    "Blitz": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Flash"
+          }
+        }
+      }
+    },
+    "Bring die Person ins Bild – am besten so groß wie in der Vorlage.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get the person in frame – ideally as big as in the original."
+          }
+        }
+      }
+    },
+    "Business- und Profilbild": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Business & profile picture"
+          }
+        }
+      }
+    },
+    "Coaching ansagen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speak coaching"
+          }
+        }
+      }
+    },
+    "Coaching: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coaching: %@"
+          }
+        }
+      }
+    },
+    "Das Bild enthält GPS-Daten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The picture contains GPS data"
+          }
+        }
+      }
+    },
+    "Das Bild konnte nicht geladen werden. Prüfe deine Internetverbindung.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The picture couldn't be loaded. Check your internet connection."
+          }
+        }
+      }
+    },
+    "Das Bild konnte nicht gelesen werden. Versuch ein anderes Bild.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The picture couldn't be read. Try another one."
+          }
+        }
+      }
+    },
+    "Datenschutz": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy"
+          }
+        }
+      }
+    },
+    "Dein Fortschritt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your progress"
+          }
+        }
+      }
+    },
+    "Dein Foto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your photo"
+          }
+        }
+      }
+    },
+    "Dein Foto · Farblook": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your photo · color look"
+          }
+        }
+      }
+    },
+    "Dein Shot-Plan": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your shot plan"
+          }
+        }
+      }
+    },
+    "Deine Fotos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your photos"
+          }
+        }
+      }
+    },
+    "Der Klassiker für Outfit-Fotos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The classic for outfit shots"
+          }
+        }
+      }
+    },
+    "Die Vorlage liegt über der Kamera. PinPose sagt dir, was du ändern sollst, und löst aus, sobald die Pose passt.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The original sits over the camera. PinPose tells you what to change and takes the shot as soon as the pose matches."
+          }
+        }
+      }
+    },
+    "Direkt analysieren?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Analyze it now?"
+          }
+        }
+      }
+    },
+    "Du hast ein Bild gespeichert, das du genau so haben willst? PinPose zeigt dir, wie es entstanden ist.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved a picture you want exactly like that? PinPose shows you how it was made."
+          }
+        }
+      }
+    },
+    "Einen Schritt näher ran": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Take a step closer"
+          }
+        }
+      }
+    },
+    "Einen Schritt zurück": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Take a step back"
+          }
+        }
+      }
+    },
+    "Einführung nochmal ansehen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show the introduction again"
+          }
+        }
+      }
+    },
+    "Einstellungen öffnen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Settings"
+          }
+        }
+      }
+    },
+    "Erinnerung heute um %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reminder today at %@"
+          }
+        }
+      }
+    },
+    "Erinnerung ist gestellt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reminder set"
+          }
+        }
+      }
+    },
+    "Erinnerung morgen um %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reminder tomorrow at %@"
+          }
+        }
+      }
+    },
+    "Erlaube Mitteilungen für PinPose in den Einstellungen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow notifications for PinPose in Settings."
+          }
+        }
+      }
+    },
+    "Erlaube PinPose den Zugriff auf die Kamera in den Einstellungen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow PinPose to use the camera in Settings."
+          }
+        }
+      }
+    },
+    "Erlaube den Standortzugriff in den Einstellungen, um Orte in deiner Nähe zu sehen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow location access in Settings to see spots near you."
+          }
+        }
+      }
+    },
+    "Erlaube den Standortzugriff, um die Golden Hour für deinen Ort zu berechnen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow location access to work out golden hour where you are."
+          }
+        }
+      }
+    },
+    "Erst mal umsehen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Just look around"
+          }
+        }
+      }
+    },
+    "Erstes Bild hinzufügen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add your first picture"
+          }
+        }
+      }
+    },
+    "Erstes Foto: %@ – tippe unten links zum Vergleichen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "First photo: %@ – tap bottom left to compare"
+          }
+        }
+      }
+    },
+    "Etwas nach links gehen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move a little to the left"
+          }
+        }
+      }
+    },
+    "Etwas nach rechts gehen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move a little to the right"
+          }
+        }
+      }
+    },
+    "Fair bleiben": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play fair"
+          }
+        }
+      }
+    },
+    "Farblook der Vorlage": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Original's color look"
+          }
+        }
+      }
+    },
+    "Fertig": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        }
+      }
+    },
+    "Foto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo"
+          }
+        }
+      }
+    },
+    "Foto aufnehmen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Take photo"
+          }
+        }
+      }
+    },
+    "Foto entfernen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove photo"
+          }
+        }
+      }
+    },
+    "Foto mit %lld Prozent": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo with %lld percent"
+          }
+        }
+      }
+    },
+    "Foto-Orte in der Nähe": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo spots nearby"
+          }
+        }
+      }
+    },
+    "Fotos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photos"
+          }
+        }
+      }
+    },
+    "Funktioniert, wenn du ein Bild kopiert hast (z. B. lange drücken → Kopieren).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Works when you've copied an image (e.g. long press → Copy)."
+          }
+        }
+      }
+    },
+    "Füg ein Bild aus Pinterest hinzu. PinPose zeigt dir Pose, Kamera, Licht und Orte – und coacht dich live beim Nachshooten.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a picture from Pinterest. PinPose shows you the pose, camera, light and spots – and coaches you live while you recreate it."
+          }
+        }
+      }
+    },
+    "GPS-Daten aus dem Bild": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GPS data from the picture"
+          }
+        }
+      }
+    },
+    "Ganzkörper": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Full body"
+          }
+        }
+      }
+    },
+    "Gespeichert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved"
+          }
+        }
+      }
+    },
+    "Gespeichert · %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved · %@"
+          }
+        }
+      }
+    },
+    "Golden Hour & Licht": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Golden hour & light"
+          }
+        }
+      }
+    },
+    "Golden Hour abends": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Evening golden hour"
+          }
+        }
+      }
+    },
+    "Golden Hour für meinen Ort berechnen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Work out golden hour for my location"
+          }
+        }
+      }
+    },
+    "Golden Hour in 30 Minuten ☀️": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Golden hour in 30 minutes ☀️"
+          }
+        }
+      }
+    },
+    "Golden Hour morgens": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Morning golden hour"
+          }
+        }
+      }
+    },
+    "Gut! Schau dir Arme und Beine in der Vorlage nochmal an.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Good! Take another look at the arms and legs in the original."
+          }
+        }
+      }
+    },
+    "Halbnah (bis zur Hüfte)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Medium shot (to the hips)"
+          }
+        }
+      }
+    },
+    "Halte das iPhone weiter weg, bis du ganz im Bild bist.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold the iPhone further away until you're fully in frame."
+          }
+        }
+      }
+    },
+    "Hand in den Haaren": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hand in the hair"
+          }
+        }
+      }
+    },
+    "Hand in die Hüfte": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hand on the hip"
+          }
+        }
+      }
+    },
+    "Helligkeit, Kontrast, Farben und Weißabgleich wie im Original.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brightness, contrast, colors and white balance like the original."
+          }
+        }
+      }
+    },
+    "Hoppla": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oops"
+          }
+        }
+      }
+    },
+    "Hüfte gerader halten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep the hips straighter"
+          }
+        }
+      }
+    },
+    "Hüfte mehr zur Seite kippen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tilt the hips more to the side"
+          }
+        }
+      }
+    },
+    "Ich": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Me"
+          }
+        }
+      }
+    },
+    "Im Bild erkannt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Found in the picture"
+          }
+        }
+      }
+    },
+    "Im Text wurde kein Link gefunden. In Pinterest: Teilen → „Link kopieren“.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No link found in the text. In Pinterest: Share → “Copy link”."
+          }
+        }
+      }
+    },
+    "In Fotos gesichert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved to Photos"
+          }
+        }
+      }
+    },
+    "In Pinterest: Pin öffnen → ••• → „Bild herunterladen“. Danach hier auswählen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In Pinterest: open the pin → ••• → “Download image”. Then choose it here."
+          }
+        }
+      }
+    },
+    "In Pinterest: Teilen → „Link kopieren“, dann hier einfügen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In Pinterest: Share → “Copy link”, then paste it here."
+          }
+        }
+      }
+    },
+    "In deinen Fotos gespeichert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved to your photos"
+          }
+        }
+      }
+    },
+    "In der Zwischenablage ist kein Bild.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There's no image in the clipboard."
+          }
+        }
+      }
+    },
+    "Jetzt nachshooten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recreate it now"
+          }
+        }
+      }
+    },
+    "Jubel, Konzert, Gipfel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cheering, concert, summit"
+          }
+        }
+      }
+    },
+    "Kamera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Camera"
+          }
+        }
+      }
+    },
+    "Kamera & Zoom berechnen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Working out camera & zoom"
+          }
+        }
+      }
+    },
+    "Kamera etwas nach links schwenken": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pan the camera a little left"
+          }
+        }
+      }
+    },
+    "Kamera etwas nach rechts schwenken": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pan the camera a little right"
+          }
+        }
+      }
+    },
+    "Kamera wechseln": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Switch camera"
+          }
+        }
+      }
+    },
+    "Kamera-Einstellungen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Camera settings"
+          }
+        }
+      }
+    },
+    "Kein Kamerazugriff": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No camera access"
+          }
+        }
+      }
+    },
+    "Kein Konto, keine Werbung, kein Tracking.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No account, no ads, no tracking."
+          }
+        }
+      }
+    },
+    "Keine Vorlage zur Hand? Nimm eine dieser Posen, PinPose coacht dich genauso durch.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No picture at hand? Pick one of these poses – PinPose coaches you just the same."
+          }
+        }
+      }
+    },
+    "Kopf gerader halten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep the head straighter"
+          }
+        }
+      }
+    },
+    "Kopf mehr zur Seite neigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tilt the head more to the side"
+          }
+        }
+      }
+    },
+    "Kopf und Schultern füllen das Bild.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Head and shoulders fill the frame."
+          }
+        }
+      }
+    },
+    "Lange drücken für Pose-Ideen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Long press for pose ideas"
+          }
+        }
+      }
+    },
+    "Licht": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Light"
+          }
+        }
+      }
+    },
+    "Licht & Farben messen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Measuring light & colors"
+          }
+        }
+      }
+    },
+    "Licht & Stimmung": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Light & mood"
+          }
+        }
+      }
+    },
+    "Licht heute bei dir": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Light near you today"
+          }
+        }
+      }
+    },
+    "Link kopiert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Link copied"
+          }
+        }
+      }
+    },
+    "Linke Hand": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Left hand"
+          }
+        }
+      }
+    },
+    "Linken Ellbogen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Left elbow"
+          }
+        }
+      }
+    },
+    "Linken Fuß": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Left foot"
+          }
+        }
+      }
+    },
+    "Linkes Knie": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Left knee"
+          }
+        }
+      }
+    },
+    "Live-Coaching": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live coaching"
+          }
+        }
+      }
+    },
+    "Locker und selbstbewusst": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relaxed and confident"
+          }
+        }
+      }
+    },
+    "Look löschen?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete look?"
+          }
+        }
+      }
+    },
+    "Look nicht gefunden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Look not found"
+          }
+        }
+      }
+    },
+    "Looks": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Looks"
+          }
+        }
+      }
+    },
+    "Lässig gehen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Casual walk"
+          }
+        }
+      }
+    },
+    "Löschen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
+        }
+      }
+    },
+    "Mit Farblook in Fotos sichern": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save to Photos with color look"
+          }
+        }
+      }
+    },
+    "Mit einem Finger verschieben, mit zwei Fingern zoomen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drag with one finger, pinch with two to zoom."
+          }
+        }
+      }
+    },
+    "Nachgeshootet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recreated"
+          }
+        }
+      }
+    },
+    "Nachshooten mit Live-Coach": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recreate with a live coach"
+          }
+        }
+      }
+    },
+    "Neuer Bestwert: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New best: %@"
+          }
+        }
+      }
+    },
+    "Noch nicht ganz – folge den Pose-Tipps Schritt für Schritt.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not quite yet – follow the pose tips step by step."
+          }
+        }
+      }
+    },
+    "Nochmal shooten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shoot again"
+          }
+        }
+      }
+    },
+    "Nur mein Foto teilen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share just my photo"
+          }
+        }
+      }
+    },
+    "Näher an die Kamera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Closer to the camera"
+          }
+        }
+      }
+    },
+    "OK": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        }
+      }
+    },
+    "Oberkörper im Bild, Schnitt etwa an der Hüfte.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Upper body in frame, cropped around the hips."
+          }
+        }
+      }
+    },
+    "Oder gleich mit einer Pose-Idee üben": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Or practise with a pose idea right away"
+          }
+        }
+      }
+    },
+    "Offen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open"
+          }
+        }
+      }
+    },
+    "Original-Ort": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Original spot"
+          }
+        }
+      }
+    },
+    "Original-Ort anzeigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show original spot"
+          }
+        }
+      }
+    },
+    "Ort": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spot"
+          }
+        }
+      }
+    },
+    "Orte in deiner Nähe": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spots near you"
+          }
+        }
+      }
+    },
+    "Overlays": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Overlays"
+          }
+        }
+      }
+    },
+    "Passende Orte finden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finding matching spots"
+          }
+        }
+      }
+    },
+    "Perfekt – Pose halten!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Perfect – hold the pose!"
+          }
+        }
+      }
+    },
+    "Perfektes Licht für „%@“. Schnapp dir dein iPhone und los!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Perfect light for “%@”. Grab your iPhone and go!"
+          }
+        }
+      }
+    },
+    "Pin laden & analysieren": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Load & analyze pin"
+          }
+        }
+      }
+    },
+    "Pin wird geladen …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading pin …"
+          }
+        }
+      }
+    },
+    "PinPose": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PinPose"
+          }
+        }
+      }
+    },
+    "PinPose bewerten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rate PinPose"
+          }
+        }
+      }
+    },
+    "Pinterest-Bild hinzufügen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add Pinterest picture"
+          }
+        }
+      }
+    },
+    "Pinterest-Bilder nachshooten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recreate Pinterest photos"
+          }
+        }
+      }
+    },
+    "Pinterest-Foto nachgeshootet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pinterest photo recreated"
+          }
+        }
+      }
+    },
+    "Pinterest-Link": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pinterest link"
+          }
+        }
+      }
+    },
+    "Pinterest-Links werden nur geladen, um das Bild zu holen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pinterest links are only loaded to fetch the picture."
+          }
+        }
+      }
+    },
+    "Porträt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Portrait"
+          }
+        }
+      }
+    },
+    "Pose Schritt für Schritt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pose step by step"
+          }
+        }
+      }
+    },
+    "Pose erkennen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Detecting pose"
+          }
+        }
+      }
+    },
+    "Pose in Worten, Zoom und Belichtung, das richtige Licht samt Uhrzeit und passende Orte in deiner Nähe.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The pose in words, zoom and exposure, the right light and time, and matching spots near you."
+          }
+        }
+      }
+    },
+    "Pose wird verglichen …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comparing pose …"
+          }
+        }
+      }
+    },
+    "Pose-Idee wählen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a pose idea"
+          }
+        }
+      }
+    },
+    "Pose-Ideen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pose ideas"
+          }
+        }
+      }
+    },
+    "Pose-Skelett": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pose skeleton"
+          }
+        }
+      }
+    },
+    "Pose-Skelett ein/aus": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pose skeleton on/off"
+          }
+        }
+      }
+    },
+    "Raster": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grid"
+          }
+        }
+      }
+    },
+    "Rechte Hand": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Right hand"
+          }
+        }
+      }
+    },
+    "Rechten Ellbogen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Right elbow"
+          }
+        }
+      }
+    },
+    "Rechten Fuß": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Right foot"
+          }
+        }
+      }
+    },
+    "Rechtes Knie": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Right knee"
+          }
+        }
+      }
+    },
+    "Route": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Directions"
+          }
+        }
+      }
+    },
+    "Route zum Original-Ort": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Directions to the original spot"
+          }
+        }
+      }
+    },
+    "Schließen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
+          }
+        }
+      }
+    },
+    "Schnitt oberhalb der Knie, nie direkt im Gelenk.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crop above the knees, never right at a joint."
+          }
+        }
+      }
+    },
+    "Schultern gerader halten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep the shoulders straighter"
+          }
+        }
+      }
+    },
+    "Schultern schräger halten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tilt the shoulders more"
+          }
+        }
+      }
+    },
+    "Sehr nah dran! Kleine Details noch anpassen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Very close! Just adjust the small details."
+          }
+        }
+      }
+    },
+    "Selbstauslöser": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Self-timer"
+          }
+        }
+      }
+    },
+    "Sichern": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save"
+          }
+        }
+      }
+    },
+    "Silhouette": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silhouette"
+          }
+        }
+      }
+    },
+    "Sitzen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sitting"
+          }
+        }
+      }
+    },
+    "So posierst du": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How to pose"
+          }
+        }
+      }
+    },
+    "Spiegeln": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mirror"
+          }
+        }
+      }
+    },
+    "Standort nur für Golden Hour und Orte in der Nähe – er wird nicht gespeichert.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Location is only used for golden hour and nearby spots – it is never stored."
+          }
+        }
+      }
+    },
+    "Stärke": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strength"
+          }
+        }
+      }
+    },
+    "Suche „%@“ in deiner Nähe …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Searching for “%@” near you …"
+          }
+        }
+      }
+    },
+    "Tipps": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tips"
+          }
+        }
+      }
+    },
+    "Titel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Title"
+          }
+        }
+      }
+    },
+    "Umbenennen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename"
+          }
+        }
+      }
+    },
+    "Vergleich": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comparison"
+          }
+        }
+      }
+    },
+    "Vergleich ansehen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View comparison"
+          }
+        }
+      }
+    },
+    "Version": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version"
+          }
+        }
+      }
+    },
+    "Von Kopf bis Fuß im Bild – die Füße nicht abschneiden!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Head to toe in frame – don't cut off the feet!"
+          }
+        }
+      }
+    },
+    "Vorher/Nachher teilen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share before/after"
+          }
+        }
+      }
+    },
+    "Vorlage": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Original"
+          }
+        }
+      }
+    },
+    "Vorlage als": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show original as"
+          }
+        }
+      }
+    },
+    "Vorlage einblenden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show original"
+          }
+        }
+      }
+    },
+    "Vorlage spiegeln": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mirror original"
+          }
+        }
+      }
+    },
+    "Vorlage verschieben & zoomen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move & zoom original"
+          }
+        }
+      }
+    },
+    "Weiches Licht": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soft light"
+          }
+        }
+      }
+    },
+    "Weiter": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next"
+          }
+        }
+      }
+    },
+    "Weiter shooten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep shooting"
+          }
+        }
+      }
+    },
+    "Weiter weg von der Kamera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Further from the camera"
+          }
+        }
+      }
+    },
+    "Weniger anzeigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show less"
+          }
+        }
+      }
+    },
+    "Wird in Fotos gespeichert …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saving to Photos …"
+          }
+        }
+      }
+    },
+    "Wow – fast identisch!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wow – almost identical!"
+          }
+        }
+      }
+    },
+    "Zoom": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zoom"
+          }
+        }
+      }
+    },
+    "Zurücksetzen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset"
+          }
+        }
+      }
+    },
+    "höher": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "higher"
+          }
+        }
+      }
+    },
+    "näher an den Körper": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "closer to the body"
+          }
+        }
+      }
+    },
+    "tiefer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "lower"
+          }
+        }
+      }
+    },
+    "weiter nach außen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "further out"
+          }
+        }
+      }
+    },
+    "wie im Bild": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "like the picture"
+          }
+        }
+      }
+    },
+    "Über PinPose": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About PinPose"
+          }
+        }
+      }
+    },
+    "Überspringen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skip"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

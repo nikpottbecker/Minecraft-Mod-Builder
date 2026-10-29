@@ -7,7 +7,7 @@ struct CompareView: View {
     let score: Double?
     /// nil hides the "saved to Fotos" line, e.g. for older shots.
     var saved: Bool?
-    var doneTitle = "Weiter shooten"
+    var doneTitle = String(localized: "Weiter shooten")
 
     @Environment(\.dismiss) private var dismiss
     @AppStorage("compare.colorLook") private var colorLook = false
@@ -25,8 +25,8 @@ struct CompareView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     HStack(alignment: .top, spacing: 10) {
-                        column(title: "Vorlage", image: reference)
-                        column(title: colorLook ? "Dein Foto · Farblook" : "Dein Foto", image: shownPhoto)
+                        column(title: String(localized: "Vorlage"), image: reference)
+                        column(title: colorLook ? String(localized: "Dein Foto · Farblook") : String(localized: "Dein Foto"), image: shownPhoto)
                     }
 
                     if let score {
@@ -45,7 +45,7 @@ struct CompareView: View {
                     }
 
                     if let saved, !colorLook {
-                        Label(saved ? "In deinen Fotos gespeichert" : "Wird in Fotos gespeichert …",
+                        Label(saved ? String(localized: "In deinen Fotos gespeichert") : String(localized: "Wird in Fotos gespeichert …"),
                               systemImage: saved ? "checkmark.circle.fill" : "arrow.down.circle")
                             .font(.subheadline)
                             .foregroundStyle(saved ? Color.green : Color.secondary)
@@ -114,7 +114,7 @@ struct CompareView: View {
                 Button {
                     saveGraded()
                 } label: {
-                    Label(savedGraded ? "In Fotos gesichert" : "Mit Farblook in Fotos sichern",
+                    Label(savedGraded ? String(localized: "In Fotos gesichert") : String(localized: "Mit Farblook in Fotos sichern"),
                           systemImage: savedGraded ? "checkmark.circle.fill" : "square.and.arrow.down")
                         .font(.subheadline.bold())
                 }
@@ -182,10 +182,10 @@ struct CompareView: View {
 
     private func verdict(for score: Double) -> String {
         switch score {
-        case 0.9...: return "Wow – fast identisch!"
-        case 0.8...: return "Sehr nah dran! Kleine Details noch anpassen."
-        case 0.65...: return "Gut! Schau dir Arme und Beine in der Vorlage nochmal an."
-        default: return "Noch nicht ganz – folge den Pose-Tipps Schritt für Schritt."
+        case 0.9...: return String(localized: "Wow – fast identisch!")
+        case 0.8...: return String(localized: "Sehr nah dran! Kleine Details noch anpassen.")
+        case 0.65...: return String(localized: "Gut! Schau dir Arme und Beine in der Vorlage nochmal an.")
+        default: return String(localized: "Noch nicht ganz – folge den Pose-Tipps Schritt für Schritt.")
         }
     }
 }

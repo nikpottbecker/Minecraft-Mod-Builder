@@ -21,8 +21,8 @@ enum CollageRenderer {
             let right = CGRect(x: panelWidth + gap, y: 0, width: panelWidth, height: panelHeight)
             drawFilling(reference, in: left, context: context.cgContext)
             drawFilling(photo, in: right, context: context.cgContext)
-            drawTag("Vorlage", in: left)
-            drawTag("Ich", in: right)
+            drawTag(String(localized: "Vorlage"), in: left)
+            drawTag(String(localized: "Ich"), in: right)
 
             let footerRect = CGRect(x: 0, y: panelHeight, width: size.width, height: footer)
             drawFooter(in: footerRect, score: score)
@@ -66,10 +66,10 @@ enum CollageRenderer {
             .foregroundColor: UIColor.white.withAlphaComponent(0.7),
         ]
         ("PinPose" as NSString).draw(at: CGPoint(x: 40, y: rect.minY + 30), withAttributes: brand)
-        ("Pinterest-Foto nachgeshootet" as NSString).draw(at: CGPoint(x: 40, y: rect.minY + 88), withAttributes: sub)
+        (String(localized: "Pinterest-Foto nachgeshootet") as NSString).draw(at: CGPoint(x: 40, y: rect.minY + 88), withAttributes: sub)
 
         guard let score else { return }
-        let text = "\(Int((score * 100).rounded())) % Pose-Match"
+        let text = String(localized: "\(Int((score * 100).rounded())) % Pose-Match")
         let attributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.monospacedDigitSystemFont(ofSize: 36, weight: .bold),
             .foregroundColor: UIColor.white,

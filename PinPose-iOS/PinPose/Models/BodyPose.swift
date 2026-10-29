@@ -97,19 +97,19 @@ enum Framing: String, Codable {
 
     var label: String {
         switch self {
-        case .fullBody: return "Ganzkörper"
-        case .knees: return "Bis zu den Knien"
-        case .waist: return "Halbnah (bis zur Hüfte)"
-        case .portrait: return "Porträt"
+        case .fullBody: return String(localized: "Ganzkörper")
+        case .knees: return String(localized: "Bis zu den Knien")
+        case .waist: return String(localized: "Halbnah (bis zur Hüfte)")
+        case .portrait: return String(localized: "Porträt")
         }
     }
 
     var detail: String {
         switch self {
-        case .fullBody: return "Von Kopf bis Fuß im Bild – die Füße nicht abschneiden!"
-        case .knees: return "Schnitt oberhalb der Knie, nie direkt im Gelenk."
-        case .waist: return "Oberkörper im Bild, Schnitt etwa an der Hüfte."
-        case .portrait: return "Kopf und Schultern füllen das Bild."
+        case .fullBody: return String(localized: "Von Kopf bis Fuß im Bild – die Füße nicht abschneiden!")
+        case .knees: return String(localized: "Schnitt oberhalb der Knie, nie direkt im Gelenk.")
+        case .waist: return String(localized: "Oberkörper im Bild, Schnitt etwa an der Hüfte.")
+        case .portrait: return String(localized: "Kopf und Schultern füllen das Bild.")
         }
     }
 }

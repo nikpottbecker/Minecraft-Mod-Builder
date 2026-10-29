@@ -17,7 +17,7 @@ struct PlacesView: View {
                         .tint(.pink)
                 }
                 if let originalCoordinate {
-                    Marker("Original-Ort", systemImage: "star.fill", coordinate: originalCoordinate)
+                    Marker(String(localized: "Original-Ort"), systemImage: "star.fill", coordinate: originalCoordinate)
                         .tint(.yellow)
                 }
             }
@@ -107,7 +107,7 @@ struct PlacesView: View {
     private func openOriginal() {
         guard let originalCoordinate else { return }
         let item = MKMapItem(placemark: MKPlacemark(coordinate: originalCoordinate))
-        item.name = "Original-Ort"
+        item.name = String(localized: "Original-Ort")
         item.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDefault])
     }
 }

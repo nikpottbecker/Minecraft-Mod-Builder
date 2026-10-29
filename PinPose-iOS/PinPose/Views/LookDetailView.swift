@@ -73,12 +73,12 @@ struct LookDetailView: View {
                     ShotStrip(look: look) { openShot = $0 }
                 }
 
-                AdviceSection(title: "So posierst du", icon: "figure.stand", advice: analysis.poseAdvice, preview: 4)
-                AdviceSection(title: "Kamera-Einstellungen", icon: "camera.fill", advice: analysis.cameraAdvice)
-                AdviceSection(title: "Licht & Stimmung", icon: "sun.max.fill", advice: analysis.lightAdvice)
-                SunTimesCard(highlightGoldenHour: analysis.lightAdvice.contains { $0.title == "Golden Hour" },
+                AdviceSection(title: String(localized: "So posierst du"), icon: "figure.stand", advice: analysis.poseAdvice, preview: 4)
+                AdviceSection(title: String(localized: "Kamera-Einstellungen"), icon: "camera.fill", advice: analysis.cameraAdvice)
+                AdviceSection(title: String(localized: "Licht & Stimmung"), icon: "sun.max.fill", advice: analysis.lightAdvice)
+                SunTimesCard(highlightGoldenHour: analysis.lightAdvice.contains { $0.icon == "sun.horizon.fill" },
                              look: look)
-                AdviceSection(title: "Bildaufbau", icon: "square.grid.3x3", advice: analysis.compositionAdvice)
+                AdviceSection(title: String(localized: "Bildaufbau"), icon: "square.grid.3x3", advice: analysis.compositionAdvice)
                 if !analysis.places.isEmpty || analysis.exif?.coordinate != nil {
                     PlacesSection(places: analysis.places, exif: analysis.exif)
                 }
@@ -107,7 +107,7 @@ struct LookDetailView: View {
             Button {
                 showCamera = true
             } label: {
-                Label(look.isRecreated ? "Nochmal shooten" : "Jetzt nachshooten", systemImage: "camera.fill")
+                Label(look.isRecreated ? String(localized: "Nochmal shooten") : String(localized: "Jetzt nachshooten"), systemImage: "camera.fill")
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 8)
@@ -153,7 +153,7 @@ struct LookDetailView: View {
             }
         }
         .sheet(item: $openShot) { shot in
-            CompareView(reference: image, photo: store.image(for: shot), score: shot.score, doneTitle: "Fertig")
+            CompareView(reference: image, photo: store.image(for: shot), score: shot.score, doneTitle: String(localized: "Fertig"))
         }
         .onChange(of: showCamera) { _, open in
             if !open { askForReviewAfterGoodSession() }
@@ -215,7 +215,7 @@ private struct ShotStrip: View {
                                 Label("Foto entfernen", systemImage: "trash")
                             }
                         }
-                        .accessibilityLabel(shot.score.map { "Foto mit \(Int($0 * 100)) Prozent" } ?? "Foto")
+                        .accessibilityLabel(shot.score.map { String(localized: "Foto mit \(Int($0 * 100)) Prozent") } ?? String(localized: "Foto"))
                     }
                 }
             }
@@ -235,18 +235,18 @@ private struct ShotPlanCard: View {
     }
 
     private var items: [Item] {
-        var result = [Item(icon: .zoom, label: "Zoom", value: ShotAdvisor.zoomLabel(analysis.recommendedZoom))]
-        if let height = analysis.cameraAdvice.first(where: { $0.title.hasPrefix("Kamera ") }) {
-            let rest = height.title.replacingOccurrences(of: "Kamera ", with: "")
-            result.append(Item(icon: .camera, label: "Kamera", value: rest.prefix(1).uppercased() + rest.dropFirst()))
+        var result = [Item(icon: .zoom, label: String(localized: "Zoom"), value: ShotAdvisor.zoomLabel(analysis.recommendedZoom))]
+        let heightIcons: Set<String> = ["arrow.up.forward.circle", "arrow.down.forward.circle", "camera.viewfinder"]
+        if let height = analysis.cameraAdvice.first(where: { heightIcons.contains($0.icon) }) {
+            result.append(Item(icon: .camera, label: String(localized: "Kamera"), value: height.title))
         } else if let framing = analysis.framing {
-            result.append(Item(icon: .person, label: "Ausschnitt", value: framing.label))
+            result.append(Item(icon: .person, label: String(localized: "Ausschnitt"), value: framing.label))
         }
         if let light = analysis.lightAdvice.first {
-            result.append(Item(icon: light.title.contains("Abend") ? .clock : .sun, label: "Licht", value: light.title))
+            result.append(Item(icon: ["moon.stars.fill", "lightbulb.fill"].contains(light.icon) ? .clock : .sun, label: String(localized: "Licht"), value: light.title))
         }
         if let place = analysis.places.first {
-            result.append(Item(icon: .mapPin, label: "Ort", value: place.title))
+            result.append(Item(icon: .mapPin, label: String(localized: "Ort"), value: place.title))
         }
         return result
     }
@@ -317,7 +317,7 @@ struct AdviceSection: View {
                     Button {
                         withAnimation(.easeInOut(duration: 0.25)) { expanded.toggle() }
                     } label: {
-                        Label(expanded ? "Weniger anzeigen" : "\(advice.count - preview) weitere anzeigen",
+                        Label(expanded ? String(localized: "Weniger anzeigen") : String(localized: "\(advice.count - preview) weitere anzeigen"),
                               systemImage: expanded ? "chevron.up" : "chevron.down")
                             .font(.subheadline.bold())
                     }
@@ -364,11 +364,11 @@ private struct PlacesSection: View {
 
             if let coordinate = exif?.coordinate {
                 NavigationLink {
-                    PlacesView(idea: PlaceIdea(title: "Original-Ort", query: "", icon: "star.fill",
-                                               reason: "GPS-Daten aus dem Bild"),
+                    PlacesView(idea: PlaceIdea(title: String(localized: "Original-Ort"), query: "", icon: "star.fill",
+                                               reason: String(localized: "GPS-Daten aus dem Bild")),
                                originalCoordinate: coordinate)
                 } label: {
-                    PlaceRow(icon: "star.fill", title: "Original-Ort anzeigen", subtitle: "Das Bild enthält GPS-Daten")
+                    PlaceRow(icon: "star.fill", title: String(localized: "Original-Ort anzeigen"), subtitle: String(localized: "Das Bild enthält GPS-Daten"))
                 }
                 .buttonStyle(.plain)
             }

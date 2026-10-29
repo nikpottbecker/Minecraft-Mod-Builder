@@ -19,9 +19,9 @@ struct AboutView: View {
         NavigationStack {
             List {
                 Section {
-                    statRow("Looks", value: store.looks.count, icon: "square.grid.2x2")
-                    statRow("Nachgeshootet", value: store.looks.filter(\.isRecreated).count, icon: "checkmark.seal")
-                    statRow("Fotos", value: store.looks.reduce(0) { $0 + $1.shots.count }, icon: "photo.stack")
+                    statRow(String(localized: "Looks"), value: store.looks.count, icon: "square.grid.2x2")
+                    statRow(String(localized: "Nachgeshootet"), value: store.looks.filter(\.isRecreated).count, icon: "checkmark.seal")
+                    statRow(String(localized: "Fotos"), value: store.looks.reduce(0) { $0 + $1.shots.count }, icon: "photo.stack")
                     if let best = store.looks.compactMap(\.bestScore).max() {
                         HStack {
                             Label {

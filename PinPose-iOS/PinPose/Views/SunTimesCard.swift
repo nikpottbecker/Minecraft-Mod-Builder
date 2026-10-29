@@ -25,10 +25,10 @@ struct SunTimesCard: View {
                    let times = SunCalculator.sunTimes(on: Date(), latitude: location.coordinate.latitude,
                                                       longitude: location.coordinate.longitude) {
                     VStack(spacing: 8) {
-                        row(icon: "sunrise.fill", title: "Golden Hour morgens", interval: times.morningGoldenHour)
-                        row(icon: "sunset.fill", title: "Golden Hour abends", interval: times.eveningGoldenHour,
+                        row(icon: "sunrise.fill", title: String(localized: "Golden Hour morgens"), interval: times.morningGoldenHour)
+                        row(icon: "sunset.fill", title: String(localized: "Golden Hour abends"), interval: times.eveningGoldenHour,
                             highlighted: highlightGoldenHour)
-                        row(icon: "moon.haze.fill", title: "Blaue Stunde", interval: times.eveningBlueHour)
+                        row(icon: "moon.haze.fill", title: String(localized: "Blaue Stunde"), interval: times.eveningBlueHour)
                         if let look {
                             Divider()
                             reminderButton(for: look, location: location.coordinate)
@@ -60,7 +60,7 @@ struct SunTimesCard: View {
     private func reminderButton(for look: Look, location: CLLocationCoordinate2D) -> some View {
         if reminders.scheduled.contains(look.id) {
             HStack {
-                Label(reminderNote ?? "Erinnerung ist gestellt", systemImage: "bell.badge.fill")
+                Label(reminderNote ?? String(localized: "Erinnerung ist gestellt"), systemImage: "bell.badge.fill")
                     .font(.subheadline.bold())
                     .foregroundStyle(Color.accentColor)
                 Spacer()
@@ -72,8 +72,10 @@ struct SunTimesCard: View {
                 Task {
                     if let start = await reminders.remind(lookID: look.id, title: look.title,
                                                           latitude: location.latitude, longitude: location.longitude) {
-                        let day = Calendar.current.isDateInToday(start) ? "heute" : "morgen"
-                        reminderNote = "Erinnerung \(day) um \(start.addingTimeInterval(-Reminders.leadTime).formatted(date: .omitted, time: .shortened))"
+                        let time = start.addingTimeInterval(-Reminders.leadTime).formatted(date: .omitted, time: .shortened)
+                        reminderNote = Calendar.current.isDateInToday(start)
+                            ? String(localized: "Erinnerung heute um \(time)")
+                            : String(localized: "Erinnerung morgen um \(time)")
                         reminderFailed = false
                     } else {
                         reminderNote = nil

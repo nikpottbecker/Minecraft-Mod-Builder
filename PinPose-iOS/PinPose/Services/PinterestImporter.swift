@@ -7,9 +7,9 @@ enum PinterestImportError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .noLink: return "Im Text wurde kein Link gefunden. In Pinterest: Teilen → „Link kopieren“."
-        case .noImageFound: return "Auf der Pinterest-Seite wurde kein Bild gefunden. Speichere das Bild stattdessen in Fotos und wähle es dort aus."
-        case .downloadFailed: return "Das Bild konnte nicht geladen werden. Prüfe deine Internetverbindung."
+        case .noLink: return String(localized: "Im Text wurde kein Link gefunden. In Pinterest: Teilen → „Link kopieren“.")
+        case .noImageFound: return String(localized: "Auf der Pinterest-Seite wurde kein Bild gefunden. Speichere das Bild stattdessen in Fotos und wähle es dort aus.")
+        case .downloadFailed: return String(localized: "Das Bild konnte nicht geladen werden. Prüfe deine Internetverbindung.")
         }
     }
 }

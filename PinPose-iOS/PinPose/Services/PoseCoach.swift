@@ -8,7 +8,7 @@ struct PoseHint: Equatable {
     /// The joint that should move, if the hint is about a single limb.
     let joint: Joint?
 
-    static let hold = PoseHint(text: "Perfekt – Pose halten!", joint: nil)
+    static let hold = PoseHint(text: String(localized: "Perfekt – Pose halten!"), joint: nil)
 }
 
 /// Turns the difference between the live pose and the reference into the single most important correction.
@@ -25,14 +25,14 @@ enum PoseCoach {
     }
 
     private static let limbs: [Limb] = [
-        Limb(from: .leftShoulder, to: .leftElbow, label: "Linken Ellbogen"),
-        Limb(from: .leftElbow, to: .leftWrist, label: "Linke Hand"),
-        Limb(from: .rightShoulder, to: .rightElbow, label: "Rechten Ellbogen"),
-        Limb(from: .rightElbow, to: .rightWrist, label: "Rechte Hand"),
-        Limb(from: .leftHip, to: .leftKnee, label: "Linkes Knie"),
-        Limb(from: .leftKnee, to: .leftAnkle, label: "Linken Fuß"),
-        Limb(from: .rightHip, to: .rightKnee, label: "Rechtes Knie"),
-        Limb(from: .rightKnee, to: .rightAnkle, label: "Rechten Fuß"),
+        Limb(from: .leftShoulder, to: .leftElbow, label: String(localized: "Linken Ellbogen")),
+        Limb(from: .leftElbow, to: .leftWrist, label: String(localized: "Linke Hand")),
+        Limb(from: .rightShoulder, to: .rightElbow, label: String(localized: "Rechten Ellbogen")),
+        Limb(from: .rightElbow, to: .rightWrist, label: String(localized: "Rechte Hand")),
+        Limb(from: .leftHip, to: .leftKnee, label: String(localized: "Linkes Knie")),
+        Limb(from: .leftKnee, to: .leftAnkle, label: String(localized: "Linken Fuß")),
+        Limb(from: .rightHip, to: .rightKnee, label: String(localized: "Rechtes Knie")),
+        Limb(from: .rightKnee, to: .rightAnkle, label: String(localized: "Rechten Fuß")),
     ]
 
     /// Limb directions that differ less than this are fine.
@@ -98,9 +98,9 @@ enum PoseCoach {
 
             let direction: String
             if abs(dy) >= abs(dx) {
-                direction = dy < 0 ? "höher" : "tiefer"
+                direction = dy < 0 ? String(localized: "höher") : String(localized: "tiefer")
             } else if let center {
-                direction = abs(goal.x - center) > abs(end.x - center) ? "weiter nach außen" : "näher an den Körper"
+                direction = abs(goal.x - center) > abs(end.x - center) ? String(localized: "weiter nach außen") : String(localized: "näher an den Körper")
             } else {
                 continue
             }
@@ -108,11 +108,11 @@ enum PoseCoach {
         }
 
         if let hint = tiltHint(live, liveAspect, target, referenceAspect, .leftShoulder, .rightShoulder,
-                               more: "Schultern schräger halten", less: "Schultern gerader halten") {
+                               more: String(localized: "Schultern schräger halten"), less: String(localized: "Schultern gerader halten")) {
             consider(hint.severity * 0.8, hint.hint)
         }
         if let hint = tiltHint(live, liveAspect, target, referenceAspect, .leftHip, .rightHip,
-                               more: "Hüfte mehr zur Seite kippen", less: "Hüfte gerader halten") {
+                               more: String(localized: "Hüfte mehr zur Seite kippen"), less: String(localized: "Hüfte gerader halten")) {
             consider(hint.severity * 0.8, hint.hint)
         }
         if let hint = headHint(live, liveAspect, target, referenceAspect) {
@@ -144,9 +144,9 @@ enum PoseCoach {
         if sizeSeverity > 1 {
             let text: String
             if ratio < 1 {
-                text = context.frontCamera ? "Näher an die Kamera" : "Einen Schritt näher ran"
+                text = context.frontCamera ? String(localized: "Näher an die Kamera") : String(localized: "Einen Schritt näher ran")
             } else {
-                text = context.frontCamera ? "Weiter weg von der Kamera" : "Einen Schritt zurück"
+                text = context.frontCamera ? String(localized: "Weiter weg von der Kamera") : String(localized: "Einen Schritt zurück")
             }
             best = (sizeSeverity, PoseHint(text: text, joint: nil))
         }
@@ -160,9 +160,9 @@ enum PoseCoach {
             let text: String
             if context.frontCamera {
                 // Mirrored preview: moving to your own left moves you to the left of the screen.
-                text = dx > 0 ? "Etwas nach links gehen" : "Etwas nach rechts gehen"
+                text = dx > 0 ? String(localized: "Etwas nach links gehen") : String(localized: "Etwas nach rechts gehen")
             } else {
-                text = dx > 0 ? "Kamera etwas nach rechts schwenken" : "Kamera etwas nach links schwenken"
+                text = dx > 0 ? String(localized: "Kamera etwas nach rechts schwenken") : String(localized: "Kamera etwas nach links schwenken")
             }
             best = (offsetSeverity * 0.9, PoseHint(text: text, joint: nil))
         }
@@ -214,7 +214,7 @@ enum PoseCoach {
         let diff = targetLean - liveLean
         guard abs(diff) > tiltToleranceDegrees else { return nil }
         return (abs(diff) / tiltToleranceDegrees,
-                PoseHint(text: diff > 0 ? "Kopf mehr zur Seite neigen" : "Kopf gerader halten", joint: .nose))
+                PoseHint(text: diff > 0 ? String(localized: "Kopf mehr zur Seite neigen") : String(localized: "Kopf gerader halten"), joint: .nose))
     }
 }
 

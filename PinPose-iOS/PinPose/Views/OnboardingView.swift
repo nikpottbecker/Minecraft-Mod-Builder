@@ -11,25 +11,25 @@ struct OnboardingView: View {
     private let pages: [OnboardingPage] = [
         OnboardingPage(
             icon: .pin,
-            title: "Dein Pinterest-Foto.\nIn echt.",
-            text: "Du hast ein Bild gespeichert, das du genau so haben willst? PinPose zeigt dir, wie es entstanden ist."
+            title: String(localized: "Dein Pinterest-Foto.\nIn echt."),
+            text: String(localized: "Du hast ein Bild gespeichert, das du genau so haben willst? PinPose zeigt dir, wie es entstanden ist.")
         ),
         OnboardingPage(
             icon: .magic,
-            title: "Alles aus einem Bild",
-            text: "Pose in Worten, Zoom und Belichtung, das richtige Licht samt Uhrzeit und passende Orte in deiner Nähe.",
+            title: String(localized: "Alles aus einem Bild"),
+            text: String(localized: "Pose in Worten, Zoom und Belichtung, das richtige Licht samt Uhrzeit und passende Orte in deiner Nähe."),
             bullets: [
-                OnboardingBullet(icon: .person, label: "Pose Schritt für Schritt"),
-                OnboardingBullet(icon: .zoom, label: "Kamera-Einstellungen"),
-                OnboardingBullet(icon: .sun, label: "Golden Hour & Licht"),
-                OnboardingBullet(icon: .mapPin, label: "Foto-Orte in der Nähe"),
+                OnboardingBullet(icon: .person, label: String(localized: "Pose Schritt für Schritt")),
+                OnboardingBullet(icon: .zoom, label: String(localized: "Kamera-Einstellungen")),
+                OnboardingBullet(icon: .sun, label: String(localized: "Golden Hour & Licht")),
+                OnboardingBullet(icon: .mapPin, label: String(localized: "Foto-Orte in der Nähe")),
             ]
         ),
         OnboardingPage(
             icon: .camera,
-            title: "Nachshooten mit Live-Coach",
-            text: "Die Vorlage liegt über der Kamera. PinPose sagt dir, was du ändern sollst, und löst aus, sobald die Pose passt.",
-            footnote: "Alles läuft auf deinem iPhone. Kein Konto, keine Uploads."
+            title: String(localized: "Nachshooten mit Live-Coach"),
+            text: String(localized: "Die Vorlage liegt über der Kamera. PinPose sagt dir, was du ändern sollst, und löst aus, sobald die Pose passt."),
+            footnote: String(localized: "Alles läuft auf deinem iPhone. Kein Konto, keine Uploads.")
         ),
     ]
 
@@ -65,7 +65,7 @@ struct OnboardingView: View {
                     onFinish(true)
                 }
             } label: {
-                Text(page < pages.count - 1 ? "Weiter" : "Erstes Bild hinzufügen")
+                Text(page < pages.count - 1 ? String(localized: "Weiter") : String(localized: "Erstes Bild hinzufügen"))
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 6)

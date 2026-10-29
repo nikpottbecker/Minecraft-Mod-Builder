@@ -8,7 +8,7 @@ enum AnalysisError: LocalizedError {
     case unreadableImage
 
     var errorDescription: String? {
-        "Das Bild konnte nicht gelesen werden. Versuch ein anderes Bild."
+        String(localized: "Das Bild konnte nicht gelesen werden. Versuch ein anderes Bild.")
     }
 }
 

@@ -89,7 +89,7 @@ struct ImportView: View {
 
     private func importPickerItem(_ item: PhotosPickerItem) async {
         isWorking = true
-        status = "Bild wird geladen …"
+        status = String(localized: "Bild wird geladen …")
         do {
             guard let data = try await item.loadTransferable(type: Data.self) else { throw AnalysisError.unreadableImage }
             await process(data)
@@ -102,7 +102,7 @@ struct ImportView: View {
 
     private func importLink() async {
         isWorking = true
-        status = "Pin wird geladen …"
+        status = String(localized: "Pin wird geladen …")
         do {
             let data = try await PinterestImporter.loadImageData(from: linkText)
             await process(data)
@@ -114,7 +114,7 @@ struct ImportView: View {
 
     private func importClipboardImage() async {
         guard let image = UIPasteboard.general.image, let data = image.jpegData(compressionQuality: 0.95) else {
-            errorMessage = "In der Zwischenablage ist kein Bild."
+            errorMessage = String(localized: "In der Zwischenablage ist kein Bild.")
             return
         }
         await process(data)
@@ -122,7 +122,7 @@ struct ImportView: View {
 
     private func process(_ data: Data) async {
         isWorking = true
-        status = "Analysiere Pose, Licht & Kamera …"
+        status = String(localized: "Analysiere Pose, Licht & Kamera …")
         do {
             let result = try await ImageAnalyzer.analyze(data: data)
             let look = store.add(image: result.image, analysis: result.analysis, silhouette: result.silhouette)
@@ -140,10 +140,10 @@ private struct AnalyzingOverlay: View {
     let status: String
 
     private let steps: [(Icon3D, String)] = [
-        (.person, "Pose erkennen"),
-        (.zoom, "Kamera & Zoom berechnen"),
-        (.sun, "Licht & Farben messen"),
-        (.mapPin, "Passende Orte finden"),
+        (.person, String(localized: "Pose erkennen")),
+        (.zoom, String(localized: "Kamera & Zoom berechnen")),
+        (.sun, String(localized: "Licht & Farben messen")),
+        (.mapPin, String(localized: "Passende Orte finden")),
     ]
     @State private var done = 0
 

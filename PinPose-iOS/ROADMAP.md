@@ -13,7 +13,7 @@ Neue Ideen unten bei „Später“ eintragen.
 
 - [ ] Zwei Personen im Bild erkennen und beide Posen vergleichen
 - [ ] Moodboard: mehrere Looks zu einem Shooting-Plan mit Ort und Uhrzeit bündeln
-- [ ] Englische Übersetzung (String Catalog)
+- [ ] Englisch Teil 2: Analyse-Texte aus PoseDescriber und ShotAdvisor (String(localized:)); bis dahin sind die Tipp-Karten auf Englisch noch deutsch
 
 ## Später
 
@@ -21,6 +21,8 @@ Neue Ideen unten bei „Später“ eintragen.
 - [ ] TestFlight-Verteilung automatisieren
 
 ## Erledigt
+
+- [x] Englisch Teil 1: String Catalog (Localizable + InfoPlist) für Oberfläche, Onboarding, Coach-Hinweise, Pose-Ideen, Mitteilungen; Logik vergleicht Icons statt deutscher Texte; Tests laufen auf Deutsch (Scheme)
 
 - [x] 3D-Icons (3dicons.co, CC0, Stil „color“) für Onboarding, Startbildschirm, Shot-Plan, Analyse-Schritte, Vergleich, Golden Hour; Bedienelemente bleiben SF Symbols; Emojis als Icon-Ersatz entfernt
 - [x] Neues App-Icon: 3D-Pin im Kamera-Sucher, hell + dunkel (scripts/make_app_icon.py)

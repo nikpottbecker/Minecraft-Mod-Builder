@@ -412,17 +412,17 @@ struct CameraView: View {
 
             HStack(spacing: 8) {
                 if look.analysis.pose != nil {
-                    ChipToggle(title: "Auto", systemImage: "figure.stand", isOn: $autoCapture)
+                    ChipToggle(title: String(localized: "Auto"), systemImage: "figure.stand", isOn: $autoCapture)
                         .accessibilityLabel("Auto-Auslöser")
                 }
                 if showGhost, referenceImage != nil {
-                    ChipToggle(title: "Vorlage", systemImage: "photo",
+                    ChipToggle(title: String(localized: "Vorlage"), systemImage: "photo",
                                isOn: sliderBinding(.opacity))
                 }
                 ChipToggle(title: String(format: "%+.1f", camera.exposureBias), systemImage: "sun.max.fill",
                            isOn: sliderBinding(.exposure))
                     .accessibilityLabel("Belichtung")
-                ChipToggle(title: "Spiegeln", systemImage: "arrow.left.and.right", isOn: $mirrorOverlay)
+                ChipToggle(title: String(localized: "Spiegeln"), systemImage: "arrow.left.and.right", isOn: $mirrorOverlay)
             }
 
             HStack(spacing: 8) {
@@ -484,7 +484,7 @@ struct CameraView: View {
                     VStack(spacing: 2) {
                         Image(systemName: "timer")
                             .font(.title3)
-                        Text(timerSeconds == 0 ? "Aus" : "\(timerSeconds) s")
+                        Text(timerSeconds == 0 ? String(localized: "Aus") : "\(timerSeconds) s")
                             .font(.caption2.bold())
                     }
                     .foregroundStyle(timerSeconds == 0 ? Color.white : Color.yellow)
@@ -511,8 +511,8 @@ struct CameraView: View {
                 .font(.headline)
                 .foregroundStyle(.pink)
             Text(camera.position == .front
-                 ? "Halte das iPhone weiter weg, bis du ganz im Bild bist."
-                 : "Bring die Person ins Bild – am besten so groß wie in der Vorlage.")
+                 ? String(localized: "Halte das iPhone weiter weg, bis du ganz im Bild bist.")
+                 : String(localized: "Bring die Person ins Bild – am besten so groß wie in der Vorlage."))
                 .font(.subheadline)
             Spacer(minLength: 0)
         }
@@ -595,16 +595,16 @@ struct CameraView: View {
         if let score {
             let percent = "\(Int((score * 100).rounded())) %"
             if let previousBest, score > previousBest + 0.005 {
-                text = "Neuer Bestwert: \(percent)"
+                text = String(localized: "Neuer Bestwert: \(percent)")
                 icon = .trophy
                 UINotificationFeedbackGenerator().notificationOccurred(.success)
             } else if previousBest == nil {
-                text = "Erstes Foto: \(percent) – tippe unten links zum Vergleichen"
+                text = String(localized: "Erstes Foto: \(percent) – tippe unten links zum Vergleichen")
             } else {
-                text = "Gespeichert · \(percent)"
+                text = String(localized: "Gespeichert · \(percent)")
             }
         } else {
-            text = "Gespeichert"
+            text = String(localized: "Gespeichert")
         }
         let toast = ShotToast(text: text, icon: icon)
         withAnimation(.spring) { shotToast = toast }
@@ -668,8 +668,8 @@ private enum OverlayStyle: String, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .photo: return "Foto"
-        case .silhouette: return "Silhouette"
+        case .photo: return String(localized: "Foto")
+        case .silhouette: return String(localized: "Silhouette")
         }
     }
 
