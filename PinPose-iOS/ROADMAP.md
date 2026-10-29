@@ -22,6 +22,8 @@ Neue Ideen unten bei „Später“ eintragen.
 
 ## Erledigt
 
+- [x] Golden-Hour-Erinnerung pro Look (lokale Mitteilung 30 Min vorher, Tippen öffnet den Look)
+
 - [x] Farblook der Vorlage aufs eigene Foto (Belichtung, Kontrast, Sättigung, Weißabgleich; Stärke-Regler; auch in der Collage)
 
 - [x] Unit-Tests (Target PinPoseTests) für PoseMatcher, PoseCoach, BodyPose, ShotAdvisor, SunCalculator, PinterestImporter, Look-Migration und Collage; laufen in GitHub Actions im Simulator

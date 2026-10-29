@@ -225,3 +225,12 @@ final class ColorMatcherTests: XCTestCase {
         XCTAssertEqual(adjustment.scaled(by: 0), .identity)
     }
 }
+
+final class ReminderTests: XCTestCase {
+    func testNextGoldenHourIsInTheFutureWithLeadTime() throws {
+        let now = Date()
+        let start = try XCTUnwrap(Reminders.nextGoldenHour(after: now, latitude: 51.5, longitude: 6.3))
+        XCTAssertGreaterThan(start.addingTimeInterval(-Reminders.leadTime), now)
+        XCTAssertLessThan(start.timeIntervalSince(now), 3 * 24 * 3600)
+    }
+}

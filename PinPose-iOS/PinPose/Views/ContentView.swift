@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var store: LookStore
+    @EnvironmentObject private var reminders: Reminders
     @State private var path: [UUID] = []
     @State private var showImport = false
     @State private var importLink: String?
@@ -55,6 +56,12 @@ struct ContentView: View {
             }
         }
         .task { await checkClipboard() }
+        .onChange(of: reminders.lookToOpen) { _, id in
+            guard let id, store.look(id: id) != nil else { return }
+            reminders.lookToOpen = nil
+            showImport = false
+            path = [id]
+        }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { Task { await checkClipboard() } }
         }

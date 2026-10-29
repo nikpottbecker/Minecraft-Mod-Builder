@@ -1,11 +1,17 @@
+import CoreLocation
 import SwiftUI
 
 /// Today's golden hour and blue hour at the user's location.
 struct SunTimesCard: View {
     /// Highlights the evening golden hour when the reference was shot in it.
     var highlightGoldenHour = false
+    /// When set, the card offers a golden hour reminder for this look.
+    var look: Look?
 
     @StateObject private var locator = PlaceFinder()
+    @EnvironmentObject private var reminders: Reminders
+    @State private var reminderNote: String?
+    @State private var reminderFailed = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -21,6 +27,10 @@ struct SunTimesCard: View {
                         row(icon: "sunset.fill", title: "Golden Hour abends", interval: times.eveningGoldenHour,
                             highlighted: highlightGoldenHour)
                         row(icon: "moon.haze.fill", title: "Blaue Stunde", interval: times.eveningBlueHour)
+                        if let look {
+                            Divider()
+                            reminderButton(for: look, location: location.coordinate)
+                        }
                     }
                 } else if locator.locationDenied {
                     Text("Erlaube den Standortzugriff, um die Golden Hour für deinen Ort zu berechnen.")
@@ -41,6 +51,44 @@ struct SunTimesCard: View {
             .padding(12)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        }
+    }
+
+    @ViewBuilder
+    private func reminderButton(for look: Look, location: CLLocationCoordinate2D) -> some View {
+        if reminders.scheduled.contains(look.id) {
+            HStack {
+                Label(reminderNote ?? "Erinnerung ist gestellt", systemImage: "bell.badge.fill")
+                    .font(.subheadline.bold())
+                    .foregroundStyle(Color.accentColor)
+                Spacer()
+                Button("Aus") { reminders.cancel(lookID: look.id); reminderNote = nil }
+                    .font(.subheadline)
+            }
+        } else {
+            Button {
+                Task {
+                    if let start = await reminders.remind(lookID: look.id, title: look.title,
+                                                          latitude: location.latitude, longitude: location.longitude) {
+                        let day = Calendar.current.isDateInToday(start) ? "heute" : "morgen"
+                        reminderNote = "Erinnerung \(day) um \(start.addingTimeInterval(-Reminders.leadTime).formatted(date: .omitted, time: .shortened))"
+                        reminderFailed = false
+                    } else {
+                        reminderNote = nil
+                        reminderFailed = true
+                    }
+                }
+            } label: {
+                VStack(alignment: .leading, spacing: 2) {
+                    Label("30 Min vor der Golden Hour erinnern", systemImage: "bell")
+                        .font(.subheadline.bold())
+                    if reminderFailed {
+                        Text("Erlaube Mitteilungen für PinPose in den Einstellungen.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
         }
     }
 

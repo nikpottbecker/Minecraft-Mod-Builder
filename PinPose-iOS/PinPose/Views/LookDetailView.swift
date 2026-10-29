@@ -85,7 +85,8 @@ struct LookDetailView: View {
                 AdviceSection(title: "So posierst du", icon: "figure.stand", advice: analysis.poseAdvice, preview: 4)
                 AdviceSection(title: "Kamera-Einstellungen", icon: "camera.fill", advice: analysis.cameraAdvice)
                 AdviceSection(title: "Licht & Stimmung", icon: "sun.max.fill", advice: analysis.lightAdvice)
-                SunTimesCard(highlightGoldenHour: analysis.lightAdvice.contains { $0.title == "Golden Hour" })
+                SunTimesCard(highlightGoldenHour: analysis.lightAdvice.contains { $0.title == "Golden Hour" },
+                             look: look)
                 AdviceSection(title: "Bildaufbau", icon: "square.grid.3x3", advice: analysis.compositionAdvice)
                 PlacesSection(places: analysis.places, exif: analysis.exif)
 
