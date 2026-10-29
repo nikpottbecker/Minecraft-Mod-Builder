@@ -21,7 +21,7 @@ struct CameraView: View {
     @State private var countdown: Int?
     @State private var flashScreen = false
     @State private var showCompare = false
-    @State private var shotToast: String?
+    @State private var shotToast: ShotToast?
 
     @AppStorage("camera.overlayStyle") private var overlayStyle: OverlayStyle = .photo
     @State private var mirrorOverlay = false
@@ -82,18 +82,8 @@ struct CameraView: View {
             }
 
             if let shotToast {
-                VStack {
-                    Spacer()
-                    Text(shotToast)
-                        .font(.subheadline.bold())
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 10)
-                        .background(.black.opacity(0.7), in: Capsule())
-                        .padding(.bottom, 260)
-                }
-                .transition(.move(edge: .bottom).combined(with: .opacity))
-                .allowsHitTesting(false)
+                ShotToastView(toast: shotToast)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
             }
 
             if flashScreen {
@@ -601,10 +591,12 @@ struct CameraView: View {
 
     private func showToast(for score: Double?, previousBest: Double?) {
         let text: String
+        var icon: Icon3D?
         if let score {
             let percent = "\(Int((score * 100).rounded())) %"
             if let previousBest, score > previousBest + 0.005 {
-                text = "🏆 Neuer Bestwert: \(percent)"
+                text = "Neuer Bestwert: \(percent)"
+                icon = .trophy
                 UINotificationFeedbackGenerator().notificationOccurred(.success)
             } else if previousBest == nil {
                 text = "Erstes Foto: \(percent) – tippe unten links zum Vergleichen"
@@ -614,8 +606,9 @@ struct CameraView: View {
         } else {
             text = "Gespeichert"
         }
-        withAnimation(.spring) { shotToast = text }
-        let shown = text
+        let toast = ShotToast(text: text, icon: icon)
+        withAnimation(.spring) { shotToast = toast }
+        let shown = toast
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
             if shotToast == shown { withAnimation { shotToast = nil } }
         }
@@ -629,6 +622,33 @@ struct CameraView: View {
             withAnimation(.easeIn(duration: 0.25)) { flashScreen = false }
         }
     }
+}
+
+private struct ShotToastView: View {
+    let toast: ShotToast
+
+    var body: some View {
+        VStack {
+            Spacer()
+            HStack(spacing: 8) {
+                if let icon = toast.icon { Icon3DView(icon, size: 30) }
+                Text(toast.text)
+            }
+            .font(.subheadline.bold())
+            .foregroundStyle(.white)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .background(.black.opacity(0.7), in: Capsule())
+            .padding(.bottom, 260)
+        }
+        .allowsHitTesting(false)
+    }
+}
+
+private struct ShotToast: Equatable {
+    var id = UUID()
+    var text: String
+    var icon: Icon3D?
 }
 
 private struct FramingGuideKey: Equatable {

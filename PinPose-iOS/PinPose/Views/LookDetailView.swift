@@ -228,25 +228,25 @@ private struct ShotPlanCard: View {
     let analysis: ShotAnalysis
 
     private struct Item: Identifiable {
-        let icon: String
+        let icon: Icon3D
         let label: String
         let value: String
         var id: String { label }
     }
 
     private var items: [Item] {
-        var result = [Item(icon: "plus.magnifyingglass", label: "Zoom", value: ShotAdvisor.zoomLabel(analysis.recommendedZoom))]
+        var result = [Item(icon: .zoom, label: "Zoom", value: ShotAdvisor.zoomLabel(analysis.recommendedZoom))]
         if let height = analysis.cameraAdvice.first(where: { $0.title.hasPrefix("Kamera ") }) {
             let rest = height.title.replacingOccurrences(of: "Kamera ", with: "")
-            result.append(Item(icon: "camera.viewfinder", label: "Kamera", value: rest.prefix(1).uppercased() + rest.dropFirst()))
+            result.append(Item(icon: .camera, label: "Kamera", value: rest.prefix(1).uppercased() + rest.dropFirst()))
         } else if let framing = analysis.framing {
-            result.append(Item(icon: "person.crop.rectangle", label: "Ausschnitt", value: framing.label))
+            result.append(Item(icon: .person, label: "Ausschnitt", value: framing.label))
         }
         if let light = analysis.lightAdvice.first {
-            result.append(Item(icon: light.icon, label: "Licht", value: light.title))
+            result.append(Item(icon: light.title.contains("Abend") ? .clock : .sun, label: "Licht", value: light.title))
         }
         if let place = analysis.places.first {
-            result.append(Item(icon: place.icon, label: "Ort", value: place.title))
+            result.append(Item(icon: .mapPin, label: "Ort", value: place.title))
         }
         return result
     }
@@ -258,10 +258,7 @@ private struct ShotPlanCard: View {
             LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
                 ForEach(items) { item in
                     HStack(spacing: 10) {
-                        Image(systemName: item.icon)
-                            .font(.headline)
-                            .foregroundStyle(Color.accentColor)
-                            .frame(width: 26)
+                        Icon3DView(item.icon, size: 34)
                         VStack(alignment: .leading, spacing: 1) {
                             Text(item.label)
                                 .font(.caption)

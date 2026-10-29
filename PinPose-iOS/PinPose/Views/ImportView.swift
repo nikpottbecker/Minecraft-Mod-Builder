@@ -139,11 +139,11 @@ struct ImportView: View {
 private struct AnalyzingOverlay: View {
     let status: String
 
-    private let steps = [
-        ("figure.stand", "Pose erkennen"),
-        ("camera.aperture", "Kamera & Zoom berechnen"),
-        ("sun.max.fill", "Licht & Farben messen"),
-        ("mappin.and.ellipse", "Passende Orte finden"),
+    private let steps: [(Icon3D, String)] = [
+        (.person, "Pose erkennen"),
+        (.zoom, "Kamera & Zoom berechnen"),
+        (.sun, "Licht & Farben messen"),
+        (.mapPin, "Passende Orte finden"),
     ]
     @State private var done = 0
 
@@ -171,7 +171,9 @@ private struct AnalyzingOverlay: View {
                             }
                             .font(.title3)
                             .frame(width: 28)
-                            Label(steps[index].1, systemImage: steps[index].0)
+                            Icon3DView(steps[index].0, size: 28)
+                                .opacity(index <= done ? 1 : 0.4)
+                            Text(steps[index].1)
                                 .font(.subheadline.weight(index <= done ? .semibold : .regular))
                                 .foregroundStyle(index <= done ? .primary : .secondary)
                         }

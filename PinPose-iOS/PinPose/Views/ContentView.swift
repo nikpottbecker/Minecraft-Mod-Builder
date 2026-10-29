@@ -143,11 +143,7 @@ private struct ClipboardBanner: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: "link")
-                .font(.headline)
-                .foregroundStyle(.white)
-                .frame(width: 36, height: 36)
-                .background(Color.accentColor.gradient, in: Circle())
+            Icon3DView(.link, size: 36)
             VStack(alignment: .leading, spacing: 1) {
                 Text("Link kopiert")
                     .font(.subheadline.bold())
@@ -218,7 +214,7 @@ private struct LibraryProgress: View {
             ProgressView(value: Double(done), total: Double(max(looks.count, 1)))
                 .tint(.accentColor)
                 .frame(maxWidth: 90)
-            Text(open == 0 ? "Alle \(looks.count) Looks nachgeshootet 🎉"
+            Text(open == 0 ? "Alle \(looks.count) Looks nachgeshootet"
                            : "\(done) von \(looks.count) nachgeshootet · \(open) \(open == 1 ? "wartet" : "warten") noch")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -301,10 +297,14 @@ private struct EmptyLibraryView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
-                Image(systemName: "camera.on.rectangle.fill")
-                    .font(.system(size: 64))
-                    .foregroundStyle(Color.accentColor.gradient)
-                    .padding(.top, 40)
+                ZStack {
+                    Icon3DView(.picture, size: 120)
+                        .rotationEffect(.degrees(-8))
+                        .offset(x: -26, y: 10)
+                    Icon3DView(.pin, size: 70)
+                        .offset(x: 34, y: -38)
+                }
+                .padding(.top, 36)
 
                 VStack(spacing: 8) {
                     Text("Pinterest-Bilder nachshooten")

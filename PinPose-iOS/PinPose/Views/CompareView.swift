@@ -31,6 +31,7 @@ struct CompareView: View {
 
                     if let score {
                         VStack(spacing: 6) {
+                            Icon3DView(score >= 0.9 ? .trophy : (score >= 0.8 ? .medal : .target), size: 64)
                             ScoreBadge(score: score)
                             Text(verdict(for: score))
                                 .font(.subheadline)
@@ -99,8 +100,7 @@ struct CompareView: View {
                             .foregroundStyle(.secondary)
                     }
                 } icon: {
-                    Image(systemName: "camera.filters")
-                        .foregroundStyle(Color.accentColor)
+                    Icon3DView(.palette, size: 30)
                 }
             }
             if colorLook {
@@ -182,7 +182,7 @@ struct CompareView: View {
 
     private func verdict(for score: Double) -> String {
         switch score {
-        case 0.9...: return "Wow – fast identisch! 🔥"
+        case 0.9...: return "Wow – fast identisch!"
         case 0.8...: return "Sehr nah dran! Kleine Details noch anpassen."
         case 0.65...: return "Gut! Schau dir Arme und Beine in der Vorlage nochmal an."
         default: return "Noch nicht ganz – folge den Pose-Tipps Schritt für Schritt."

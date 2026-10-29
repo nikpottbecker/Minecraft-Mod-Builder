@@ -24,7 +24,11 @@ struct AboutView: View {
                     statRow("Fotos", value: store.looks.reduce(0) { $0 + $1.shots.count }, icon: "photo.stack")
                     if let best = store.looks.compactMap(\.bestScore).max() {
                         HStack {
-                            Label("Bester Pose-Match", systemImage: "trophy")
+                            Label {
+                                Text("Bester Pose-Match")
+                            } icon: {
+                                Icon3DView(.trophy, size: 26)
+                            }
                             Spacer()
                             ScoreBadge(score: best, compact: true)
                         }
@@ -68,6 +72,9 @@ struct AboutView: View {
                 }
 
                 Section {
+                    Text("3D-Icons: 3dicons.co von realvjy (CC0)")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                     HStack {
                         Text("Version")
                         Spacer()

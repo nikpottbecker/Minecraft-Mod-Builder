@@ -15,8 +15,10 @@ struct SunTimesCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Label("Licht heute bei dir", systemImage: "sun.horizon.fill")
-                .font(.title3.bold())
+            HStack(spacing: 8) {
+                Icon3DView(.sun, size: 30)
+                Text("Licht heute bei dir").font(.title3.bold())
+            }
 
             Group {
                 if let location = locator.userLocation,

@@ -22,6 +22,9 @@ Neue Ideen unten bei „Später“ eintragen.
 
 ## Erledigt
 
+- [x] 3D-Icons (3dicons.co, CC0, Stil „color“) für Onboarding, Startbildschirm, Shot-Plan, Analyse-Schritte, Vergleich, Golden Hour; Bedienelemente bleiben SF Symbols; Emojis als Icon-Ersatz entfernt
+- [x] Neues App-Icon: 3D-Pin im Kamera-Sucher, hell + dunkel (scripts/make_app_icon.py)
+
 - [x] Analyse-Wartezeit als abhakende Schritte; „Jetzt nachshooten“ fest unten in der Look-Ansicht; App-Store-Texte (APPSTORE.md)
 
 - [x] Coach korrigiert auch Abstand und Position („Einen Schritt zurück“, „Kamera etwas nach links schwenken“); Auto-Auslöser wartet, bis der Ausschnitt passt
