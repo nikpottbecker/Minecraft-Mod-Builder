@@ -42,10 +42,31 @@ enum PoseCoach {
     /// From this match score on the pose counts as done.
     static let holdScore = 0.85
 
+    /// Where the person is on screen, for distance and position hints.
+    struct FramingContext {
+        /// The live pose as shown on screen (not un-mirrored).
+        var screenPose: BodyPose
+        /// The reference overlay is shown mirrored.
+        var referenceMirrored: Bool
+        var frontCamera: Bool
+    }
+
+    /// Size differences up to this factor are fine.
+    static let sizeTolerance = 1.25
+    /// Horizontal offsets up to this share of the screen height are fine.
+    static let offsetTolerance = 0.12
+
     /// Returns `PoseHint.hold` when the pose matches, the most important correction otherwise,
     /// or nil when there is not enough of the body visible to say anything useful.
-    static func hint(live: BodyPose, liveAspect: CGFloat, reference: BodyPose, referenceAspect: CGFloat, score: Double?) -> PoseHint? {
-        if let score, score >= holdScore { return .hold }
+    static func hint(live: BodyPose, liveAspect: CGFloat, reference: BodyPose, referenceAspect: CGFloat, score: Double?,
+                     framing: FramingContext? = nil) -> PoseHint? {
+        let framingHint = framing.flatMap { self.framingHint($0, liveAspect: liveAspect,
+                                                             reference: reference, referenceAspect: referenceAspect) }
+        if let score, score >= holdScore {
+            // A matching pose at the wrong size or place still needs one step.
+            if let framingHint, framingHint.severity > 1.5 { return framingHint.hint }
+            return .hold
+        }
 
         let target = PoseMatcher.alignedReference(live: live, liveAspect: liveAspect,
                                                   reference: reference, referenceAspect: referenceAspect)
@@ -97,7 +118,55 @@ enum PoseCoach {
         if let hint = headHint(live, liveAspect, target, referenceAspect) {
             consider(hint.severity * 0.7, hint.hint)
         }
+        if let framingHint {
+            // Distance first: limb directions are easier to judge once the size is right.
+            consider(framingHint.severity * 1.2, framingHint.hint)
+        }
         return best?.hint
+    }
+
+    /// "Ein Schritt zurück", "Näher ran", "Kamera etwas nach links" …
+    static func framingHint(_ context: FramingContext, liveAspect: CGFloat,
+                            reference: BodyPose, referenceAspect: CGFloat) -> (severity: Double, hint: PoseHint)? {
+        let target = context.referenceMirrored ? reference.mirrored() : reference
+        // Only joints visible in both, so a cut-off foot does not count as "too small".
+        let common = Set(context.screenPose.points.keys).intersection(target.points.keys)
+        guard common.count >= 6,
+              common.contains(.leftShoulder) || common.contains(.rightShoulder),
+              common.contains(.leftHip) || common.contains(.rightHip) || common.contains(.root) else { return nil }
+        let liveBox = BodyPose(points: context.screenPose.points.filter { common.contains($0.key) }).boundingBox
+        let targetBox = BodyPose(points: target.points.filter { common.contains($0.key) }).boundingBox
+        guard liveBox.height > 0.05, targetBox.height > 0.05 else { return nil }
+
+        var best: (severity: Double, hint: PoseHint)?
+        let ratio = Double(liveBox.height / targetBox.height)
+        let sizeSeverity = abs(log(ratio)) / log(sizeTolerance)
+        if sizeSeverity > 1 {
+            let text: String
+            if ratio < 1 {
+                text = context.frontCamera ? "Näher an die Kamera" : "Einen Schritt näher ran"
+            } else {
+                text = context.frontCamera ? "Weiter weg von der Kamera" : "Einen Schritt zurück"
+            }
+            best = (sizeSeverity, PoseHint(text: text, joint: nil))
+        }
+
+        // Both pictures fill the screen height, so compare x in units of the height.
+        let liveX = Double((liveBox.midX - 0.5) * liveAspect)
+        let targetX = Double((targetBox.midX - 0.5) * referenceAspect)
+        let dx = liveX - targetX
+        let offsetSeverity = abs(dx) / offsetTolerance
+        if offsetSeverity > 1, offsetSeverity * 0.9 > (best?.severity ?? 0) {
+            let text: String
+            if context.frontCamera {
+                // Mirrored preview: moving to your own left moves you to the left of the screen.
+                text = dx > 0 ? "Etwas nach links gehen" : "Etwas nach rechts gehen"
+            } else {
+                text = dx > 0 ? "Kamera etwas nach rechts schwenken" : "Kamera etwas nach links schwenken"
+            }
+            best = (offsetSeverity * 0.9, PoseHint(text: text, joint: nil))
+        }
+        return best
     }
 
     // MARK: Geometry (y points down, x is scaled by the aspect ratio so angles are true angles)

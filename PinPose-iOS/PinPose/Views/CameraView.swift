@@ -110,6 +110,9 @@ struct CameraView: View {
             // A selfie preview is mirrored, so mirror the reference too.
             mirrorOverlay = position == .front
         }
+        .onChange(of: FramingGuideKey(scale: overlayScale, offset: overlayOffset, mirrored: mirrorOverlay), initial: true) { _, key in
+            camera.setFramingGuide(enabled: key.scale == 1 && key.offset == .zero, referenceMirrored: key.mirrored)
+        }
         .onChange(of: camera.matchScore) { _, score in
             handleMatch(score)
         }
@@ -540,7 +543,9 @@ struct CameraView: View {
         }
         wasMatching = matching
 
-        guard autoCapture, matching, countdown == nil else {
+        // Wait until size and position fit too, when the coach is on.
+        let framed = !coaching || camera.coachHint == nil || camera.coachHint == .hold
+        guard autoCapture, matching, framed, countdown == nil else {
             matchingSince = nil
             return
         }
@@ -586,6 +591,12 @@ struct CameraView: View {
             withAnimation(.easeIn(duration: 0.25)) { flashScreen = false }
         }
     }
+}
+
+private struct FramingGuideKey: Equatable {
+    var scale: CGFloat
+    var offset: CGSize
+    var mirrored: Bool
 }
 
 private enum CameraSlider {

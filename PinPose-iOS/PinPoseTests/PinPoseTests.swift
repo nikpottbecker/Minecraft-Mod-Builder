@@ -256,3 +256,33 @@ final class PoseIdeaTests: XCTestCase {
         XCTAssertEqual(image.size.width * image.scale, PoseIdea.imageSize.width)
     }
 }
+
+final class FramingHintTests: XCTestCase {
+    /// The standing pose shrunk around its centre, like a person further away.
+    private func scaled(_ pose: BodyPose, by factor: CGFloat, dx: CGFloat = 0) -> BodyPose {
+        BodyPose(points: pose.points.mapValues { CGPoint(x: 0.5 + ($0.x - 0.5) * factor + dx, y: 0.5 + ($0.y - 0.5) * factor) })
+    }
+
+    private func hint(live: BodyPose, front: Bool = false) -> String? {
+        PoseCoach.hint(live: live, liveAspect: 0.75, reference: standingPose(), referenceAspect: 0.75, score: 0.95,
+                       framing: .init(screenPose: live, referenceMirrored: false, frontCamera: front))?.text
+    }
+
+    func testTooSmallAsksToComeCloser() {
+        XCTAssertEqual(hint(live: scaled(standingPose(), by: 0.5)), "Einen Schritt näher ran")
+        XCTAssertEqual(hint(live: scaled(standingPose(), by: 0.5), front: true), "Näher an die Kamera")
+    }
+
+    func testTooBigAsksToStepBack() {
+        XCTAssertEqual(hint(live: scaled(standingPose(), by: 1.6)), "Einen Schritt zurück")
+    }
+
+    func testOffCentreAsksToPan() {
+        XCTAssertEqual(hint(live: scaled(standingPose(), by: 1, dx: 0.3)), "Kamera etwas nach rechts schwenken")
+        XCTAssertEqual(hint(live: scaled(standingPose(), by: 1, dx: 0.3), front: true), "Etwas nach links gehen")
+    }
+
+    func testRightSizeAndPlaceHolds() {
+        XCTAssertEqual(hint(live: scaled(standingPose(), by: 1.05)), PoseHint.hold.text)
+    }
+}

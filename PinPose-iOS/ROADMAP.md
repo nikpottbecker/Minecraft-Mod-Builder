@@ -22,6 +22,8 @@ Neue Ideen unten bei „Später“ eintragen.
 
 ## Erledigt
 
+- [x] Coach korrigiert auch Abstand und Position („Einen Schritt zurück“, „Kamera etwas nach links schwenken“); Auto-Auslöser wartet, bis der Ausschnitt passt
+
 - [x] „Über PinPose“: Fortschritt, Einführung erneut, Bewerten, Datenschutz; PrivacyInfo.xcprivacy; Bewertungs-Bitte nur nach einer guten Session (einmal pro Version)
 
 - [x] Pose-Ideen: 6 eingebaute Posen (Figur + Silhouette), Start ohne eigenes Bild; leerer Startbildschirm ohne doppelte Erklärung

@@ -44,6 +44,8 @@ final class CameraController: NSObject, ObservableObject {
     private var candidateHint: PoseHint?
     private var candidateCount = 0
     private var stableHint: PoseHint?
+    private var framingGuide = true
+    private var referenceMirrored = false
 
     /// Sets the reference to match against and the settings to start with.
     func prepare(referencePose: BodyPose?, referenceAspect: CGFloat, zoom: Double, exposureBias: Float) {
@@ -54,6 +56,14 @@ final class CameraController: NSObject, ObservableObject {
         sessionQueue.async {
             self.pendingZoom = zoom
             self.pendingBias = exposureBias
+        }
+    }
+
+    /// Distance/position hints only make sense while the reference overlay is not moved or zoomed by hand.
+    func setFramingGuide(enabled: Bool, referenceMirrored: Bool) {
+        videoQueue.async {
+            self.framingGuide = enabled
+            self.referenceMirrored = referenceMirrored
         }
     }
 
@@ -284,8 +294,13 @@ extension CameraController: AVCaptureVideoDataOutputSampleBufferDelegate {
         if let pose, let referencePose {
             // A mirrored (selfie) frame makes Vision swap left and right; undo that so "Linke Hand" is the real left hand.
             let anatomicalPose = connection.isVideoMirrored ? pose.mirrored() : pose
+            let framing = framingGuide
+                ? PoseCoach.FramingContext(screenPose: pose, referenceMirrored: referenceMirrored,
+                                           frontCamera: connection.isVideoMirrored)
+                : nil
             rawHint = PoseCoach.hint(live: anatomicalPose, liveAspect: size.width / size.height,
-                                     reference: referencePose, referenceAspect: referenceAspect, score: score)
+                                     reference: referencePose, referenceAspect: referenceAspect, score: score,
+                                     framing: framing)
         }
         let hint = stabilized(rawHint)
 
