@@ -1,0 +1,114 @@
+# Builds only the PinPose iOS app. Runs only when files under PinPose-iOS/ change,
+# so the rest of the repository is not affected.
+name: PinPose iOS Build
+
+on:
+  push:
+    paths:
+      - "PinPose-iOS/**"
+      - ".github/workflows/pinpose-ios.yml"
+  pull_request:
+    paths:
+      - "PinPose-iOS/**"
+      - ".github/workflows/pinpose-ios.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Xcode version
+        run: xcodebuild -version
+
+      - name: Pick an iPhone simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          devices = json.load(sys.stdin)["devices"]
+          best = None
+          for runtime, items in sorted(devices.items(), reverse=True):
+              if "iOS" not in runtime:
+                  continue
+              for d in items:
+                  if d["name"].startswith("iPhone") and "Pro" in d["name"] and "Max" not in d["name"]:
+                      print(d["udid"]); sys.exit()
+                  if best is None and d["name"].startswith("iPhone"):
+                      best = d["udid"]
+          print(best or "")
+          ')
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          xcrun simctl list devices | grep "$UDID"
+
+      - name: Build for iOS Simulator
+        working-directory: PinPose-iOS
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project PinPose.xcodeproj \
+            -scheme PinPose \
+            -configuration Debug \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            -derivedDataPath DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            build 2>&1 | tee build.log
+
+      - name: Screenshots (German and English)
+        working-directory: PinPose-iOS
+        run: |
+          UDID=${{ steps.sim.outputs.udid }}
+          APP=DerivedData/Build/Products/Debug-iphonesimulator/PinPose.app
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl status_bar "$UDID" override --time 9:41 --batteryState charged --batteryLevel 100 --wifiBars 3 --cellularBars 4 || true
+          xcrun simctl install "$UDID" "$APP"
+          mkdir -p screenshots
+          for lang in de en; do
+            for screen in onboarding empty library detail compare ideas about; do
+              xcrun simctl launch --terminate-running-process "$UDID" com.pinpose.PinPoseApp \
+                -PinPoseScreenshot "$screen" -AppleLanguages "($lang)" -AppleLocale "${lang}_DE" >/dev/null
+              sleep 7
+              xcrun simctl io "$UDID" screenshot "screenshots/${lang}-${screen}.png"
+            done
+          done
+          ls -la screenshots
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: pinpose-screenshots
+          path: PinPose-iOS/screenshots
+          retention-days: 14
+
+      - name: Unit tests (iOS Simulator)
+        working-directory: PinPose-iOS
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project PinPose.xcodeproj \
+            -scheme PinPose \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            -derivedDataPath DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            test 2>&1 | tee build-test.log | grep -E "Test Case .*(passed|failed)|error:|TEST (SUCCEEDED|FAILED)" || true
+          grep -q "\*\* TEST SUCCEEDED \*\*" build-test.log
+
+      - name: Build for iPhone (unsigned)
+        working-directory: PinPose-iOS
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project PinPose.xcodeproj \
+            -scheme PinPose \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            build 2>&1 | tee build-device.log
+
+      - name: Show compiler errors
+        if: failure()
+        working-directory: PinPose-iOS
+        run: grep -h -E "error:" build*.log | sort -u | head -100 || true
