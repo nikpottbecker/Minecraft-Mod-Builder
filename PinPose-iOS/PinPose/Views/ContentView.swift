@@ -6,6 +6,7 @@ struct ContentView: View {
     @State private var path: [UUID] = []
     @State private var showImport = false
     @State private var showIdeas = false
+    @State private var showAbout = false
     @State private var importLink: String?
     @State private var clipboardHasLink = false
     @AppStorage("onboardingDone") private var onboardingDone = false
@@ -45,6 +46,14 @@ struct ContentView: View {
             }
             .navigationTitle("PinPose")
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        showAbout = true
+                    } label: {
+                        Image(systemName: "info.circle")
+                    }
+                    .accessibilityLabel("Über PinPose")
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         Button {
@@ -88,6 +97,9 @@ struct ContentView: View {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { showImport = true }
                 }
             }
+        }
+        .sheet(isPresented: $showAbout) {
+            AboutView().environmentObject(store)
         }
         .sheet(isPresented: $showIdeas) {
             PoseIdeasView { look in

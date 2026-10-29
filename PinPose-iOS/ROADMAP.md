@@ -6,7 +6,7 @@ Neue Ideen unten bei „Später“ eintragen.
 ## Jetzt
 
 - [ ] Erster Test auf dem echten iPhone: Kamera, Pose-Skelett, Match-%, Silhouette, Karte, Golden Hour. Gefundene Bugs hier als eigene Punkte eintragen.
-- [ ] Share Extension: In der Pinterest-App „Teilen → PinPose“ öffnet direkt die Analyse (App Group für die Übergabe)
+- [ ] Share Extension (zurückgestellt: braucht App Group = bezahlter Developer-Account; bis dahin erkennt das Banner kopierte Links)
 - [ ] Live-Coaching auf dem iPhone testen: Schwellen (25° Gliedmaßen, 12° Schultern/Hüfte/Kopf) und Wortwahl anpassen; prüfen, ob die Ansagen bei stummgeschaltetem iPhone hörbar sind
 
 ## Danach
@@ -17,10 +17,12 @@ Neue Ideen unten bei „Später“ eintragen.
 
 ## Später
 
-- [ ] App-Store-Texte und Screenshots
+- [ ] App-Store-Texte und Screenshots (Datenschutz-Manifest ist da)
 - [ ] TestFlight-Verteilung automatisieren
 
 ## Erledigt
+
+- [x] „Über PinPose“: Fortschritt, Einführung erneut, Bewerten, Datenschutz; PrivacyInfo.xcprivacy; Bewertungs-Bitte nur nach einer guten Session (einmal pro Version)
 
 - [x] Pose-Ideen: 6 eingebaute Posen (Figur + Silhouette), Start ohne eigenes Bild; leerer Startbildschirm ohne doppelte Erklärung
 

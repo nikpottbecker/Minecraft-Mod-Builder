@@ -1,3 +1,4 @@
+import StoreKit
 import SwiftUI
 
 struct LookDetailView: View {
@@ -11,6 +12,8 @@ struct LookDetailView: View {
     @State private var newTitle = ""
     @State private var confirmDelete = false
     @State private var openShot: Shot?
+    @Environment(\.requestReview) private var requestReview
+    @AppStorage("reviewAskedVersion") private var reviewAskedVersion = ""
 
     var body: some View {
         if let look = store.look(id: lookID) {
@@ -147,6 +150,9 @@ struct LookDetailView: View {
         .sheet(item: $openShot) { shot in
             CompareView(reference: image, photo: store.image(for: shot), score: shot.score, doneTitle: "Fertig")
         }
+        .onChange(of: showCamera) { _, open in
+            if !open { askForReviewAfterGoodSession() }
+        }
         .fullScreenCover(isPresented: $showCamera) {
             CameraView(look: look, referenceImage: image, silhouette: store.silhouette(for: look))
                 .environmentObject(store)
@@ -269,6 +275,21 @@ private struct ShotPlanCard: View {
                 }
             }
         }
+    }
+}
+
+extension LookDetailView {
+    /// Asks for a rating right after a session that went well (peak moment), at most once per app version.
+    fileprivate func askForReviewAfterGoodSession() {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1"
+        guard reviewAskedVersion != version else { return }
+        let shots = store.looks.flatMap(\.shots)
+        let greatShots = shots.filter { ($0.score ?? 0) >= 0.85 }.count
+        guard shots.count >= 3, greatShots >= 1,
+              let latest = store.look(id: lookID)?.shots.first, (latest.score ?? 0) >= 0.8,
+              Date().timeIntervalSince(latest.createdAt) < 600 else { return }
+        reviewAskedVersion = version
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { requestReview() }
     }
 }
 

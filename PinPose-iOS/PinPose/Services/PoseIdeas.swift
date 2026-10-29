@@ -10,6 +10,9 @@ struct PoseIdea: Identifiable, Hashable {
 
     static let imageSize = CGSize(width: 900, height: 1200)
 
+    static func == (a: PoseIdea, b: PoseIdea) -> Bool { a.id == b.id }
+    func hash(into hasher: inout Hasher) { hasher.combine(id) }
+
     /// Standing straight, arms down, facing the camera. Left/right are the person's own sides.
     private static let base: [Joint: CGPoint] = [
         .nose: CGPoint(x: 0.5, y: 0.14), .neck: CGPoint(x: 0.5, y: 0.22), .root: CGPoint(x: 0.5, y: 0.5),
