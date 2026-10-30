@@ -22,9 +22,9 @@ export default {
 
     const you = hero(THREE, b);
     you.rotation.y = -Math.PI / 2 + 0.14;
-    b.expression(you, 'worried');
+    b.expression(you, 'smile');
     you.position.y = 0;
-    b.look(you, -0.5, 0.3);
+    b.look(you, 0, 0.1);
     scene.add(you);
 
     // Stadtlichter im Hintergrund, durch die Unschaerfe weich
