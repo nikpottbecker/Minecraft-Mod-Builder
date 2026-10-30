@@ -18,7 +18,7 @@ const ROOT = dirname(fileURLToPath(import.meta.url));
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.woff2': 'font/woff2' };
 
 export function parseArgs(argv) {
-  const opts = { scene: null, out: null, scale: 1, fps: null, check: false, checkCount: 12, preview: false, draft: false, audio: null, gpu: false, from: 0, to: null };
+  const opts = { scene: null, out: null, scale: 1, fps: null, check: false, checkCount: 12, preview: false, draft: false, audio: null, gpu: false, cover: false, from: 0, to: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     const next = () => argv[++i];
@@ -31,6 +31,7 @@ export function parseArgs(argv) {
     else if (a === '--draft') opts.draft = true;
     else if (a === '--audio') opts.audio = next();
     else if (a === '--gpu') opts.gpu = true;
+    else if (a === '--cover') opts.cover = true;
     else if (a === '--from') opts.from = Number(next());
     else if (a === '--to') opts.to = Number(next());
     else if (!a.startsWith('--') && !opts.scene) opts.scene = a;
@@ -111,7 +112,7 @@ async function main() {
   page.on('pageerror', (e) => console.error('[browser]', e.message));
 
   try {
-    await page.goto(`http://127.0.0.1:${port}/runtime/index.html?scene=/${sceneRel}&scale=${opts.scale}&quality=${opts.draft ? 'draft' : 'final'}`);
+    await page.goto(`http://127.0.0.1:${port}/runtime/index.html?scene=/${sceneRel}&scale=${opts.scale}&quality=${opts.draft ? 'draft' : 'final'}${opts.cover ? '&cover=1' : ''}`);
     await page.waitForFunction(() => window.__simReady || window.__simError, null, { timeout: 120000 });
     const error = await page.evaluate(() => window.__simError);
     if (error) throw new Error('Szene konnte nicht geladen werden:\n' + error);
@@ -119,6 +120,15 @@ async function main() {
     const frames = frameList({ totalFrames: meta.totalFrames, sceneFps: meta.fps, fps: opts.fps, from: opts.from, to: opts.to, check: opts.check, checkCount: opts.checkCount });
     console.log(`Szene: ${meta.title}`);
     console.log(`${meta.width}x${meta.height}, ${frames.length} Frames${opts.check ? ' (Pruefmodus)' : ''}`);
+
+    // Titelbild: Text und Gesicht in der Mitte, damit Profil-Zuschnitte (3:4, 1:1) nichts abschneiden
+    if (opts.cover) {
+      const data = await page.evaluate(() => window.__sim.frame(0, 'image/jpeg', 0.95));
+      const file = join(ROOT, 'out', `${name}-cover-safe.jpg`);
+      await writeFile(file, Buffer.from(data.split(',')[1], 'base64'));
+      console.log(`Titelbild: ${relative(process.cwd(), file)}`);
+      return;
+    }
 
     if (opts.check) {
       const dir = join(ROOT, 'out', 'check', name);

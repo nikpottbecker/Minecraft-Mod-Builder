@@ -425,7 +425,7 @@ export default {
 
     const fig = (x, z) => [x, 1.75, z];
     S.rig = ctx.motion.shots(THREE, [
-      { at: 0, set: 'stairs', pose: 'hook', aperture: 1, pos: [0.35, 1.55, 4.4], look: [0.1, 2.0, 0], move: { pos: [0.25, 1.55, 3.6], dur: at.recap }, focus: fig(0, 0) },
+      { at: 0, set: 'stairs', pose: 'hook', aperture: 1, pos: [0.35, 1.55, 4.4], look: [0.1, ctx.coverMode ? 1.92 : 2.0, 0], move: { pos: [0.25, 1.55, 3.6], dur: at.recap }, focus: fig(0, 0) },
       { at: at.recap, set: 'apt', aperture: 0.6, pos: [0.3, 1.75, 5.2], look: [0.05, 1.25, -1], fov: 52, move: { pos: [0.15, 1.7, 4.5], dur: 4 }, focus: fig(0, -1) },
       { at: at.helen, set: 'apt', aperture: 2.5, pos: [-0.7, 1.55, 1.2], look: [-1, 1.72, -1], fov: 40, move: { pos: [-0.75, 1.55, 0.9], dur: 3.5 }, focus: fig(-1, -1) },
       { at: at.math, set: 'apt', aperture: 2, pos: [-0.25, 1.65, 2.3], look: [-0.25, 1.0, 0], fov: 40, move: { pos: [-0.25, 1.55, 1.9], dur: 3.5 }, focus: [-0.25, 0.95, 0] },
@@ -515,6 +515,7 @@ export default {
     S.tableBucket.visible = t >= at.payoff;
 
     if (shot.set === 'stairs') {
+      S.torch.intensity = shot.pose === 'hook' || shot.pose === 'stop' ? 18 : 30;
       you.visible = true;
       S.flight.visible = true;
       S.door5.visible = shot.pose === 'stop';
@@ -603,6 +604,11 @@ export default {
   overlay(g, t, ui, ctx) {
     const { phase, motion, state: S } = ctx;
     const pop = (start, end) => motion.ease.outBack(phase(t, start, start + 0.3)) * (1 - phase(t, end - 0.2, end));
+    if (ctx.coverMode) {
+      ui.grade(g, { color: '#c3cfea', edge: 0.5 });
+      ui.cover(g, { lines: ['*Blackout*', 'in a high-rise'], part: 'Part 2', y: 545, size: 118 });
+      return;
+    }
     const snap = (key, time) => {
       if (t >= time && !S[key]) {
         const c = document.createElement('canvas');

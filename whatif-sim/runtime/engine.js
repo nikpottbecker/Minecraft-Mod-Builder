@@ -69,6 +69,7 @@ export async function boot(sceneUrl, { scale = 1, live = false, quality = 'final
     blocks: blocks(THREE, rng),
     motion,
     state: {},
+    coverMode: new URLSearchParams(location.search).has('cover'),
     // Hilfsfunktionen fuer Zeitachsen
     clamp: (v, a = 0, b = 1) => Math.min(b, Math.max(a, v)),
     smooth: (t) => t * t * (3 - 2 * t),

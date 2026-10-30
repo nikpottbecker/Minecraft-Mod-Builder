@@ -377,7 +377,7 @@ export default {
     S.sets = { city, home, room, hall };
     const face = (x, z) => [x, y(1.75), z];
     S.rig = ctx.motion.shots(THREE, [
-      { at: 0, set: 'room', aperture: 1.6, pos: [0.3, y(1.5), 3.1], look: [-0.5, y(1.85), -2], move: { pos: [0.1, y(1.5), 2.2], dur: at.dinner }, focus: face(-0.6, -2) },
+      { at: 0, set: 'room', aperture: 1.6, pos: [0.3, y(1.5), 3.1], look: [-0.5, y(ctx.coverMode ? 1.8 : 1.85), -2], move: { pos: [0.1, y(1.5), 2.2], dur: at.dinner }, focus: face(-0.6, -2) },
       { at: at.dinner, set: 'room', aperture: 1.6, pos: [0.5, y(1.7), 2.7], look: [3.1, y(1.25), 0], move: { pos: [0.9, y(1.65), 2.3], dur: 3 }, focus: face(3, 0.1) },
       { at: at.off, set: 'city', aperture: 0.05, pos: [-34, 6, -118], look: [0, 44, 0], fov: 46, move: { pos: [-30, 7, -106], dur: 5 } },
       { at: at.phone, set: 'room', aperture: 2.4, pos: [-1.65, y(1.5), 2.9], look: [-2.1, y(1.4), 0.3], move: { pos: [-1.8, y(1.45), 2.4], dur: 2.5 }, focus: face(-2.1, -0.25) },
@@ -423,7 +423,7 @@ export default {
     const you = S.you;
     b.look(you, Math.sin(t * 0.8) * 0.5, 0);
     const blinkT = (t * 0.37) % 1;
-    b.blink(you, blinkT < 0.05 ? 1 : 0);
+    b.blink(you, t > 1 && blinkT < 0.05 ? 1 : 0);
     const place = (x, py, z, ry) => {
       you.position.set(x, py, z);
       you.rotation.y = ry;
@@ -528,6 +528,10 @@ export default {
   overlay(g, t, ui, ctx) {
     const { phase, motion } = ctx;
     const pop = (start, end) => motion.ease.outBack(phase(t, start, start + 0.3)) * (1 - phase(t, end - 0.2, end));
+    if (ctx.coverMode) {
+      ui.cover(g, { lines: ['*Blackout*', 'in a high-rise'], part: 'Part 1', y: 545, size: 118 });
+      return;
+    }
     ui.vignette(g, 0.5);
 
     // Hochhaus-Schema: Peak (fh = Wasserstand in Stockwerken)
