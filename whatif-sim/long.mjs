@@ -43,6 +43,7 @@ if (cmd === 'texts') {
   await writeFile(join(ROOT, 'out', `${name}-kapitel.txt`), marks + '\n');
   const srt = mod.chunks.map((c, i) => `${i + 1}\n${srtTime(c.start)} --> ${srtTime(c.end)}\n${c.words.map((w) => w.w).join(' ')}\n`).join('\n');
   await writeFile(join(ROOT, 'out', `${name}.srt`), srt);
+  await writeFile(join(ROOT, 'out', `${name}-quellen.txt`), mod.SOURCES.map((x, i) => `Q${i + 1} ${x}`).join('\n') + '\n');
   console.log(marks);
 }
 

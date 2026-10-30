@@ -22,8 +22,8 @@ export default {
     // ---------- Cold open ----------
     { ch: 'open', id: 'o1', v: ['wave', 1.9, 0.5], role: 'hook', ...low, beat: 0.4, space: 'street', text: 'One light in a *black city.* That light is you.', pause: 0.5 },
     { ch: 'open', id: 'o2', v: ['now', 0, 0.5], role: 'setup', link: 'also', ...low, beat: 0.36, space: 'room', text: 'Floor 14. No power. No network. And smoke in the *stairwell.*', say: 'Floor fourteen. No power. No network. And smoke in the stairwell.', pause: 0.4 },
-    { ch: 'open', id: 'o3', v: ['instinct', 0, 0.5], role: 'turn', link: 'aber', ...low, beat: 0.4, space: 'room', text: 'Every instinct you have says *run.* In this building, that is the wrong answer.', pause: 0.6 },
-    { ch: 'open', id: 'o4', v: ['nobody', 0.3, 0.3], role: 'setup', link: 'denn', ...CALM, beat: 0.34, space: 'room', text: 'This is what a long blackout does to a high-rise, day by day. The people are fictional. The *physics* is not.', pause: 0.6 },
+    { ch: 'open', id: 'o3', v: ['instinct', 0, 0.12], role: 'turn', link: 'aber', ...low, beat: 0.4, space: 'room', text: 'Every instinct you have says *run.* In this building, that is the wrong answer.', pause: 0.6 },
+    { ch: 'open', id: 'o4', v: ['nobody', 0.3, 0.12], role: 'setup', link: 'denn', ...CALM, beat: 0.34, space: 'room', text: 'This is what a long blackout does to a high-rise, day by day. The people are fictional. The *physics* is not.', pause: 0.6 },
     { ch: 'open', id: 'o5', v: ['ladder', 1, 0.4], role: 'setup', link: 'also', rate: '-6%', pitch: '-7Hz', space: 'street', text: 'And it starts with *dinner.*', pause: 2.2 },
 
     // ---------- Tag 1 ----------

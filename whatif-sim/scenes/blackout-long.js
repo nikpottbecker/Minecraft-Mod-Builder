@@ -5,7 +5,15 @@ import timing from './blackout-long.timing.js';
 import cues from './blackout-long.cues.js';
 import { layout } from '../runtime/narration.js';
 
-const lines = script.lines.map((l) => ({ ...l, src: l.id, id: l.u ?? l.id }));
+// Quellen je Zeile: Nummer = Position in SOURCES, unten rechts als Q1, Q2 ...
+const Q = {
+  real1: [1], real2: [2], rule1b: [3], busy: [6], mast: [6], mast2: [6], press: [4], seven: [4], bar: [5], pumps: [4], peak: [4],
+  math: [8, 20], math2: [8], fridge: [7], share: [20], math_b: [8, 20], rule3: [9, 20], street: [6], store: [6], gas: [6],
+  line: [4], clock: [10], payoff: [20], warn: [11], rule4: [11], hose: [15], crews: [12], lungs: [13], rule5: [12], hand: [14],
+  towels: [12], seal: [12], call: [12], ladder: [16, 20], wave: [12], crew: [17], surge: [18], cold: [18], trip: [18],
+  well: [19], well2: [19], grid: [18], pieces: [1, 18], r2: [7], r3: [9], r4: [11], r5: [12], lesson: [8], kit: [8],
+};
+const lines = script.lines.map((l) => ({ ...l, src: l.id, id: l.u ?? l.id, q: Q[l.u ?? l.id] }));
 export const { beats, chunks, at, duration } = layout(lines, timing, { tail: 5 });
 const timed = lines.map((l, i) => ({ ...l, at: beats[i].at }));
 
@@ -17,7 +25,7 @@ export const chapters = CHAPTERS.map((c, i) => {
   return { ...c, lines: own, start: own[0].at, end: nextFirst ? nextFirst.at : duration, card: next?.card };
 });
 
-const SOURCES = [
+export const SOURCES = [
   'Iberian blackout, 28 April 2025, about 60 million people, restoration finished at 00:22 in Portugal and about 04:00 in Spain: ENTSO-E',
   'Berlin, January 2026: cable bridge fire, about 45,000 households, power fully back after about four days: Stromnetz Berlin and reporting',
   'Northeast blackout 2003, hundreds trapped in elevators: Wikipedia summary of the US-Canada task force report',

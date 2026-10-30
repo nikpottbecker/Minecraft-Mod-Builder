@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { warp, warpTable } from '../runtime/remix.js';
+import { stitch, warp, warpTable } from '../runtime/remix.js';
 import { speechMargin } from '../audio.mjs';
 
 const lines = [{ id: 'a', at: 0 }, { id: 'neu', at: 4, v: ['a', 1, 0.5] }, { id: 'b', at: 10 }];
@@ -12,6 +12,15 @@ test('Zeilen zeigen ihre Stelle im Original und bremsen, wenn die neue Zeile lae
   assert.equal(warp(rows, 4).t, 3);
   assert.equal(warp(rows, 6).t, 4);
   assert.equal(warp(rows, 10).t, 5);
+});
+
+test('Bildzeilen im selben Shot schliessen ohne Sprung an', () => {
+  const rows = warpTable([{ id: 'a', at: 0 }, { id: 'x', at: 4, v: ['a', 0.5, 0.2] }], { a: 2 }, 9);
+  stitch(rows, () => true);
+  assert.equal(rows[1].B, 2.46);
+  const cut = warpTable([{ id: 'a', at: 0 }, { id: 'x', at: 4, v: ['a', 0.5, 0.2] }], { a: 2 }, 9);
+  stitch(cut, () => false);
+  assert.equal(cut[1].B, 2.5);
 });
 
 test('Fehlendes Bild im Original faellt sofort auf', () => {

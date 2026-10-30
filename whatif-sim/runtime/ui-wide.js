@@ -114,6 +114,17 @@ export const wide = {
     g.restore();
   },
 
+  // Quellenhinweis: sehr klein unten rechts, passt zur Liste Q1, Q2 ... in der Beschreibung
+  sourceTag(g, nums) {
+    g.save();
+    g.font = '600 19px Helvetica, Arial, sans-serif';
+    g.textAlign = 'right';
+    g.textBaseline = 'alphabetic';
+    g.fillStyle = 'rgba(255,255,255,0.42)';
+    g.fillText(nums.map((n) => `Q${n}`).join(' '), W - 26, H - 20);
+    g.restore();
+  },
+
   // Kapitelkarte: oben klein, unten gross
   chapter(g, { lines, alpha = 1 }) {
     if (alpha <= 0) return;
