@@ -103,7 +103,7 @@ async function main() {
   const server = await serve(ROOT);
   const port = server.address().port;
   const args = opts.gpu
-    ? ['--ignore-gpu-blocklist', '--enable-gpu-rasterization']
+    ? [...(process.platform === 'darwin' ? ['--use-angle=metal'] : []), '--ignore-gpu-blocklist', '--enable-gpu-rasterization']
     : ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'];
   const browser = await chromium.launch({ args, headless: true });
   const page = await browser.newPage({ viewport: { width: 600, height: 1000 } });
