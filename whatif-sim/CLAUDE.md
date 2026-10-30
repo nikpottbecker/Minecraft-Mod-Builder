@@ -80,5 +80,7 @@ Vorlage: `scenes/blackout.js`. Die Sprache der Videos ist ab jetzt Englisch.
 1. Text in `scenes/<name>.script.js` schreiben (`*wort*` = gelb, `say` = gesprochene Fassung).
 2. `node timing.mjs scenes/<name>.script.js` misst die Stimme und schreibt `<name>.timing.js`.
 3. Die Szene baut daraus mit `layout()` (`runtime/narration.js`) Beats, Untertitel und Länge.
+   **Stimme geht vor:** `fxDuck` (Effekte weichen der Stimme) immer setzen, laute Effekte in Sprechpausen legen,
+   nie auf ein Wort. Prüfen pro 100 ms in der Sprechzeit, nicht im Durchschnitt: Median ≥ 15 dB Abstand, höchstens 5 % unter 6 dB.
 4. Rendern wie gewohnt, dann `node audio.mjs`, dann `node caption.mjs scenes/<name>.js`
    (Caption + Cover). Bausteine: `ui.cover`, `ui.clock`, `ui.rule`, `ui.nameTag`, `ui.section`, `ui.words`.

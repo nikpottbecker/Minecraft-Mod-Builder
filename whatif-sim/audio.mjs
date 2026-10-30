@@ -286,19 +286,30 @@ async function main() {
     duck[i] = 1 - (def.music?.duck ?? 0.65) * Math.min(1, envl * 6);
   }
   const musicGain = dbToGain(def.music?.gain ?? -14);
+  // Effekte und Hall weichen der Stimme: schnell runter, langsam zurueck, tiefer als die Musik
+  const fxKeep = new Float32Array(bed[0].length).fill(1);
+  if (def.fxDuck) {
+    const look = Math.round(RATE * 0.09);
+    let e = 0;
+    for (let i = 0; i < fxKeep.length; i++) {
+      const v = Math.abs(voice[0][Math.min(i + look, fxKeep.length - 1)]);
+      e = v > e ? e + (v - e) * 0.2 : e * 0.99996;
+      fxKeep[i] = 1 - def.fxDuck * Math.min(1, e * 9);
+    }
+  }
 
   // ---------- Mischen ----------
   const fxGain = dbToGain(def.fxGain ?? 0);
   const mixed = track(duration);
   for (let c = 0; c < 2; c++) {
     for (let i = 0; i < mixed[c].length; i++) {
-      mixed[c][i] = voice[c][i] + fx[c][i] * 0.9 * fxGain + room[c][i] * fxGain + bed[c][i] * musicGain * duck[i];
+      mixed[c][i] = voice[c][i] + (fx[c][i] * 0.9 + room[c][i]) * fxGain * fxKeep[i] + bed[c][i] * musicGain * duck[i];
     }
   }
   // Einzelspuren fuer die Kontrolle der Mischung
   await writeWav(join(dir, 'stem-voice.wav'), voice);
-  await writeWav(join(dir, 'stem-fx.wav'), fx);
-  await writeWav(join(dir, 'stem-room.wav'), room);
+  await writeWav(join(dir, 'stem-fx.wav'), fx.map((c) => c.map((v, i) => v * fxKeep[i])));
+  await writeWav(join(dir, 'stem-room.wav'), room.map((c) => c.map((v, i) => v * fxKeep[i])));
   await writeWav(join(dir, 'stem-music.wav'), bed.map((c) => c.map((v, i) => v * musicGain * duck[i])));
   const rawMix = join(dir, 'mix-raw.wav');
   await writeWav(rawMix, mixed);

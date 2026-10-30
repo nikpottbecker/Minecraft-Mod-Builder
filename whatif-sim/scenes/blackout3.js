@@ -24,6 +24,7 @@ export default {
   rate: script.rate,
   pitch: script.pitch,
   fxGain: 5,
+  fxDuck: 0.93,
   voiceChain: 'highpass=f=75,acompressor=threshold=-20dB:ratio=3:attack=6:release=140:makeup=2,equalizer=f=170:t=q:w=1:g=2,equalizer=f=3000:t=q:w=1.5:g=1.5',
   series: { name: 'Blackout in a high-rise', part: 3 },
   caption: {
@@ -51,7 +52,7 @@ export default {
   music: {
     bpm: 76,
     gain: -8,
-    duck: 0.5,
+    duck: 0.72,
     sections: [
       { at: 0, mood: 'suspense' },
       { at: at.water, mood: 'dread' },
@@ -345,34 +346,34 @@ export default {
     const cue = [];
     const add = (t, name, opts) => cue.push([t, name, opts]);
     add(0, 'room', { dur: duration, gain: -26 });
-    add(0, 'murmur', { dur: at.bolt + 1.2, gain: -9, space: 'stairs' });
+    add(0, 'murmur', { dur: at.bolt + 1.2, gain: -14, space: 'stairs' });
     add(0.9, 'thud', { gain: -7, pitch: 0.8, space: 'stairs' });
     add(1.3, 'thud', { gain: -8, pitch: 0.8, space: 'stairs' });
     add(1.75, 'thud', { gain: -7, pitch: 0.8, space: 'stairs' });
-    add(at.bolt + 1.3, 'bolt', { gain: -2, space: 'stairs' });
-    add(at.water + 1.8, 'click', { gain: -7 });
-    add(at.water + 2.15, 'click', { gain: -8 });
+    add(at.bolt + 1.3, 'bolt', { gain: -9, space: 'stairs' });
+    add(at.water + 1.8, 'click', { gain: -11 });
+    add(at.water + 2.15, 'click', { gain: -12 });
     add(at.water + 2.7, 'powerdown', { dur: 0.5, gain: -14 });
-    add(at.candles, 'wind', { dur: at.smell - at.candles + 1, gain: -17 });
+    add(at.candles, 'wind', { dur: at.smell - at.candles + 1, gain: -22 });
     for (let k = 0; k < 8; k++) add(at.candles + 0.3 + k * 0.28, 'click', { gain: -22, pitch: 1.6 + k * 0.05 });
-    add(at.warn, 'crackle', { dur: at.smell - at.warn + 1.5, gain: -9 });
+    add(at.warn, 'crackle', { dur: at.smell - at.warn + 1.5, gain: -14 });
     add(at.smell + 2.2, 'heart', { gain: -11 });
     add(at.smell + 3.3, 'heart', { gain: -10 });
-    add(at.smoke, 'impact', { gain: -5 });
-    add(at.smoke, 'boom', { dur: 1.8, gain: -11 });
+    add(at.smoke + 0.6, 'impact', { gain: -8 });
+    add(at.smoke + 0.6, 'boom', { dur: 1.3, gain: -14 });
     add(at.smoke + 0.3, 'alarm', { dur: 7, gain: -24, pan: -0.4 });
     add(at.crack + 0.2, 'creak', { dur: 0.8, gain: -6, space: 'hall' });
     add(at.crack + 0.5, 'fire', { dur: at.dial - at.crack + 1, gain: -15, space: 'stairs' });
     add(at.crack + 1.2, 'murmur', { dur: 2.5, gain: -20, space: 'stairs' });
-    add(at.crack + 2.1, 'cough', { gain: -14, pan: 0.4, space: 'stairs' });
+    add(at.floor9 - 0.35, 'cough', { gain: -14, pan: 0.4, space: 'stairs' });
     add(at.floor9, 'riser', { dur: 3, gain: -15 });
     add(at.dial + 0.3, 'click', { gain: -7, pitch: 1.3 });
     add(at.dial + 1, 'glitch', { gain: -9 });
     add(at.hose + 0.3, 'siren', { dur: 3.6, gain: -23, pan: 0.5 });
     for (let t = at.look + 0.6; t < at.go - 0.3; t += 0.86) add(t, 'heart', { gain: -8 + (t - at.look) * 0.25 });
-    add(at.alone + 1.5, 'cough', { gain: -15, pitch: 0.85 });
-    add(at.choice, 'fire', { dur: 2.3, gain: -7, space: 'stairs' });
-    add(at.choice + 2.25, 'thud', { gain: -1, pitch: 0.65, space: 'hall' });
+    add(at.go - 0.65, 'cough', { gain: -16, pitch: 0.85 });
+    add(at.choice, 'fire', { dur: 2.3, gain: -14, space: 'stairs' });
+    add(at.ask - 0.65, 'thud', { gain: -2, pitch: 0.65, space: 'hall' });
     add(at.ask + 0.8, 'cough', { gain: -12 });
     add(at.ask + 1.6, 'whoosh', { gain: -12 });
     add(at.ask + 1.9, 'pop', { gain: -10 });
@@ -475,7 +476,7 @@ export default {
       b.look(you, t >= at.alone && t < at.go ? Math.sin(t * 1.9) * 0.9 : 0, 0);
 
       const open = t >= at.crack + 0.2 && t < at.floor9 ? motion.ease.outCubic(phase(t, at.crack + 0.2, at.crack + 0.8)) : 0;
-      const shake = t >= at.choice + 2.2 && t < at.choice + 2.5 ? Math.sin(t * 90) * 0.012 : 0;
+      const shake = t >= at.ask - 0.65 && t < at.ask - 0.35 ? Math.sin(t * 90) * 0.012 : 0;
       S.door.rotation.y = 0.36 * open + shake;
       S.gray.visible = true;
       S.gap.visible = t >= at.smoke;

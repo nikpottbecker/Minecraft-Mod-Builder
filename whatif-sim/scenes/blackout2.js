@@ -26,6 +26,7 @@ export default {
   rate: script.rate,
   pitch: script.pitch,
   fxGain: 5,
+  fxDuck: 0.93,
   voiceChain: 'highpass=f=75,acompressor=threshold=-20dB:ratio=3:attack=6:release=140:makeup=2,equalizer=f=170:t=q:w=1:g=2,equalizer=f=3000:t=q:w=1.5:g=1.5',
   series: { name: 'Blackout in a high-rise', part: 2 },
   caption: {
@@ -54,7 +55,7 @@ export default {
   music: {
     bpm: 80,
     gain: -8,
-    duck: 0.5,
+    duck: 0.72,
     sections: [
       { at: 0, mood: 'dread' },
       { at: at.recap, mood: 'suspense' },
