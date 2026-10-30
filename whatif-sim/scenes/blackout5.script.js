@@ -1,0 +1,26 @@
+// Part 5, Serienfinale "Lights".
+export default {
+  tts: 'directed',
+  voice: 'en-US-AndrewNeural',
+  rate: '-3%',
+  pitch: '-5Hz',
+  lines: [
+    { id: 'hook', role: 'hook', rate: '-6%', pitch: '-8Hz', beat: 0.36, space: 'street', text: 'Your last water is on floor 14. The fire crew says *no.*', say: 'Your last water is on floor fourteen. The fire crew says no.', pause: 0.3 },
+    { id: 'sealed', role: 'setup', link: 'also', rate: '-4%', beat: 0.34, space: 'street', text: 'Day 4. The building is sealed. You have *zero liters.*', say: 'Day four. The building is sealed. You have zero liters.' },
+    { id: 'well', role: 'turn', link: 'aber', rate: '-3%', beat: 0.3, space: 'street', text: 'But Germany keeps about 5,200 *emergency wells.*', say: 'But Germany keeps about five thousand two hundred emergency wells.' },
+    { id: 'line', role: 'escalation', link: 'deshalb', rate: '-4%', beat: 0.34, space: 'street', text: 'So you queue. Four hours. *One bucket.*', say: 'So you queue. Four hours. One bucket.', pause: 0.5 },
+    { id: 'marek', role: 'twist', link: 'doch', rate: '-5%', pitch: '-6Hz', beat: 0.38, space: 'street', text: 'Behind you: Marek. He takes *Helen\'s bucket* without a word.', pause: 0.7 },
+    { id: 'grid', role: 'escalation', link: 'denn', rate: '-3%', beat: 0.3, space: 'street', text: "Engineers can't just flip the grid on. They restore it *piece by piece.*" },
+    { id: 'day6', role: 'escalation', link: 'deshalb', rate: '-8%', pitch: '-8Hz', beat: 0.46, space: 'street', text: 'Day 6. 6:42 PM. Your *street.*', say: 'Day six. Six forty-two P M. Your street.', pause: 0.9 },
+    { id: 'lights', role: 'peak', link: 'also', rate: '-14%', pitch: '-9Hz', gain: -2, space: 'street', text: 'The lights *stay on.*', pause: 1.3 },
+    { id: 'tap', role: 'consequence', link: 'also', rate: '-4%', beat: 0.34, space: 'room', text: 'On floor 14, the tap coughs. Then it *runs.*', say: 'On floor fourteen, the tap coughs. Then it runs.', pause: 0.6 },
+    { id: 'rules', role: 'answer', link: 'denn', rate: '-3%', space: 'room', text: 'Five rules got you here.' },
+    { id: 'r1', role: 'answer', link: 'also', rate: '-1%', space: 'room', text: 'Stay out of the elevator.', pause: 0.15 },
+    { id: 'r2', role: 'answer', link: 'also', rate: '-1%', space: 'room', text: 'Keep the fridge shut.', pause: 0.15 },
+    { id: 'r3', role: 'answer', link: 'also', rate: '-1%', space: 'room', text: "Don't flush drinking water.", pause: 0.15 },
+    { id: 'r4', role: 'answer', link: 'also', rate: '-1%', space: 'room', text: 'Flashlights, not candles.', pause: 0.15 },
+    { id: 'r5', role: 'answer', link: 'also', rate: '-6%', space: 'room', text: 'And a closed door buys time.', pause: 0.7 },
+    { id: 'lesson', role: 'payoff', link: 'aber', rate: '-4%', beat: 0.36, space: 'room', text: 'You started with 9 liters. Officials say *20* per person, for 10 days.', say: 'You started with nine liters. Officials say twenty per person, for ten days.', pause: 0.7 },
+    { id: 'ask', role: 'cliffhanger', link: 'doch', rate: '-12%', pitch: '-9Hz', gain: -2, space: 'room', text: 'How many days would *you* last?' },
+  ],
+};
