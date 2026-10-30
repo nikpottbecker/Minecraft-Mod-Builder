@@ -26,6 +26,13 @@ try {
   for (const [i, line] of script.lines.entries()) {
     const text = (line.say ?? line.text).replace(/\*/g, '');
     const out = join(dir, `${i}.mp3`);
+    if (script.tts === 'directed') {
+      const { stdout } = await exec('python3', [join(ROOT, 'audio', 'edge_directed.py'), '--text', text, '--voice', script.voice, `--rate=${line.rate ?? script.rate ?? '+0%'}`, `--pitch=${line.pitch ?? script.pitch ?? '+0Hz'}`, '--gap', String(line.beat ?? 0.26), '--cache', join(ROOT, 'out', 'audio', 'cache'), '--out', out.replace('.mp3', '.wav')]);
+      const r = JSON.parse(stdout);
+      lines.push({ text, dur: r.dur, words: r.words });
+      console.log(`  ${r.dur.toFixed(2)} s  ${text}`);
+      continue;
+    }
     const say = () => (script.tts === 'kokoro'
       ? exec(KOKORO_PY, [join(ROOT, 'audio', 'kokoro_tts.py'), '--text', text, '--voice', script.voice, '--speed', String(line.speed ?? 1), '--out', out.replace('.mp3', '.wav')])
       : exec('python3', [join(ROOT, 'audio', 'edge_words.py'), '--text', text, '--voice', script.voice, '--out', out]));

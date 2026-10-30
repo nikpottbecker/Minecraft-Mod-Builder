@@ -22,6 +22,10 @@ const STOP = at.running - 1.1; // Figur bleibt auf der Treppe stehen
 export default {
   title: 'Blackout in a high-rise, Part 2',
   voice: script.voice,
+  tts: script.tts,
+  rate: script.rate,
+  pitch: script.pitch,
+  fxGain: 5,
   voiceChain: 'highpass=f=75,acompressor=threshold=-20dB:ratio=3:attack=6:release=140:makeup=2,equalizer=f=170:t=q:w=1:g=2,equalizer=f=3000:t=q:w=1.5:g=1.5',
   series: { name: 'Blackout in a high-rise', part: 2 },
   caption: {
@@ -34,7 +38,7 @@ export default {
   fps: 30,
   seed: 25,
   look: {
-    env: 0.16,
+    env: 0.12,
     ao: { radius: 0.5, intensity: 0.8 },
     dof: { aperture: 2, maxblur: 0.012 },
     bloom: { strength: 0.25, radius: 0.45, threshold: 1.5 },
@@ -49,7 +53,8 @@ export default {
   ],
   music: {
     bpm: 80,
-    gain: -17,
+    gain: -8,
+    duck: 0.5,
     sections: [
       { at: 0, mood: 'dread' },
       { at: at.recap, mood: 'suspense' },
@@ -64,6 +69,7 @@ export default {
       { at: at.hall, mood: 'silence' },
       { at: at.seen, mood: 'dread' },
       { at: at.ask, mood: 'silence' },
+      { at: at.ask + 1.6, mood: 'suspense' },
     ],
   },
   story: { hook: "The last working tap in your building isn't yours.", beats },
@@ -165,11 +171,21 @@ export default {
     S.door5.children[1].position.set(-1.14, 2.2, -1.14);
     S.door5.visible = false;
     stairs.add(S.door5);
-    S.torch = new THREE.SpotLight('#fff0d0', 17, 16, 0.55, 0.7, 1.2);
+    S.torch = new THREE.SpotLight('#fff0d0', 34, 16, 0.55, 0.7, 1.2);
     S.torch.position.set(0.9, 2.6, 4.2);
     S.torch.target.position.set(0, 1.2, 0);
     stairs.add(S.torch, S.torch.target);
-    S.torchFill = new THREE.PointLight('#a9b8e8', 1.2, 7, 1.5);
+    const cone = new THREE.Mesh(new THREE.ConeGeometry(1.5, 5.4, 28, 1, true), new THREE.MeshBasicMaterial({ color: '#ffe9c2', transparent: true, opacity: 0.022, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending }));
+    cone.position.set(0.72, 2.25, 2.55);
+    cone.rotation.set(Math.PI / 2 + 0.3, 0, 0.16);
+    stairs.add(cone);
+    const dustPos = [];
+    for (let i = 0; i < 260; i++) dustPos.push(rng.range(-3, 3), rng.range(0, 4), rng.range(-1, 3));
+    const dustGeo = new THREE.BufferGeometry();
+    dustGeo.setAttribute('position', new THREE.Float32BufferAttribute(dustPos, 3));
+    S.dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: '#ffeccb', size: 0.022, transparent: true, opacity: 0.55, depthWrite: false }));
+    stairs.add(S.dust);
+    S.torchFill = new THREE.PointLight('#a9b8e8', 0.8, 7, 1.5);
     S.torchFill.position.set(0.5, 3, 2);
     stairs.add(S.torchFill);
 
@@ -197,6 +213,9 @@ export default {
       apt.add(g);
       S.bottles.push(g);
     }
+    S.sip = S.bottles[4].clone();
+    S.sip.scale.setScalar(1.15);
+    apt.add(S.sip);
     S.tableBucket = makeBucket();
     S.tableBucket.position.set(0.55, 0.8, 0.1);
     S.tableBucket.userData.level(1);
@@ -264,8 +283,27 @@ export default {
     mk(shop, 1.5, 2.3, 0.3, '#3d4656', 3.8, 1.15, 1.6);
     mk(shop, 1.1, 0.74, 0.04, '#07080c', 3.8, 1.55, 1.78);
     mk(shop, 1.1, 0.4, 0.14, '#272c38', 3.8, 0.85, 1.8);
+    const noteC = document.createElement('canvas');
+    noteC.width = 512;
+    noteC.height = 340;
+    const ng = noteC.getContext('2d');
+    ng.fillStyle = '#f1ecdc';
+    ng.fillRect(0, 0, 512, 340);
+    ng.fillStyle = '#1d1d24';
+    ng.textAlign = 'center';
+    ng.font = "400 96px 'Anton', sans-serif";
+    ng.fillText('NO POWER', 256, 130);
+    ng.fillStyle = '#c9352c';
+    ng.fillText('CLOSED', 256, 270);
+    const noteT = new THREE.CanvasTexture(noteC);
+    noteT.colorSpace = THREE.SRGBColorSpace;
+    const note = new THREE.Mesh(new THREE.PlaneGeometry(1.8, 1.2), new THREE.MeshStandardMaterial({ map: noteT }));
+    note.position.set(-2.6, 1.7, 1.62);
+    note.rotation.z = 0.04;
+    shop.add(note);
+    for (const [hx, hh] of [[-30, 18], [-15, 26], [16, 22], [30, 30], [64, 24], [80, 34]]) mk(street, 14, hh, 10, rng.pick(['#747b8c', '#7f8493', '#6a7183']), hx, hh / 2, -22);
     S.crowd = [];
-    for (const [px, pz, ry] of [[3.4, -2.8, Math.PI / 2], [-3, -3.2, Math.PI / 2], [-5.8, -2.6, 2]]) {
+    for (const [px, pz, ry] of [[-1.3, -3.3, 2.4], [-0.3, -3.1, 3.2], [0.8, -3.2, 3.1], [2.2, -3.1, 3.2], [3.6, -3.2, 3.1], [-7.6, -3.0, 1.3], [-8.8, -2.6, 2.1]]) {
       const p = b.person();
       p.position.set(px, 0, pz);
       p.rotation.y = ry;
@@ -283,7 +321,7 @@ export default {
       mk(gas, 0.9, 2, 0.6, '#c9423a', px, 1, 0);
       mk(gas, 0.7, 0.5, 0.04, '#0a0b10', px, 1.5, 0.32);
     }
-    for (const [cx, col] of [[-9, '#2f6fe0'], [-3, '#e7c43a'], [3, '#8e96a8']]) {
+    for (const [cx, col] of [[-15, '#b0412f'], [-9, '#2f6fe0'], [-3, '#e7c43a'], [3, '#8e96a8']]) {
       const c = b.car(col);
       c.position.set(cx, 0, 4.5);
       gas.add(c);
@@ -375,8 +413,15 @@ export default {
     add(at.ask + 1.6, 'whoosh', { gain: -12 });
     add(at.ask + 1.9, 'pop', { gain: -10 });
     add(at.ask + 2.2, 'pop', { gain: -10, pitch: 1.2 });
+    add(at.ask + 2.0, 'riser', { dur: 2.6, gain: -14 });
+    for (let t = at.ask + 1.8; t < duration - 0.8; t += 0.92) add(t, 'heart', { gain: -9 });
+    add(at.recap + 0.6, 'siren', { dur: 6, gain: -24, pan: 0.5 });
+    add(at.helen + 1.3, 'creak', { dur: 0.3, gain: -20, pitch: 2 });
+    add(at.helen + 2, 'slosh', { dur: 0.4, gain: -18 });
+    add(at.marek, 'water', { dur: at.deal - at.marek, gain: -26 });
     S.cues = cue.sort((a, c) => a[0] - c[0]);
     S.cueI = 0;
+    S.pending = true;
 
     const fig = (x, z) => [x, 1.75, z];
     S.rig = ctx.motion.shots(THREE, [
@@ -387,16 +432,23 @@ export default {
       { at: at.toilet, set: 'apt', aperture: 2.5, pos: [-0.7, 1.55, 1.0], look: [-1, 1.72, -1], fov: 40 },
       { at: at.rule3, set: 'bath', aperture: 2, pos: [1.5, 1.3, 1.1], look: [2.2, 0.7, -2], fov: 44, move: { pos: [1.7, 1.2, 0.6], dur: 4.5 } },
       { at: at.stairs, set: 'stairs', pose: 'down', aperture: 0.8, pos: [-0.8, 2.0, 4.3], look: [0, 1.6, 0], fov: 50, focus: fig(0, 0) },
+      { at: at.stairs + 1.5, set: 'stairs', pose: 'down', aperture: 3, pos: [0.9, 0.55, 2.3], look: [0.05, 0.42, 0.65], fov: 42, focus: [0, 0.45, 0.68] },
+      { at: at.stairs + 3.0, set: 'stairs', pose: 'down', aperture: 2.2, pos: [-1.3, 1.85, 2.3], look: [0, 1.8, 0], fov: 40, focus: fig(0, 0) },
       { at: at.street, set: 'street', bg: '#aeb7c6', aperture: 0.25, pos: [-7, 2.4, 19], look: [-5.5, 3.1, -4], fov: 58, move: { pos: [-6.5, 2.3, 16], dur: 3.8 }, focus: [-3, 2, -3] },
+      { at: at.street + 2.0, set: 'street', bg: '#aeb7c6', aperture: 1.2, pos: [-5.2, 1.7, -1.3], look: [-2.1, 1.45, -4.3], fov: 42, move: { pos: [-4.8, 1.65, -1.7], dur: 2 }, focus: [-2.2, 1.5, -4.4] },
       { at: at.gas, set: 'street', bg: '#aeb7c6', aperture: 0.25, pos: [36, 2, 9], look: [46, 2.3, -4], fov: 46, move: { pos: [37, 2, 8], dur: 2.2 }, focus: [44, 2, -3] },
+      { at: at.back + 1.6, set: 'stairs', pose: 'up', aperture: 3, pos: [-0.9, 0.5, 2.3], look: [0, 0.4, 0.65], fov: 42, focus: [0, 0.45, 0.68] },
       { at: at.back, set: 'stairs', pose: 'up', aperture: 0.8, pos: [0.8, 2.0, 4.3], look: [0, 1.6, 0], fov: 50, focus: fig(0, 0) },
       { at: STOP, set: 'stairs', pose: 'stop', aperture: 1.6, pos: [0.5, 1.75, 2.8], look: [-0.2, 1.8, -1], fov: 44, move: { pos: [0.35, 1.75, 2.4], dur: 1.1 }, focus: fig(0, 0) },
       { at: at.running, set: 'bath', aperture: 1.5, pos: [0.15, 1.15, -0.85], look: [-0.7, 0.8, -2.1], fov: 40, move: { pos: [0.05, 1.1, -1.0], dur: 1.5 }, focus: [-0.7, 0.8, -2.09] },
       { at: at.line, set: 'stairs', pose: 'stop', aperture: 1, pos: [0.5, 1.75, 3.2], look: [0, 1.6, 0], fov: 50 },
       { at: at.marek, set: 'bath', aperture: 1.5, pos: [1.0, 1.65, 3.2], look: [-0.45, 1.15, -1.2], fov: 50, move: { pos: [0.8, 1.65, 2.8], dur: 4 }, focus: fig(-0.1, -0.5) },
+      { at: at.marek + 2.7, set: 'bath', noFig: true, aperture: 3, pos: [-1.4, 1.5, 0], look: [-1.7, 0.55, -1.9], fov: 42, move: { pos: [-1.45, 1.35, -0.3], dur: 1.6 }, focus: [-1.6, 0.56, -1.9] },
       { at: at.clock, set: 'bath', aperture: 2, pos: [0.3, 1.8, 2.2], look: [-0.1, 1.72, -0.5], fov: 42, move: { pos: [0.25, 1.8, 1.9], dur: 4.5 }, focus: fig(-0.1, -0.5) },
       { at: at.deal, set: 'bath', aperture: 5, pos: [-0.25, 1.2, -1.2], look: [-0.7, 0.68, -2.1], fov: 42, move: { pos: [-0.3, 1.1, -1.3], dur: 2.5 } },
       { at: at.carry, set: 'stairs', pose: 'carry', aperture: 0.8, pos: [0.8, 1.9, 3.9], look: [0, 1.5, 0], fov: 50, focus: fig(0, 0) },
+      { at: at.carry + 1.4, set: 'stairs', pose: 'carry', aperture: 2.2, pos: [1.25, 1.75, 2.3], look: [0, 1.75, 0], fov: 40, focus: fig(0, 0) },
+      { at: at.carry + 2.6, set: 'stairs', pose: 'carry', aperture: 3, pos: [0.85, 0.5, 2.3], look: [0.05, 0.42, 0.65], fov: 42, focus: [0, 0.45, 0.68] },
       { at: at.payoff, set: 'apt', aperture: 1.2, pos: [0.4, 1.6, 3.5], look: [0.15, 1.2, 0], fov: 46, move: { pos: [0.35, 1.55, 3.0], dur: 3.5 }, focus: [0.3, 1.1, 0] },
       { at: at.hall, set: 'hall', aperture: 1.2, pos: [0, 1.65, 2.8], look: [0, 1.55, -2], fov: 56, move: { pos: [0, 1.62, 2.5], dur: 1.8 }, focus: [0, 1.7, -1.8] },
       { at: at.seen, set: 'hall', aperture: 1.8, pos: [-0.6, 1.6, 0.8], look: [-1.0, 1.72, -2.2], fov: 44, move: { pos: [0.6, 1.6, 0.8], dur: 2 }, focus: [0, 1.7, -2] },
@@ -409,6 +461,15 @@ export default {
 
   update(ctx, t) {
     const { state: S, blocks: b, phase, motion } = ctx;
+    if (S.pending) {
+      // Dezenter Luftzug auf jedem Ortswechsel
+      S.pending = false;
+      S.rig.list.forEach((sh, i) => {
+        const prev = S.rig.list[i - 1];
+        if (prev && prev.set !== sh.set) S.cues.push([sh.at - 0.08, 'whoosh', { gain: -20 }]);
+      });
+      S.cues.sort((a, c) => a[0] - c[0]);
+    }
     while (S.cueI < S.cues.length && S.cues[S.cueI][0] <= t) {
       const [, name, opts] = S.cues[S.cueI++];
       ctx.sound(name, opts);
@@ -418,11 +479,21 @@ export default {
     const dark = shot.set === 'stairs';
     ctx.scene.background.set(shot.bg || (dark ? '#05060c' : '#40454f'));
     S.hemi.intensity = shot.set === 'street' ? 1.5 : dark ? 0.18 : 0.5;
-    S.sun.intensity = shot.set === 'street' ? 1.8 : 0;
+    S.sun.intensity = shot.set === 'street' ? 1.3 : shot.set === 'apt' ? 3.2 : 0;
+    S.sun.color.set(shot.set === 'apt' ? '#ffc98c' : '#dfe6f2');
+    if (shot.set === 'apt') S.sun.position.set(-7, 9, -16);
+    else S.sun.position.set(-20, 40, 30);
+    S.sun.target.position.set(shot.set === 'apt' ? 0 : 10, 0, shot.set === 'apt' ? 0 : -4);
+    S.dust.rotation.y = t * 0.03;
+    S.dust.position.y = Math.sin(t * 0.4) * 0.15;
 
     const you = S.you;
     const limbs = you.userData.limbs;
-    b.blink(you, t < at.ask && (t * 0.37) % 1 < 0.05 ? 1 : 0);
+    b.blink(you, t > 1 && t < at.ask && ((t + 1.3) * 0.37) % 1 < 0.05 ? 1 : 0);
+    const breathe = 1 + Math.sin(t * 1.9) * 0.008;
+    you.scale.y = breathe;
+    S.marek.scale.y = 1 + Math.sin(t * 1.6 + 1) * 0.008;
+    S.marek.userData.face.head.rotation.y = Math.sin(t * 0.7) * 0.12;
     b.blink(S.helen, ((t + 1.1) * 0.31) % 1 < 0.05 ? 1 : 0);
     b.blink(S.marek, ((t + 0.6) * 0.29) % 1 < 0.05 ? 1 : 0);
     you.rotation.z = 0;
@@ -430,6 +501,7 @@ export default {
     you.visible = false;
     S.helen.visible = false;
     S.marek.visible = false;
+    if (S.sip) S.sip.visible = false;
 
     // Eimer: leer bis zum Fuellen, voll danach
     const filled = phase(t, at.deal + 0.2, at.carry);
@@ -467,7 +539,8 @@ export default {
         const heavy = shot.pose === 'carry';
         const dir = shot.pose === 'down' ? -1 : 1;
         const speed = heavy ? 2.6 : 3.6;
-        const dtSince = t - shot.at;
+        const start = { down: at.stairs, up: at.back, carry: at.carry }[shot.pose];
+        const dtSince = t - start;
         const u = dtSince * speed;
         const off = ((u % 1) + 1) % 1;
         S.flight.position.set(-dir * off * 0.3, -dir * off * 0.18, 0);
@@ -478,7 +551,7 @@ export default {
         b.expression(you, heavy ? 'worried' : 'flat');
         const span = shot.pose === 'down' ? at.street - at.stairs : shot.pose === 'up' ? STOP - at.back : at.payoff - at.carry;
         const [from, to] = shot.pose === 'down' ? [14, 0] : shot.pose === 'up' ? [0, 5] : [5, 14];
-        const f = from + (to - from) * phase(t, shot.at, shot.at + span);
+        const f = from + (to - from) * phase(t, start, start + span);
         S.floor = Math.round(f);
         S.drawNum(S.floor);
         const cycle = ((dtSince * 1.1) % 1 + 1) % 1;
@@ -492,7 +565,11 @@ export default {
       S.helen.rotation.y = -Math.PI / 2 + 0.15;
       b.expression(S.helen, t >= at.payoff ? 'smile' : 'worried');
       const drinking = t >= at.helen && t < at.math;
-      S.helen.userData.limbs.armR.rotation.z = drinking ? 1.7 : 0.1;
+      const sip = motion.ease.inOutCubic(phase(t, at.helen + 1.2, at.helen + 1.9)) * (1 - phase(t, at.math - 0.7, at.math - 0.2));
+      S.sip.visible = t >= at.helen && t < at.math;
+      S.sip.position.set(-0.75 + sip * -0.05, 0.8 + sip * 0.72, -0.72 + sip * 0.1);
+      S.sip.rotation.x = -sip * 1.05;
+      S.helen.userData.limbs.armR.rotation.z = drinking ? 0.3 + sip * 1.5 : 0.1;
       if (t >= at.toilet && t < at.rule3) b.look(S.helen, -0.9, 0);
       else b.look(S.helen, 0, 0);
       you.visible = t < at.helen || t >= at.payoff;
@@ -502,7 +579,7 @@ export default {
     }
 
     if (shot.set === 'bath' && t >= at.running) {
-      S.marek.visible = t >= at.marek;
+      S.marek.visible = t >= at.marek && !shot.noFig;
       S.marek.position.set(-0.1, 0, -0.5);
       S.marek.rotation.y = -Math.PI / 2 + 0.2;
       b.expression(S.marek, t >= at.clock ? 'worried' : 'flat');
@@ -526,7 +603,20 @@ export default {
   overlay(g, t, ui, ctx) {
     const { phase, motion, state: S } = ctx;
     const pop = (start, end) => motion.ease.outBack(phase(t, start, start + 0.3)) * (1 - phase(t, end - 0.2, end));
-    ui.vignette(g, 0.5);
+    const snap = (key, time) => {
+      if (t >= time && !S[key]) {
+        const c = document.createElement('canvas');
+        c.width = g.canvas.width;
+        c.height = g.canvas.height;
+        c.getContext('2d').drawImage(g.canvas, 0, 0);
+        S[key] = c;
+      }
+    };
+    snap('imgB', at.dilemma + 0.8);
+    snap('imgA', at.seen + 0.9);
+    const set = S.rig.list[S.rig.current(t)].set;
+    ui.grade(g, { color: { stairs: '#c3cfea', apt: '#ffe6cc', bath: '#dfeaf2', street: '#b9c4d8', hall: '#c4b6ac' }[set], edge: set === 'stairs' ? 0.74 : 0.62 });
+    ui.vignette(g, 0.45);
 
     // Schema
     if (t >= at.line - 0.05 && t < at.marek) {
@@ -562,6 +652,6 @@ export default {
     if (t < at.recap) ui.cover(g, { lines: ['*Blackout*', 'in a high-rise'], part: 'Part 2', y: 240, size: 150, alpha: 1 - phase(t, at.recap - 0.3, at.recap) });
     const vote = at.ask + 1.6;
     if (t >= at.ask && t < vote) ui.cover(g, { lines: ['Would you', '*tell them?*'], y: 280, size: 170, alpha: phase(t, at.ask, at.ask + 0.2) });
-    if (t >= vote) ui.vote(g, { title: 'What do you do?', a: 'Tell them', b: 'Stay quiet', comment: 'Comment TELL or QUIET', next: 'Part 3 soon · Follow', k: phase(t, vote, vote + 0.3) });
+    if (t >= vote) ui.vote(g, { title: 'What do you do?', a: 'Tell them', b: 'Stay quiet', comment: 'Comment TELL or QUIET', next: 'Part 3 soon · Follow', k: phase(t, vote, vote + 0.3), imgA: S.imgA, imgB: S.imgB });
   },
 };

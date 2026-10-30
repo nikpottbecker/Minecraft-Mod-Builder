@@ -79,8 +79,12 @@ export function estimateWords(text, start, end) {
 }
 
 // ---------- Sprachanbieter ----------
-async function synthesize(provider, text, file, speaker, speed = 1) {
+async function synthesize(provider, text, file, speaker, speed = 1, dir = {}) {
   const tmp = file.replace(/\.wav$/, '.src');
+  if (provider === 'directed') {
+    const out = await run('python3', [join(ROOT, 'audio', 'edge_directed.py'), '--text', text, '--voice', speaker, `--rate=${dir.rate}`, `--pitch=${dir.pitch}`, '--gap', String(dir.beat ?? 0.26), '--cache', join(ROOT, 'out', 'audio', 'cache'), '--out', file], { capture: true });
+    return JSON.parse(out).words;
+  }
   if (provider === 'kokoro') {
     const py = join(homedir(), '.cache/whatif-tts/.venv/bin/python');
     const json = await run(py, [join(ROOT, 'audio', 'kokoro_tts.py'), '--text', text, '--voice', speaker || 'am_michael', '--speed', String(speed), '--out', tmp + '.wav'], { capture: true });
@@ -198,7 +202,7 @@ async function main() {
       const slotEnd = Math.min(b.until ?? Infinity, beats[i + 1]?.at ?? duration, duration);
       const slot = slotEnd - b.at - 0.12;
       const raw = join(dir, `beat-${String(i).padStart(2, '0')}.wav`);
-      let words = await synthesize(provider, text, raw, opts.speaker || def.voice, b.speed ?? 1);
+      let words = await synthesize(provider, text, raw, opts.speaker || def.voice, b.speed ?? 1, { rate: b.rate ?? def.rate ?? '+0%', pitch: b.pitch ?? def.pitch ?? '+0Hz', beat: b.beat });
       let { channels } = await readWav(raw);
       let clip = channels[0];
       const span = speechSpan(clip, RATE);
@@ -219,7 +223,7 @@ async function main() {
         if (len / tempo > slot + 0.05) console.warn(`  ! Beat ${b.at} s: Text zu lang für den Slot (${(len / tempo).toFixed(1)} s > ${slot.toFixed(1)} s). Kürzen!`);
       }
       const at = b.at + 0.06;
-      place(voice, clip, at, { gain: 0 });
+      place(voice, clip, at, { gain: b.gain ?? 0 });
       if (b.space) {
         const s = send(b.space);
         const o = Math.round(at * RATE);
@@ -279,17 +283,23 @@ async function main() {
   for (let i = 0; i < duck.length; i++) {
     const v = Math.abs(voice[0][i]);
     envl = v > envl ? envl + (v - envl) * 0.02 : envl * 0.99994;
-    duck[i] = 1 - 0.65 * Math.min(1, envl * 6);
+    duck[i] = 1 - (def.music?.duck ?? 0.65) * Math.min(1, envl * 6);
   }
   const musicGain = dbToGain(def.music?.gain ?? -14);
 
   // ---------- Mischen ----------
+  const fxGain = dbToGain(def.fxGain ?? 0);
   const mixed = track(duration);
   for (let c = 0; c < 2; c++) {
     for (let i = 0; i < mixed[c].length; i++) {
-      mixed[c][i] = voice[c][i] + fx[c][i] * 0.9 + room[c][i] + bed[c][i] * musicGain * duck[i];
+      mixed[c][i] = voice[c][i] + fx[c][i] * 0.9 * fxGain + room[c][i] * fxGain + bed[c][i] * musicGain * duck[i];
     }
   }
+  // Einzelspuren fuer die Kontrolle der Mischung
+  await writeWav(join(dir, 'stem-voice.wav'), voice);
+  await writeWav(join(dir, 'stem-fx.wav'), fx);
+  await writeWav(join(dir, 'stem-room.wav'), room);
+  await writeWav(join(dir, 'stem-music.wav'), bed.map((c) => c.map((v, i) => v * musicGain * duck[i])));
   const rawMix = join(dir, 'mix-raw.wav');
   await writeWav(rawMix, mixed);
   const wavOut = join(ROOT, 'out', `${name}.wav`);

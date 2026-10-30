@@ -336,7 +336,7 @@ export const ui = {
   },
 
   // Abstimmung am Ende: zwei Karten, ein Wort als Kommentar, Hinweis auf den naechsten Teil.
-  vote(g, { title, a, b, comment, next, k = 1 }) {
+  vote(g, { title, a, b, comment, next, k = 1, imgA, imgB }) {
     if (k <= 0) return;
     g.save();
     g.globalAlpha = k;
@@ -348,15 +348,30 @@ export const ui = {
     g.fillStyle = '#ffffff';
     g.fillText(title.toUpperCase(), 540, 420);
     [[a, 70, '#3fb4ff'], [b, 560, RED]].forEach(([label, x, color]) => {
+      const img = x === 70 ? imgA : imgB;
       roundRect(g, x, 540, 450, 400, 28);
       g.fillStyle = 'rgba(20,24,42,0.96)';
       g.fill();
+      if (img) {
+        g.save();
+        g.clip();
+        g.drawImage(img, 0, (img.height - img.width * 400 / 450) * 0.42, img.width, img.width * 400 / 450, x, 540, 450, 400);
+        const fade = g.createLinearGradient(0, 700, 0, 940);
+        fade.addColorStop(0, 'rgba(6,8,16,0)');
+        fade.addColorStop(1, 'rgba(6,8,16,0.92)');
+        g.fillStyle = fade;
+        g.fillRect(x, 700, 450, 240);
+        g.restore();
+      }
       g.strokeStyle = color;
       g.lineWidth = 8;
       g.stroke();
-      g.font = `400 82px ${DISPLAY}`;
+      g.font = `400 72px ${DISPLAY}`;
       g.fillStyle = color;
-      label.toUpperCase().split(' ').forEach((w, i, all) => g.fillText(w, x + 225, 740 + (i - (all.length - 1) / 2) * 96));
+      g.lineWidth = 12;
+      g.strokeStyle = '#000';
+      g.strokeText(label.toUpperCase(), x + 225, 880);
+      g.fillText(label.toUpperCase(), x + 225, 880);
     });
     g.font = `400 70px ${DISPLAY}`;
     g.fillStyle = YELLOW;
@@ -364,6 +379,21 @@ export const ui = {
     g.font = `400 54px ${DISPLAY}`;
     g.fillStyle = '#ffffff';
     g.fillText(next.toUpperCase(), 540, 1160);
+    g.restore();
+  },
+
+  // Farblook pro Ort: Farbe multiplizieren, dazu kraeftige Vignette.
+  grade(g, { color = '#ffffff', edge = 0.6 } = {}) {
+    g.save();
+    g.globalCompositeOperation = 'multiply';
+    g.fillStyle = color;
+    g.fillRect(0, 0, 1080, 1920);
+    g.globalCompositeOperation = 'source-over';
+    const v = g.createRadialGradient(540, 900, 420, 540, 900, 1250);
+    v.addColorStop(0, 'rgba(0,0,6,0)');
+    v.addColorStop(1, `rgba(0,0,6,${edge})`);
+    g.fillStyle = v;
+    g.fillRect(0, 0, 1080, 1920);
     g.restore();
   },
 

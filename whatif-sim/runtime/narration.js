@@ -43,7 +43,7 @@ export function layout(lines, timing, { gap = 0.35, lead = 0.06, tail = 1.2, max
     const tl = timing.lines[i];
     if (tl.text !== (line.say ?? line.text).replace(/\*/g, '')) throw new Error(`Timing veraltet bei „${line.id}“: node timing.mjs erneut ausführen`);
     at[line.id] = t;
-    beats.push({ at: t, role: line.role, link: line.link, text: line.text, say: line.say, id: line.id, speed: line.speed, space: line.space });
+    beats.push({ at: t, role: line.role, link: line.link, text: line.text, say: line.say, id: line.id, speed: line.speed, space: line.space, rate: line.rate, pitch: line.pitch, beat: line.beat, gain: line.gain });
     const marked = new Set([...line.text.matchAll(/\*([^*]+)\*/g)].flatMap((m) => m[1].split(/\s+/)));
     const words = wordTimes(line.text, tl).map((w) => ({ ...w, start: t + lead + w.start, mark: marked.has(w.w) }));
     const lineEnd = t + lead + tl.dur;
