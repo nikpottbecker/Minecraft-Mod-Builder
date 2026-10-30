@@ -18,7 +18,7 @@ const ROOT = dirname(fileURLToPath(import.meta.url));
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.woff2': 'font/woff2' };
 
 export function parseArgs(argv) {
-  const opts = { scene: null, out: null, scale: 1, fps: null, check: false, checkCount: 12, preview: false, draft: false, audio: null, gpu: false, cover: false, from: 0, to: null };
+  const opts = { scene: null, out: null, scale: 1, fps: null, check: false, checkCount: 12, preview: false, draft: false, audio: null, gpu: false, cover: false, from: 0, to: null, crf: 18 };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     const next = () => argv[++i];
@@ -34,6 +34,7 @@ export function parseArgs(argv) {
     else if (a === '--cover') opts.cover = true;
     else if (a === '--from') opts.from = Number(next());
     else if (a === '--to') opts.to = Number(next());
+    else if (a === '--crf') opts.crf = Number(next());
     else if (!a.startsWith('--') && !opts.scene) opts.scene = a;
     else throw new Error(`Unbekannte Option: ${a}`);
   }
@@ -124,7 +125,7 @@ async function main() {
     // Titelbild: Text und Gesicht in der Mitte, damit Profil-Zuschnitte (3:4, 1:1) nichts abschneiden
     if (opts.cover) {
       const data = await page.evaluate(() => window.__sim.frame(0, 'image/jpeg', 0.95));
-      const file = join(ROOT, 'out', `${name}-cover-safe.jpg`);
+      const file = resolve(opts.out || join(ROOT, 'out', `${name}-cover-safe.jpg`));
       await writeFile(file, Buffer.from(data.split(',')[1], 'base64'));
       console.log(`Titelbild: ${relative(process.cwd(), file)}`);
       return;
@@ -153,7 +154,7 @@ async function main() {
     await mkdir(dirname(out), { recursive: true });
     const ff = ['-v', 'error', '-y', '-f', 'image2pipe', '-framerate', String(outFps), '-c:v', 'mjpeg', '-i', '-'];
     if (opts.audio) ff.push('-i', resolve(opts.audio), '-c:a', 'aac', '-b:a', '192k', '-shortest');
-    ff.push('-c:v', 'libx264', '-preset', opts.preview ? 'veryfast' : 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', out);
+    ff.push('-c:v', 'libx264', '-preset', opts.preview ? 'veryfast' : 'medium', '-crf', String(opts.crf), '-pix_fmt', 'yuv420p', '-movflags', '+faststart', out);
     const { child, done } = run('ffmpeg', ff, { input: true });
 
     const start = Date.now();

@@ -42,8 +42,10 @@ export async function boot(sceneUrl, { scale = 1, live = false, quality = 'final
   const fps = def.fps || 30;
   const duration = def.duration || 15;
   const totalFrames = Math.round(duration * fps);
-  const w = Math.round(WIDTH * scale);
-  const h = Math.round(HEIGHT * scale);
+  // format: 'wide' = 16:9 (1920x1080) fuer YouTube; Standard bleibt 9:16.
+  const wide = def.format === 'wide';
+  const w = Math.round((wide ? HEIGHT : WIDTH) * scale);
+  const h = Math.round((wide ? WIDTH : HEIGHT) * scale);
 
   const glCanvas = document.createElement('canvas');
   const renderer = new THREE.WebGLRenderer({ canvas: glCanvas, antialias: true, preserveDrawingBuffer: true });
@@ -104,7 +106,7 @@ export async function boot(sceneUrl, { scale = 1, live = false, quality = 'final
     look.render();
     g.setTransform(1, 0, 0, 1, 0, 0);
     g.drawImage(glCanvas, 0, 0);
-    // Overlays werden immer in 1080x1920-Koordinaten gezeichnet und skaliert.
+    // Overlays werden in 1080x1920-Koordinaten gezeichnet (wide: 1920x1080) und skaliert.
     g.setTransform(scale, 0, 0, scale, 0, 0);
     def.overlay?.(g, t, ui, ctx);
   };

@@ -16,7 +16,7 @@
 //  4. Musik unter der Stimme absenken (Ducking), Lautheit auf -14 LUFS (TikTok/Reels)
 //  5. Ergebnis: out/<name>.wav und, falls out/<name>.mp4 existiert, out/<name>-ton.mp4
 
-import { mkdir, writeFile, access, readFile } from 'node:fs/promises';
+import { mkdir, writeFile, access, readFile, rm } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import { homedir } from 'node:os';
 import { join, resolve, relative, basename, dirname } from 'node:path';
@@ -173,6 +173,28 @@ function place([L, R], clip, t, { gain = 0, pan = 0 } = {}) {
   }
 }
 
+// Abstand Stimme zu allem anderen, je 100 ms, nur wo gesprochen wird.
+export function speechMargin(voice, mixed, rate = RATE) {
+  const n = Math.round(rate * 0.1);
+  const rows = [];
+  for (let o = 0; o + n <= voice[0].length; o += n) {
+    let v = 0;
+    let r = 0;
+    for (let i = o; i < o + n; i++) {
+      v += voice[0][i] ** 2 + voice[1][i] ** 2;
+      r += (mixed[0][i] - voice[0][i]) ** 2 + (mixed[1][i] - voice[1][i]) ** 2;
+    }
+    if (v / (2 * n) > 1e-4) rows.push({ t: +(o / rate).toFixed(1), db: 10 * Math.log10(v / Math.max(r, 1e-9)) });
+  }
+  const sorted = rows.map((x) => x.db).sort((a, b) => a - b);
+  return {
+    blocks: rows.length,
+    median: sorted[Math.floor(sorted.length / 2)] ?? 0,
+    under6: (100 * sorted.filter((d) => d < 6).length) / Math.max(1, rows.length),
+    worst: rows.filter((x) => x.db < 6),
+  };
+}
+
 async function main() {
   const opts = parseArgs(process.argv.slice(2));
   const sceneAbs = resolve(opts.scene);
@@ -225,6 +247,8 @@ async function main() {
       }
       const at = b.at + 0.06;
       place(voice, clip, at, { gain: b.gain ?? 0 });
+      // Lange Videos: Zwischendateien sofort weg, die Platte ist knapp
+      if (def.lean) await rm(raw).then(() => rm(raw.replace('.wav', '-trim.wav'), { force: true })).then(() => rm(raw.replace('.wav', '-fit.wav'), { force: true }));
       if (b.space) {
         const s = send(b.space);
         const o = Math.round(at * RATE);
@@ -264,6 +288,7 @@ async function main() {
     const { channels } = await readWav(wet);
     voice[0] = channels[0];
     voice[1] = channels[1] ?? channels[0];
+    if (def.lean) await Promise.all([rm(dry), rm(wet)]);
   }
 
   // ---------- Hall pro Ort ----------
@@ -308,15 +333,22 @@ async function main() {
     }
   }
   // Einzelspuren fuer die Kontrolle der Mischung
-  await writeWav(join(dir, 'stem-voice.wav'), voice);
-  await writeWav(join(dir, 'stem-fx.wav'), fx.map((c) => c.map((v, i) => v * fxKeep[i])));
-  await writeWav(join(dir, 'stem-room.wav'), room.map((c) => c.map((v, i) => v * fxKeep[i])));
-  await writeWav(join(dir, 'stem-music.wav'), bed.map((c) => c.map((v, i) => v * musicGain * duck[i])));
+  if (def.lean) {
+    const m = speechMargin(voice, mixed);
+    console.log(`Sprachabstand (100 ms, nur Sprechzeit): Median ${m.median.toFixed(1)} dB, unter 6 dB: ${m.under6.toFixed(1)} %, ${m.blocks} Bloecke`);
+    await writeFile(join(dir, 'margin.json'), JSON.stringify(m.worst));
+  } else {
+    await writeWav(join(dir, 'stem-voice.wav'), voice);
+    await writeWav(join(dir, 'stem-fx.wav'), fx.map((c) => c.map((v, i) => v * fxKeep[i])));
+    await writeWav(join(dir, 'stem-room.wav'), room.map((c) => c.map((v, i) => v * fxKeep[i])));
+    await writeWav(join(dir, 'stem-music.wav'), bed.map((c) => c.map((v, i) => v * musicGain * duck[i])));
+  }
   const rawMix = join(dir, 'mix-raw.wav');
   await writeWav(rawMix, mixed);
   const wavOut = join(ROOT, 'out', `${name}.wav`);
   // Lautheit fuer Social Media: -14 LUFS, True Peak -1,5 dB
   await run('ffmpeg', ['-v', 'error', '-y', '-i', rawMix, '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11', '-ar', String(RATE), wavOut]);
+  if (def.lean) await rm(rawMix);
   console.log(`Ton: ${relative(process.cwd(), wavOut)}`);
 
   const video = opts.video ? resolve(opts.video) : join(ROOT, 'out', `${name}.mp4`);

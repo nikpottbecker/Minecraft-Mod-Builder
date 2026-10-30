@@ -84,3 +84,11 @@ Vorlage: `scenes/blackout.js`. Die Sprache der Videos ist ab jetzt Englisch.
    nie auf ein Wort. Prüfen pro 100 ms in der Sprechzeit, nicht im Durchschnitt: Median ≥ 15 dB Abstand, höchstens 5 % unter 6 dB.
 4. Rendern wie gewohnt, dann `node audio.mjs`, dann `node caption.mjs scenes/<name>.js`
    (Caption + Cover). Bausteine: `ui.cover`, `ui.clock`, `ui.rule`, `ui.nameTag`, `ui.section`, `ui.words`.
+
+## Lange YouTube-Fassung (16:9)
+Vorlage: `scenes/blackout-long.js` + `scenes/blackout-long/*.js`. Alte Szenen bleiben unberührt.
+1. Skript `scenes/<name>.script.js` mit `ch` (Kapitel) und `v` (welche Stelle der Originalszene), dann `node timing.mjs`.
+2. `runtime/remix.js` spielt die Originalszene in neuer Zeitachse ab, Overlays kommen aus `runtime/ui-wide.js` (`format: 'wide'`).
+3. `node long.mjs scenes/<name>.js cues`, `node audio.mjs scenes/<name>.js` (mit `lean: true`: keine Stems, Sprachabstand wird ausgegeben).
+4. Kapitel rendern (`--gpu --crf 20 --out out/long/<id>.mp4`), Ton nach `.m4a`, `node long.mjs … join`, dann `texts` (Kapitelmarken, .srt).
+Thumbnail: `node render.mjs scenes/blackout-long-thumb2.js --cover --gpu --scale 0.6667 --out out/blackout-long-thumbnail.jpg`.
