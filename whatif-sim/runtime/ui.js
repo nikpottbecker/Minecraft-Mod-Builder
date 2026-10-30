@@ -335,6 +335,38 @@ export const ui = {
     g.restore();
   },
 
+  // Abstimmung am Ende: zwei Karten, ein Wort als Kommentar, Hinweis auf den naechsten Teil.
+  vote(g, { title, a, b, comment, next, k = 1 }) {
+    if (k <= 0) return;
+    g.save();
+    g.globalAlpha = k;
+    g.fillStyle = 'rgba(6,8,16,0.86)';
+    g.fillRect(0, 0, 1080, 1920);
+    g.textAlign = 'center';
+    g.textBaseline = 'middle';
+    g.font = `400 104px ${DISPLAY}`;
+    g.fillStyle = '#ffffff';
+    g.fillText(title.toUpperCase(), 540, 420);
+    [[a, 70, '#3fb4ff'], [b, 560, RED]].forEach(([label, x, color]) => {
+      roundRect(g, x, 540, 450, 400, 28);
+      g.fillStyle = 'rgba(20,24,42,0.96)';
+      g.fill();
+      g.strokeStyle = color;
+      g.lineWidth = 8;
+      g.stroke();
+      g.font = `400 82px ${DISPLAY}`;
+      g.fillStyle = color;
+      label.toUpperCase().split(' ').forEach((w, i, all) => g.fillText(w, x + 225, 740 + (i - (all.length - 1) / 2) * 96));
+    });
+    g.font = `400 70px ${DISPLAY}`;
+    g.fillStyle = YELLOW;
+    g.fillText(comment.toUpperCase(), 540, 1050);
+    g.font = `400 54px ${DISPLAY}`;
+    g.fillStyle = '#ffffff';
+    g.fillText(next.toUpperCase(), 540, 1160);
+    g.restore();
+  },
+
   // Steckbrief einer Figur: "HELEN · 81 · APT 14B"
   nameTag(g, { name, info, x = 540, y = 1180, k = 1 }) {
     if (k <= 0) return;

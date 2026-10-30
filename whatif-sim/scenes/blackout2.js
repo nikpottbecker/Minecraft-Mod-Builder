@@ -5,7 +5,7 @@ import script from './blackout2.script.js';
 import timing from './blackout2.timing.js';
 import { layout } from '../runtime/narration.js';
 
-const { beats, chunks, at, duration } = layout(script.lines, timing);
+const { beats, chunks, at, duration } = layout(script.lines, timing, { tail: 5.2 });
 
 const CLOCKS = [
   ['recap', 'DAY 2 · 7:30 AM'],
@@ -27,7 +27,7 @@ export default {
   caption: {
     scenario: 'The last working tap in your building is on floor 5',
     emoji: '🪣🏢',
-    question: 'Would you tell them?',
+    question: 'Tell them or stay quiet?',
     tags: ['blackout', 'whatif', 'survival', 'scenario', 'highrise', 'powerout'],
   },
   duration,
@@ -372,6 +372,9 @@ export default {
     add(at.seen, 'murmur', { dur: at.where - at.seen + 0.5, gain: -13, space: 'hall' });
     for (let t = at.where; t < at.ask; t += 1.05) add(t, 'heart', { gain: -8 + (t - at.where) * 0.6 });
     add(at.ask + 0.65, 'drip', { gain: -6, space: 'stairs' });
+    add(at.ask + 1.6, 'whoosh', { gain: -12 });
+    add(at.ask + 1.9, 'pop', { gain: -10 });
+    add(at.ask + 2.2, 'pop', { gain: -10, pitch: 1.2 });
     S.cues = cue.sort((a, c) => a[0] - c[0]);
     S.cueI = 0;
 
@@ -540,19 +543,25 @@ export default {
       ui.gauge(g, { label: 'WATER LEFT', value: water, warn: t < at.payoff + 1, k: t >= at.payoff + 1 ? pulse : 0, x: 60, y: 90 });
     }
     const counting = (t >= at.stairs && t < at.street) || (t >= at.back && t < at.running) || (t >= at.carry && t < at.payoff);
-    if (counting) ui.gauge(g, { label: 'FLOOR', value: String(S.floor ?? 14), x: 840, y: 90 });
+    if (counting) ui.gauge(g, { label: 'FLOOR', value: String(S.floor ?? 14), x: 850, y: 240 });
+    if (t >= at.recap && t < at.ask) {
+      const left = Math.ceil(at.ask - t);
+      ui.gauge(g, { label: 'DECISION IN', value: `${left}s`, warn: left <= 10, x: 800, y: 90 });
+    }
 
     // Karten
     if (t >= at.rule3 && t < at.stairs) ui.rule(g, { label: 'Rule #3', text: 'One flush = 6 liters', result: '= 3 days of water', y: 270, k: pop(at.rule3, at.stairs) });
     if (t >= at.clock + 2 && t < at.deal) ui.rule(g, { label: 'Emergency plan target', text: '72 hours', y: 270, k: pop(at.clock + 2, at.deal) });
     if (t >= at.deal && t < at.carry) ui.rule(g, { label: "Marek's rule", text: 'One bucket per apartment', y: 270, k: pop(at.deal, at.carry) });
-    if (t >= at.carry && t < at.payoff) ui.rule(g, { label: 'The climb', text: '10 L = 10 kg · 9 floors', y: 270, k: pop(at.carry + 0.1, at.payoff) });
+    if (t >= at.carry && t < at.payoff) ui.rule(g, { label: 'The climb', text: '10 L = 10 kg · 9 floors', y: 410, k: pop(at.carry + 0.1, at.payoff) });
     if (t >= at.payoff + 1 && t < at.hall) ui.rule(g, { label: 'Two people', text: '17 L ÷ 4 L a day', result: '= 4.25 days', y: 270, k: pop(at.payoff + 1, at.hall) });
     if (t >= at.marek + 1.5 && t < at.clock + 2) ui.nameTag(g, { name: 'Marek', info: '52 · Apt 5C', y: 1130, k: pop(at.marek + 1.5, at.clock + 2) });
 
     if (t < at.ask) ui.words(g, t, chunks);
 
     if (t < at.recap) ui.cover(g, { lines: ['*Blackout*', 'in a high-rise'], part: 'Part 2', y: 240, size: 150, alpha: 1 - phase(t, at.recap - 0.3, at.recap) });
-    if (t >= at.ask) ui.cover(g, { lines: ['Would you', '*tell them?*'], part: 'Part 3 soon', y: 280, size: 170, alpha: phase(t, at.ask, at.ask + 0.2) });
+    const vote = at.ask + 1.6;
+    if (t >= at.ask && t < vote) ui.cover(g, { lines: ['Would you', '*tell them?*'], y: 280, size: 170, alpha: phase(t, at.ask, at.ask + 0.2) });
+    if (t >= vote) ui.vote(g, { title: 'What do you do?', a: 'Tell them', b: 'Stay quiet', comment: 'Comment TELL or QUIET', next: 'Part 3 soon · Follow', k: phase(t, vote, vote + 0.3) });
   },
 };
