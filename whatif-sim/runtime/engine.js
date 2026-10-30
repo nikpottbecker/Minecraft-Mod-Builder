@@ -12,6 +12,7 @@
 import * as THREE from 'three';
 import { blocks } from './blocks.js';
 import { ui } from './ui.js';
+import * as motion from './motion.js';
 
 export const WIDTH = 1080;
 export const HEIGHT = 1920;
@@ -63,6 +64,7 @@ export async function boot(sceneUrl, { scale = 1, live = false } = {}) {
     THREE, scene, camera, renderer, rng,
     width: w, height: h, scale, fps, duration, totalFrames,
     blocks: blocks(THREE, rng),
+    motion,
     state: {},
     // Hilfsfunktionen fuer Zeitachsen
     clamp: (v, a = 0, b = 1) => Math.min(b, Math.max(a, v)),

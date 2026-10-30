@@ -1,52 +1,65 @@
 # Anleitung für Claude: „Was wäre wenn…“-Video aus einer Zeile
 
-Der Nutzer schreibt eine Prämisse („Was wäre, wenn …“). Arbeite diese fünf Schritte
-der Reihe nach ab und melde kurz nach jedem Schritt das Ergebnis.
+Der Nutzer schreibt eine Prämisse („Was wäre, wenn …“). Arbeite die Schritte der Reihe
+nach ab und melde nach jedem Schritt kurz das Ergebnis.
+
+**Vorher lesen:** [`STORY.md`](./STORY.md) (Psychologie, Struktur, Rhetorik) und
+[`ANIMATION.md`](./ANIMATION.md) (Animationsprinzipien, Kamera, Bildaufbau).
 
 ## 1. Prämisse prüfen
-- Suche (WebSearch) auf TikTok/YouTube/Instagram, ob es die Idee schon als
-  virales Video gibt (Suchbegriffe auf Deutsch und Englisch, z. B. „what if friction disappeared“).
-- Gibt es sie schon mit vielen Aufrufen: dem Nutzer melden und **einen neuen Dreh**
-  vorschlagen (anderer Ort, andere Dauer, andere Größe).
-- Prüfe, ob die Physik sauber erklärbar ist. Wenn die echte Antwort unklar oder
-  umstritten ist, sag das und schlage eine Variante mit klarer Physik vor.
+- Suche (WebSearch) auf TikTok, YouTube und Instagram, ob es die Idee schon als virales
+  Video gibt. Suchbegriffe auf Deutsch und Englisch, z. B. „what if friction disappeared“.
+- Gibt es sie schon mit vielen Aufrufen, melde das dem Nutzer und schlage **einen neuen
+  Dreh** vor (anderer Ort, andere Dauer, andere Größe).
+- Prüfe, ob sich die Physik sauber erklären lässt. Ist die echte Antwort unklar oder
+  umstritten, sag das und schlage eine Variante mit klarer Physik vor.
 
 ## 2. Quellen
-- Jede Zahl, die im Video erscheint, braucht eine Quelle oder eine Formel.
-- Recherchiere die Werte (WebSearch) und trage sie in `sources` der Szene ein.
-- Zahlen im Video **aus der Simulation berechnen** (z. B. `S.redSlid`), nicht
-  hart eintippen, damit Bild und Text nie auseinanderlaufen.
+- Jede Zahl, die im Video erscheint, braucht eine Quelle oder Formel. Recherchiere sie
+  und trage sie in `sources` ein.
+- Zahlen im Text als `{platzhalter}` schreiben und zur Laufzeit aus der Simulation
+  füllen, damit Bild und Text nie auseinanderlaufen.
 
-## 3. Szene als Code schreiben
+## 3. Story schreiben (vor jeder Zeile Animationscode)
+- Fülle `story.beats` nach dem Bauplan in `STORY.md`: hook → setup → **aber** → Eskalation
+  mit `peak` → Folgen → Twist → Payoff → Loop.
+- Jeder Beat hat `link` (aber/deshalb/doch/also/denn) — **nie „und dann“**.
+- Formuliere mehrere Hook-Varianten, nimm die mit der kleinsten, konkretesten
+  Neugierlücke.
+- `node lint-story.mjs scenes/<name>.js` muss ohne ✗ durchlaufen, Ziel ≥ 90/100.
+
+## 4. Szene als Code
 - Neue Datei `scenes/<kurzname>.js`, Aufbau wie `scenes/reibung.js`:
-  `title`, `duration`, `fps`, `seed`, `sources`, `setup`, `update`, `overlay`.
-- Bausteine: `ctx.blocks` (`runtime/blocks.js`): `building`, `car`, `person`,
-  `tree`, `billboard`, `box`, `ground`, `animatePerson`.
-- Overlays: `ui` (`runtime/ui.js`): `pill`, `title`, `caption`, `stat`, `card`,
-  `vignette`, `fade`, `fmt`. `*Wort*` wird gelb hervorgehoben.
-- Ablauf, der funktioniert: 0–3 s Frage + normale Welt, dann das Ereignis mit
-  laufendem Zähler, danach die Folgen, am Ende eine Faktenkarte mit Quelle und
-  eine Schlusszeile. 15–25 s Gesamtlänge.
-- Nur deterministisch: Zufall nur über `ctx.rng`, Zeit nur über `t`/`dt`.
+  `title`, `duration`, `fps`, `seed`, `sources`, `story`, `setup`, `update`, `overlay`.
+- **Shot-Liste** mit `ctx.motion.shots()`: pro Beat eine Einstellung, die genau das
+  zeigt, was der Untertitel sagt. Wendepunkt nah, Folgen in der Totale, Loop wie der
+  Anfang.
+- Bausteine: `ctx.blocks` (`building`, `car`, `person`, `tree`, `billboard`, `box`,
+  `ground`, `animatePerson`). Bewegung: `ctx.motion` (`ease`, `tween`, `spring`,
+  `keyframes`, `shake`, `shots`).
+- Overlays: `ui.beats(g, t, story.beats)` für Untertitel, die Wort für Wort
+  aufploppen, dazu `ui.title`, `ui.pill`, `ui.stat`, `ui.card`, `ui.flash`, `ui.vignette`.
+- Nur deterministisch: Zufall nur über `ctx.rng`, Zeit nur über `t` und `dt`.
+- Physik ehrlich halten, aber groß zeigen (Nahaufnahme, Blitz, Wackeln am Peak).
 
-## 4. Eigene Frames prüfen
+## 5. Eigene Frames prüfen
 ```bash
-node render.mjs scenes/<kurzname>.js --check                 # 12 Bilder über die ganze Länge
+node render.mjs scenes/<kurzname>.js --check --count 16              # ganze Länge
 node render.mjs scenes/<kurzname>.js --check --from 3 --to 8 --count 8
 ```
-Dann `out/check/<kurzname>/kontaktbogen.jpg` (und bei Bedarf einzelne PNGs) ansehen und
-gezielt prüfen:
-- Steckt die Kamera in einem Gebäude oder ist das Bild von Objekten verdeckt?
-- Passiert die Pointe jeder Untertitelzeile **sichtbar im Bild**?
-- Überdecken Texte/Kacheln die Action? Ist alles lesbar (auch „μ“, Umlaute)?
-- Stimmen die Zahlen mit dem Text überein?
-Fehler beheben und erneut prüfen, bis nichts mehr auffällt.
+Sieh dir `out/check/<kurzname>/kontaktbogen.jpg` an und prüfe jeden Beat:
+- Ist die Aktion, von der der Untertitel spricht, **sichtbar** in der Einstellung?
+- Steckt die Kamera in einem Objekt, oder verdeckt etwas im Vordergrund das Motiv
+  (Auto, Mast, Baum, Person)?
+- Überlappen Texte, Kacheln oder Karte einander oder die Aktion?
+- Ist alles lesbar (auch „μ“ und Umlaute)? Stimmen die Zahlen?
+Fehler beheben und neu prüfen, bis nichts mehr auffällt. Erst dann rendern.
 
-## 5. Rendern
+## 6. Rendern
 ```bash
 node render.mjs scenes/<kurzname>.js --preview    # schnell, halbe Auflösung
 node render.mjs scenes/<kurzname>.js              # final: out/<kurzname>.mp4, 1080x1920
-node render.mjs scenes/<kurzname>.js --gpu        # auf dem Mac/PC mit Grafikkarte deutlich schneller
+node render.mjs scenes/<kurzname>.js --gpu        # mit Grafikkarte (Mac/PC) schneller
 node render.mjs scenes/<kurzname>.js --audio musik.mp3
 ```
-Am Ende: Pfad zum Video, Länge und die verwendeten Quellen nennen.
+Melde am Ende den Pfad zum Video, die Länge, den Story-Score und die Quellen.

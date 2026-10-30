@@ -185,6 +185,66 @@ export const ui = {
     g.fillRect(0, 1300, 1080, 620);
   },
 
+  // Story-Untertitel: aktiver Beat = letzter mit at <= t (bis zum naechsten Beat oder `until`).
+  // Woerter ploppen einzeln auf (0,07 s versetzt, leichtes Ueberschwingen) — das Auge
+  // liest mit, und jeder Wortwechsel ist ein kleiner visueller Reiz.
+  beats(g, t, beats, { y = 1330, size = 80 } = {}) {
+    let i = -1;
+    for (let k = 0; k < beats.length; k++) if (beats[k].at <= t) i = k;
+    if (i < 0) return;
+    const b = beats[i];
+    const end = b.until ?? beats[i + 1]?.at ?? Infinity;
+    if (t >= end || !b.text) return;
+    const local = t - b.at;
+    const out = Math.min(1, Math.max(0, (end - t) / 0.12));
+    g.save();
+    g.font = `900 ${size}px ${FONT}`;
+    g.textBaseline = 'middle';
+    const marked = new Set([...String(b.text).matchAll(/\*([^*]+)\*/g)].flatMap((m) => m[1].split(/\s+/)));
+    const lines = wrap(g, String(b.text).replace(/\*/g, ''), 940);
+    let wordIndex = 0;
+    lines.forEach((line, li) => {
+      const words = line.split(' ');
+      const widths = words.map((w) => g.measureText(w + ' ').width);
+      let x = 540 - (widths.reduce((s, w) => s + w, 0) - g.measureText(' ').width) / 2;
+      const ly = y + li * size * 1.12;
+      words.forEach((w, wi) => {
+        const wt = (local - wordIndex * 0.07) / 0.22;
+        wordIndex++;
+        if (wt <= 0) {
+          x += widths[wi];
+          return;
+        }
+        const k = wt >= 1 ? 1 : 1 + 2.2 * (wt - 1) ** 3 + 1.2 * (wt - 1) ** 2;
+        const cx = x + g.measureText(w).width / 2;
+        g.save();
+        g.globalAlpha = Math.min(1, wt * 2) * out;
+        g.translate(cx, ly);
+        g.scale(0.6 + 0.4 * k, 0.6 + 0.4 * k);
+        g.textAlign = 'center';
+        g.strokeStyle = 'rgba(0,0,0,0.9)';
+        g.lineWidth = 14;
+        g.lineJoin = 'round';
+        g.strokeText(w, 0, 0);
+        g.fillStyle = marked.has(w) ? YELLOW : '#ffffff';
+        g.fillText(w, 0, 0);
+        g.restore();
+        x += widths[wi];
+      });
+    });
+    g.restore();
+  },
+
+  // Kurzer Lichtblitz als Akzent (Aufprall, Wendepunkt).
+  flash(g, amount, color = '#ffffff') {
+    if (amount <= 0) return;
+    g.save();
+    g.globalAlpha = Math.min(0.85, amount);
+    g.fillStyle = color;
+    g.fillRect(0, 0, 1080, 1920);
+    g.restore();
+  },
+
   // Blende (0 = unsichtbar, 1 = schwarz).
   fade(g, amount, color = '#000') {
     if (amount <= 0) return;

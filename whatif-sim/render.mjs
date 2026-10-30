@@ -11,7 +11,7 @@ import { createServer } from 'node:http';
 import { readFile, mkdir, writeFile, rm } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import { extname, join, resolve, relative, basename, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
@@ -92,6 +92,11 @@ async function main() {
   const opts = parseArgs(process.argv.slice(2));
   const sceneRel = relative(ROOT, resolve(opts.scene)).split('\\').join('/');
   const name = basename(opts.scene).replace(/\.m?js$/, '');
+
+  // Story-Check vorab (blockiert nicht, zeigt aber, was an der Geschichte fehlt)
+  const { lintStory, formatReport } = await import('./lint-story.mjs');
+  const def = (await import(pathToFileURL(resolve(opts.scene)).href)).default;
+  console.log('Story-Check:\n' + formatReport(lintStory(def)));
 
   const server = await serve(ROOT);
   const port = server.address().port;

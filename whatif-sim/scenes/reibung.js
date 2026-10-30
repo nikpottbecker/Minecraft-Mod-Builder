@@ -8,15 +8,15 @@
 //   horizontale Kraft und bleibt stehen.
 // - Luftwiderstand bleibt, ist ueber 5 s bei Stadttempo aber vernachlaessigbar.
 
-const T_OFF = 3;
-const T_ON = 8;
+const T_OFF = 3.5;
+const T_ON = 8.5;
 const MU = 0.8; // Reifen auf trockenem Asphalt
 const G = 9.81;
 const KMH = 3.6;
 
 export default {
   title: 'Was wäre, wenn die *Reibung* 5 Sekunden lang verschwindet?',
-  duration: 18,
+  duration: 19,
   fps: 30,
   seed: 7,
   sources: [
@@ -24,6 +24,25 @@ export default {
     'Bremsweg s = v² / (2·μ·g) — Grundformel der Mechanik',
     'Gehen benötigt Haftreibung zwischen Schuh und Boden — z. B. Wikipedia „Gehen“',
   ],
+
+  // Story zuerst (siehe STORY.md). `link` = Verbindung zum vorherigen Beat (aber/deshalb statt
+  // "und dann"), `role` = Funktion im Bogen. {name} wird zur Laufzeit aus der Simulation ersetzt.
+  story: {
+    hook: 'Was wäre, wenn die Reibung 5 Sekunden lang verschwindet?',
+    beats: [
+      { at: 0, role: 'hook', until: 2.4, text: 'Was wäre, wenn die *Reibung* 5 Sekunden lang verschwindet?' },
+      { at: 2.4, role: 'setup', link: 'also', text: 'Ampel *rot.* Du bremst.' },
+      { at: 3.5, role: 'turn', link: 'aber', text: '*Aber* die Reibung ist weg.' },
+      { at: 4.9, role: 'escalation', link: 'deshalb', text: 'Bremsen bringt *nichts* mehr.' },
+      { at: 5.9, role: 'peak', link: 'also', text: 'Lenken auch nicht: *geradeaus.*' },
+      { at: 7.4, role: 'escalation', link: 'deshalb', text: 'Grün? Räder *drehen durch.*' },
+      { at: 8.8, role: 'consequence', link: 'doch', text: 'Reibung zurück. *Doch* {fallen} liegen am Boden.' },
+      { at: 11.0, role: 'twist', link: 'aber', text: 'Nur wer *stillstand*, steht noch.' },
+      { at: 13.2, role: 'answer', link: 'denn', text: 'Mit Reibung: *{stop} m* Bremsweg.' },
+      { at: 14.8, role: 'payoff', link: 'aber', text: 'Ohne Reibung: *unendlich.*' },
+      { at: 16.6, role: 'loop', link: 'denn', text: 'Und das alles, weil für 5 Sekunden …' },
+    ],
+  },
 
   setup(ctx) {
     const { THREE, scene, blocks: b, rng } = ctx;
@@ -170,21 +189,21 @@ export default {
     };
 
     // Rotes Auto: bremst fuer die rote Ampel — rutscht ohne Reibung einfach drueber.
-    const redPath = brakePath(-60, 50 / KMH, 1.0, 3.0);
+    const redPath = brakePath(-60 - (50 / KMH) * 0.5, 50 / KMH, 1.5, 3.0);
     S.red = addCar('#e63946', {
       after: 'brake',
-      plan: (t) => ({ x: redPath(t).s, z: 3, h: 0, locked: t > 1 }),
+      plan: (t) => ({ x: redPath(t).s, z: 3, h: 0, locked: t > 1.5 }),
     });
     // Taxi von der anderen Seite, bremst ebenfalls
-    const taxiPath = brakePath(0, 50 / KMH, 2.0, 3.43);
+    const taxiPath = brakePath(0, 50 / KMH, 2.5, 3.43);
     S.taxi = addCar('#f7c600', {
       after: 'brake',
-      plan: (t) => ({ x: 70 - taxiPath(t).s, z: -3, h: Math.PI, locked: t > 2 }),
+      plan: (t) => ({ x: 70 + (50 / KMH) * 0.5 - taxiPath(t).s, z: -3, h: Math.PI, locked: t > 2.5 }),
     });
     // Blaues Auto biegt gerade links ab — ohne Reibung faehrt es geradeaus in die Hausecke.
     const R = 9;
     const vTurn = 9;
-    const tArc = 2.4;
+    const tArc = 2.9;
     S.blue = addCar('#1d8cf8', {
       after: 'brake',
       plan: (t) => {
@@ -226,10 +245,14 @@ export default {
         phase: rng() * Math.PI * 2,
         slipDelay: rng.range(0, 0.35),
         fall: 0, fallen: false, vx: 0, vz: 0,
-        getUp: T_ON + rng.range(1.0, 2.5),
+        getUp: T_ON + rng.range(4.2, 6.0),
         wobble: rng() * 10,
       });
     };
+    // Hauptfigur fuer die Nahaufnahme: rutscht als Erste weg.
+    addPerson(-13, 7.2, -1, 0, true);
+    S.hero = S.people[S.people.length - 1];
+    Object.assign(S.hero, { speed: 1.4, slipDelay: 0.05 });
     // Gehende laufen von der Kreuzung weg, damit niemand auf die Fahrbahn geraet.
     for (let i = 0; i < 26; i++) {
       const s = rng() < 0.5 ? -1 : 1;
@@ -261,8 +284,8 @@ export default {
     S.mu = off ? 0 : MU;
 
     // Ampeln
-    const mainState = t < 1.5 ? 2 : t < 2.5 ? 1 : 0;
-    const crossState = t < 4 ? 0 : t < 13 ? 2 : 1;
+    const mainState = t < 2.0 ? 2 : t < 3.0 ? 1 : 0;
+    const crossState = t < 4.5 ? 0 : 2;
     for (const bulbs of S.mainLights) bulbs.forEach((m, i) => (m.emissiveIntensity = i === mainState ? 2.2 : 0));
     for (const bulbs of S.crossLights) bulbs.forEach((m, i) => (m.emissiveIntensity = i === crossState ? 2.2 : 0));
 
@@ -307,13 +330,18 @@ export default {
       const g = car.group;
       g.position.copy(car.pos);
       g.rotation.y = car.heading;
-      // Bremsen kippt die Front leicht nach unten, ein Aufprall ruettelt kurz.
-      const shake = car.crashT != null ? Math.exp(-(t - car.crashT) * 6) * Math.sin((t - car.crashT) * 60) * 0.06 : 0;
-      g.rotation.z = shake;
+      // Bremsen kippt die Front nach unten (nur MIT Reibung — beim Rutschen gibt es keine
+      // Bremskraft, also auch kein Nicken). Feder sorgt fuers Nachwippen beim Anhalten.
+      const speedNow = car.pos.distanceTo(prev) / dt;
+      const braking = car.locked && !off && speedNow > 0.2 && car.after !== 'cruise';
+      car.pitchV = (car.pitchV || 0) + ((braking ? -0.045 : 0) - (car.pitch || 0)) * 160 * dt - (car.pitchV || 0) * 9 * dt;
+      car.pitch = (car.pitch || 0) + car.pitchV * dt;
+      const crash = car.crashT != null ? Math.exp(-(t - car.crashT) * 6) * Math.sin((t - car.crashT) * 60) * 0.08 : 0;
+      g.rotation.z = car.pitch + crash;
       // Raeder: rollen mit der Strecke; beim Querverkehr drehen sie bei Gruen ohne Reibung durch.
       const dist = car.pos.distanceTo(prev);
       let spin = car.locked ? 0 : dist / 0.4;
-      if (car.waiting && t >= 4 && t < T_ON) spin = 28 * dt;
+      if (car.waiting && t >= 4.5 && t < T_ON) spin = 28 * dt;
       for (const wheel of g.userData.wheels) wheel.rotation.z -= spin;
     }
 
@@ -373,17 +401,31 @@ export default {
     S.fallenCount = Math.max(S.fallenCount, fallen);
 
     // ---------- Kamera ----------
-    // Erst hinter dem roten Auto, dann Kranfahrt ueber die Hauptstrasse (zwischen den
-    // Haeusern, damit die Kamera nie in einer Fassade steckt), dann langsames Heranfahren.
-    const red = S.red.pos;
-    const follow = { p: new THREE.Vector3(red.x - 15, 5.5, red.z + 2), l: new THREE.Vector3(red.x + 14, 1.5, red.z - 1) };
-    const over = { p: new THREE.Vector3(-34 + 0.5 * t, 36 - 0.4 * t, 1.5), l: new THREE.Vector3(4, 0, -2) };
-    const k = smooth(phase(t, 3.2, 6.2));
-    camera.position.lerpVectors(follow.p, over.p, k);
-    const look = new THREE.Vector3().lerpVectors(follow.l, over.l, k);
-    camera.lookAt(look);
-    camera.fov = lerp(48, 58, k);
-    camera.updateProjectionMatrix();
+    // Shot-Liste: jede Einstellung zeigt genau das, was der Untertitel gerade sagt.
+    if (!S.rig) {
+      const hero = () => S.hero.mesh.position;
+      const red = () => S.red.pos;
+      S.rig = ctx.motion.shots(THREE, [
+        // Hook: hinter dem roten Auto auf Strassenhoehe
+        { at: 0, fov: 48, pos: () => [red().x - 15, 5.5, red().z + 2], look: () => [red().x + 14, 1.5, red().z - 1] },
+        // Wendepunkt: harter Schnitt auf den Fussgaenger, der wegrutscht
+        { at: 3.5, fov: 46, pos: () => [hero().x - 5.5, 1.7, 10.2], look: () => [hero().x + 0.6, 0.8, hero().z - 0.8], move: { fov: 52, dur: 1.4 } },
+        // Totale: rotes Auto rutscht ueber Rot, blaues Auto in die Hausecke
+        { at: 4.9, fov: 58, pos: [-30, 34, 1.5], look: [4, 0, -2], move: { pos: [-26, 30, 1.5], dur: 2.5 } },
+        // Detail: Raeder des Querverkehrs drehen durch
+        { at: 7.4, fov: 46, pos: [4.5, 2.6, -7.6], look: [-3, 0.7, -14.5] },
+        // Folge: Gestuerzte auf dem Gehweg
+        { at: 8.8, fov: 50, pos: [-13, 4.2, 4.2], look: [-27, 0.3, 8.2], move: { pos: [-15, 3.6, 4.6], dur: 2.2 } },
+        // Kontrast: die Stehenden an der Ecke, dahinter die Liegenden
+        { at: 11.0, fov: 60, pos: [-3.5, 1.8, 9.6], look: [-30, 0.3, 8.8], move: { pos: [-4.5, 1.7, 9.6], dur: 2.2 } },
+        // Aufloesung: Kran nach oben, Ueberblick
+        { at: 13.2, fov: 58, pos: [-30, 30, 1.5], look: [4, 0, 0], move: { pos: [-44, 62, 1.5], look: [8, 0, 0], dur: 3.4 } },
+        // Loop: zurueck auf Strassenhoehe, wie am Anfang
+        { at: 16.6, fov: 48, blend: 1.6, pos: [-58, 5.5, 5], look: [-29, 1.5, 2] },
+      ]);
+    }
+    const blueCrash = S.blue.crashT;
+    S.rig.apply(camera, t, ctx, ctx.motion.shake(t, blueCrash, { amp: 0.9, decay: 4 }));
   },
 
   overlay(g, t, ui, ctx) {
@@ -391,6 +433,9 @@ export default {
     const { smooth, phase } = ctx;
     const fadeIn = (a, b) => smooth(phase(t, a, b));
     const window_ = (a, b, f = 0.25) => Math.min(fadeIn(a, a + f), 1 - fadeIn(b - f, b));
+    const stop = (50 / KMH) ** 2 / (2 * MU * G);
+    const vars = { fallen: S.fallenCount, stop: ui.fmt(stop, 0) };
+    const fill = (text) => text.replace(/\{(\w+)\}/g, (_, k) => vars[k]);
 
     ui.vignette(g, 0.6);
 
@@ -399,41 +444,31 @@ export default {
     else if (t < T_ON) ui.pill(g, `REIBUNG WEG · *${ui.fmt(t - T_OFF, 1)} s*`, {});
     else ui.pill(g, 'REIBUNG *ZURÜCK*', {});
 
-    const statsAlpha = window_(2.6, 14.2, 0.4);
+    // Zahlen nur, solange sie die Geschichte tragen (weniger ist mehr)
+    const statsAlpha = window_(3.3, 13.0, 0.3);
     ui.stat(g, { x: 60, y: 230, width: 470, label: 'Reibungszahl μ', value: ui.fmt(S.mu, 2), color: S.mu === 0 ? '#ff5a5f' : ui.YELLOW, alpha: statsAlpha });
     ui.stat(g, { x: 550, y: 230, width: 470, label: 'Gestürzt', value: `${S.fallenCount}`, unit: `/ ${S.walkers}`, alpha: statsAlpha });
     ui.stat(g, {
-      x: 60, y: 420, width: 960, alpha: window_(T_OFF, 14.2, 0.4),
+      x: 60, y: 420, width: 960, alpha: window_(4.9, 7.4, 0.3),
       label: 'Rotes Auto, über Rot gerutscht',
       value: ui.fmt(S.redSlid, 1), unit: `m  ·  ${ui.fmt(S.red.vel.length() * KMH, 0)} km/h`,
     });
 
-    // Titel zu Beginn
-    ui.title(g, this.title, { y: 640, alpha: 1 - fadeIn(2.4, 2.9) });
+    // Hook als grosser Titel, ab Frame 0 sichtbar (kein Schwarzbild am Anfang)
+    const beats = this.story.beats;
+    ui.title(g, beats[0].text, { y: 640, alpha: 1 - fadeIn(2.15, 2.4) });
+    ui.beats(g, t, beats.slice(1).map((b) => ({ ...b, text: fill(b.text) })), { y: 1330 });
 
-    // Untertitel
-    const caps = [
-      [3.0, 4.4, 'Reibung: *weg.*'],
-      [4.4, 5.8, 'Bremsen? *Zwecklos.*'],
-      [5.8, 7.0, 'Lenken? *Geht auch nicht.*'],
-      [7.0, 8.4, 'Grün? Die Räder *drehen durch.*'],
-      [8.4, 10.6, 'Wer gelaufen ist, *liegt.*'],
-      [10.6, 13.2, 'Wer *stillstand*, steht noch.'],
-      [16.0, 18.0, 'Reibung: *unterschätzt.*'],
-    ];
-    for (const [a, b2, text] of caps) ui.caption(g, text, { y: 1330, alpha: window_(a, b2, 0.15) });
-
-    // Fakt mit Quelle
-    const stop = (50 / KMH) ** 2 / (2 * MU * G);
+    // Faktenkarte mit Quelle zur Aufloesung
     ui.card(g, {
-      y: 1420,
-      alpha: window_(13.3, 16.0, 0.3),
+      y: 1530,
+      alpha: window_(13.2, 16.5, 0.3),
       label: 'Fakt · Bremsweg aus 50 km/h',
-      lines: [`Mit Reibung (μ ≈ 0,8): ${ui.fmt(stop, 0)} m.`, 'Ohne Reibung: unendlich — das Auto rollt einfach weiter.'],
-      source: 's = v² / (2·μ·g), μ Reifen/Asphalt trocken',
+      lines: [`μ ≈ 0,8 (Reifen auf trockenem Asphalt): ${ui.fmt(stop, 0)} m.`, 'μ = 0: Das Auto hält nie an.'],
+      source: 's = v² / (2·μ·g)',
     });
 
-    ui.fade(g, 1 - fadeIn(0, 0.4));
-    ui.fade(g, fadeIn(17.4, 18));
+    // Akzent am Hoehepunkt: kurzer Blitz beim Aufprall
+    if (S.blue.crashT != null) ui.flash(g, 0.35 * Math.exp(-(t - S.blue.crashT) * 9));
   },
 };

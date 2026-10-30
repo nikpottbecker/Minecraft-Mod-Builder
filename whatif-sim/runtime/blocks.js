@@ -129,6 +129,8 @@ export function blocks(THREE, rng) {
       const wheels = [];
       for (const [x, z] of [[1.3, 0.95], [1.3, -0.95], [-1.3, 0.95], [-1.3, -0.95]]) {
         const wheel = box(0.8, 0.8, 0.35, '#1b1b1f', { x, y: 0.4, z });
+        // Felgen-Streifen, damit man die Drehung sieht
+        wheel.add(box(0.62, 0.14, 0.37, '#c9ccd3'));
         wheels.push(wheel);
         group.add(wheel);
       }

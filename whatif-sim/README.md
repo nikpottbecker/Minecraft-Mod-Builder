@@ -20,13 +20,15 @@ Im Ordner `whatif-sim` Claude Code starten und eine Zeile schreiben:
 
 > Was wäre, wenn alle Ampeln weltweit 5 Sekunden lang grün wären?
 
-Claude folgt dann [`CLAUDE.md`](./CLAUDE.md):
+Claude folgt dann [`CLAUDE.md`](./CLAUDE.md), dazu das Story-Regelwerk
+[`STORY.md`](./STORY.md) und das Animations-Handwerk [`ANIMATION.md`](./ANIMATION.md):
 
 1. **Prämisse prüfen**: Gibt es das Video schon? Ist die Physik sauber?
 2. **Quellen**: Jede Zahl bekommt eine Quelle oder Formel.
-3. **Szene schreiben**: `scenes/<name>.js`
-4. **Eigene Frames prüfen**: Kontaktbogen ansehen, Fehler beheben.
-5. **Rendern**: `out/<name>.mp4`
+3. **Story zuerst**: Beats mit „aber/deshalb“, Höhepunkt, Pointe, Loop; per `lint-story.mjs` geprüft
+4. **Szene schreiben**: `scenes/<name>.js` mit Shot-Liste
+5. **Eigene Frames prüfen**: Kontaktbogen ansehen, Fehler beheben.
+6. **Rendern**: `out/<name>.mp4`
 
 ## Befehle
 
@@ -38,6 +40,7 @@ Claude folgt dann [`CLAUDE.md`](./CLAUDE.md):
 | `... --gpu` | Grafikkarte statt Software-Rendering (viel schneller auf dem Mac) |
 | `... --audio musik.mp3` | Tonspur dazumischen |
 | `... --out pfad.mp4` | Ausgabedatei festlegen |
+| `node lint-story.mjs scenes/reibung.js` | Story-Check mit Score (läuft auch vor jedem Rendern) |
 
 Live im Browser ansehen: `npx serve .` und
 `http://localhost:3000/runtime/index.html?scene=/scenes/reibung.js&scale=0.5&live` öffnen.
@@ -48,7 +51,9 @@ Live im Browser ansehen: `npx serve .` und
 render.mjs          Renderer: Headless-Chromium -> JPEG-Frames -> ffmpeg (H.264)
 runtime/engine.js   Lädt die Szene, feste Zeitschritte (deterministisch), Kamera, Licht
 runtime/blocks.js   Bausteine: Häuser, Autos, Blockfiguren, Bäume, Werbetafeln
-runtime/ui.js       TikTok-Overlays: Label, Titel, Untertitel, Zahlenkacheln, Faktenkarte
+runtime/ui.js       TikTok-Overlays: Label, Titel, Wort-für-Wort-Untertitel, Zahlenkacheln, Faktenkarte
+runtime/motion.js   Easing, Federn, Keyframes, Kamera-Shot-Liste, Wackeln
+lint-story.mjs      Story-Prüfer (Hook, aber/deshalb, Höhepunkt, Ende, Quellen, Lesetempo)
 scenes/reibung.js   Beispiel: „Was wäre, wenn die Reibung 5 Sekunden verschwindet?“
 ```
 
