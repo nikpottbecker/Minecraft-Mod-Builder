@@ -1,6 +1,8 @@
 // Profilbild: der Main Character aus "Blackout in a high-rise" vor der Stadt bei Nacht.
 // node render.mjs scenes/avatar.js --check --count 1 --gpu, dann quadratisch zuschneiden.
 
+import { hero } from '../runtime/hero.js';
+
 export default {
   title: 'Channel avatar',
   duration: 1,
@@ -18,9 +20,10 @@ export default {
     const { THREE, scene, camera, blocks: b, rng } = ctx;
     scene.background = new THREE.Color('#0a0f26');
 
-    const you = b.character({ shirt: '#d9463d', pants: '#27324f', skin: '#d6a57c', hair: '#2a1a10', outfit: 'hoodie', hairStyle: 'tufts' });
+    const you = hero(THREE, b);
     you.rotation.y = -Math.PI / 2 + 0.14;
     b.expression(you, 'worried');
+    you.position.y = 0;
     b.look(you, -0.5, 0.3);
     scene.add(you);
 
@@ -44,10 +47,10 @@ export default {
     scene.add(rim);
     scene.add(new THREE.HemisphereLight('#8ea6e8', '#1b1d29', 0.5));
 
-    camera.position.set(0, 1.72, 3.2);
-    camera.lookAt(0, 1.72, 0);
+    camera.position.set(0, 2.03, 2.9);
+    camera.lookAt(0, 2.03, 0);
     camera.fov = 40;
     camera.updateProjectionMatrix();
-    ctx.focus = 3.2;
+    ctx.focus = 2.9;
   },
 };

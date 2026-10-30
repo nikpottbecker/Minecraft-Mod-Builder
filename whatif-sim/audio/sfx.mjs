@@ -375,6 +375,19 @@ export const sfx = {
     return normalize(lowpass(x, 1800).map((v, i) => v * ((i / RATE) % 1 < 0.45 ? 1 : 0)), 0.3);
   },
 
+  // Motor im Leerlauf: tiefes Brummen im Innenraum
+  engine({ dur = 8, seed = 107 } = {}) {
+    const n = noise(seed);
+    const x = new Float32Array(len(dur));
+    let ph = 0;
+    for (let i = 0; i < x.length; i++) {
+      const t = i / RATE;
+      ph += (34 + Math.sin(t * 1.3) * 1.2) / RATE;
+      x[i] = (Math.sin(TAU * ph) + 0.5 * Math.sin(TAU * ph * 2) + 0.2 * n()) * Math.min(1, t / 0.3, (dur - t) / 0.3);
+    }
+    return normalize(lowpass(x, 240), 0.5);
+  },
+
   // Stadt-Atmosphaere (Verkehrsrauschen, Hupe in der Ferne)
   city({ dur = 10, seed = 31 } = {}) {
     const n = noise(seed);
