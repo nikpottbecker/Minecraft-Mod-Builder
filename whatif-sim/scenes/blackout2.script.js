@@ -1,0 +1,28 @@
+// Part 2 "Floor 5". `*wort*` = gelb, `say` = gesprochene Fassung.
+export default {
+  voice: 'en-US-AndrewNeural',
+  lines: [
+    { id: 'hook', role: 'hook', text: "The last working tap in your building *isn't yours.*", pause: 0.25 },
+    { id: 'recap', role: 'setup', link: 'also', text: 'Day 2 without power. Floor 14. Your taps are *dry.*', say: 'Day two without power. Floor fourteen. Your taps are dry.', pause: 0.25 },
+    { id: 'helen', role: 'setup', link: 'denn', text: 'You opened your door last night. So Helen drinks *your water* too.' },
+    { id: 'math', role: 'escalation', link: 'deshalb', text: "7 liters left. For two people, that's *under 2 days.*", say: "Seven liters left. For two people, that's under two days." },
+    { id: 'toilet', role: 'escalation', link: 'aber', text: 'Then Helen asks about the *toilet.*', pause: 0.2 },
+    { id: 'rule3', role: 'escalation', link: 'denn', text: "*Rule three:* one flush takes 6 liters. That's 3 days of drinking water.", say: "Rule three: one flush takes six liters. That's three days of drinking water." },
+    { id: 'stairs', role: 'escalation', link: 'deshalb', text: 'So you grab a bucket and go down. 14 floors. *No lights.*', say: 'So you grab a bucket and go down. Fourteen floors. No lights.' },
+    { id: 'street', role: 'escalation', link: 'aber', text: 'Outside, the store is *closed.* The ATM is dead.' },
+    { id: 'gas', role: 'escalation', link: 'also', text: 'Even the gas pumps need *power.*', pause: 0.2 },
+    { id: 'back', role: 'turn', link: 'deshalb', text: 'You climb back with an empty bucket. Then, on floor 5, you *hear it.*', say: 'You climb back with an empty bucket. Then, on floor five, you hear it.', pause: 0.6 },
+    { id: 'running', role: 'peak', link: 'also', text: '*Running water.*', pause: 0.45 },
+    { id: 'line', role: 'answer', link: 'denn', text: 'Floor 5 sits below the *22 meter* line. Street pressure still reaches it.', say: 'Floor five sits below the twenty-two meter line. Street pressure still reaches it.' },
+    { id: 'marek', role: 'twist', link: 'aber', text: 'A door opens. Marek, 52. His bathtub is *full.*', say: 'A door opens. Marek, fifty-two. His bathtub is full.' },
+    { id: 'clock', role: 'twist', link: 'denn', text: "He knows it won't last. Emergency plans only aim for *72 hours.*", say: "He knows it won't last. Emergency plans only aim for seventy-two hours." },
+    { id: 'deal', role: 'consequence', link: 'deshalb', text: 'His rule: *one bucket* per apartment.' },
+    { id: 'carry', role: 'consequence', link: 'also', text: '10 liters. 10 kilos. *9 floors* up.', say: 'Ten liters. Ten kilos. Nine floors up.' },
+    { id: 'payoff', role: 'payoff', link: 'also', text: "You make it. 17 liters. That's *4 more days.*", say: "You make it. Seventeen liters. That's four more days.", pause: 0.7 },
+    { id: 'hall', role: 'turn', link: 'aber', text: 'But the hallway is *not empty.*', pause: 0.3 },
+    { id: 'seen', role: 'consequence', link: 'denn', text: 'Your whole floor saw that *bucket.*' },
+    { id: 'where', role: 'consequence', link: 'deshalb', text: 'They ask where you got it.', pause: 0.65 },
+    { id: 'dilemma', role: 'consequence', link: 'doch', text: 'Tell them, and Marek runs dry. Stay quiet, and *they* do.' },
+    { id: 'ask', role: 'cliffhanger', link: 'doch', text: 'Would you *tell them?*' },
+  ],
+};
