@@ -173,6 +173,9 @@ export default {
     S.dash = new THREE.PointLight('#7fb2ff', 3.5, 4, 1.4);
     S.dash.position.set(-0.5, 1.35, -0.75);
     cab.add(S.dash);
+    S.faceLight = new THREE.PointLight('#ffc99a', 4.5, 5, 1.4);
+    S.faceLight.position.set(-0.5, 2.15, -0.75);
+    cab.add(S.faceLight);
     S.wipers = [-0.55, 0.45].map((x) => {
       const p = new THREE.Group();
       p.position.set(x, 1.38, -1.62);
@@ -310,7 +313,7 @@ export default {
 
     const you = S.you;
     b.blink(you, t > 1 && t < at.ask ? (((t + 1.3) * 0.36) % 1 < 0.05 ? 1 : 0) : 0);
-    b.expression(you, t < at.brake ? 'flat' : t >= at.dark ? 'worried' : t >= at.walk ? 'worried' : 'flat');
+    b.expression(you, ctx.coverMode ? 'worried' : t < at.brake ? 'flat' : t >= at.dark ? 'worried' : t >= at.walk ? 'worried' : 'flat');
     you.scale.y = 1 + Math.sin(t * 2.2) * 0.009;
     b.look(you, shot.set === 'cab' && t >= at.empty && t < at.hours ? 0.5 : Math.sin(t * 0.8) * 0.3, t >= at.empty ? -0.3 : 0.1);
     you.userData.limbs.armL.rotation.z = 1.2;
@@ -332,7 +335,7 @@ export default {
       pos.setXYZ(i, cam.x + x, cam.y - 4 + (y < 0 ? y + 12 : y), cam.z + z);
     });
     pos.needsUpdate = true;
-    S.flakes.material.size = shot.whiteout ? 0.2 : 0.13;
+    S.flakes.material.size = ctx.coverMode ? 0.035 : shot.whiteout ? 0.2 : shot.set === 'cab' ? 0.06 : 0.13;
     S.rig.apply(ctx.camera, t, ctx, t >= DARK && t < DARK + 0.5 ? motion.shake(t, DARK, { amp: 0.02, decay: 7 }) : [0, 0, 0]);
     void dt;
   },

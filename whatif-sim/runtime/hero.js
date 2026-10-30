@@ -68,9 +68,20 @@ export function hero(THREE, b, { jacket = false } = {}) {
   head.add(box(0.24, 0.16, 0.26, C.skinDark, { y: 0.03, r: 0.03 }));
   head.add(box(0.54, 0.34, 0.52, C.skin, { y: 0.44, r: 0.08 }));
   head.add(box(0.52, 0.26, 0.5, C.skin, { y: 0.24, r: 0.05 }));
-  const shadow = new THREE.MeshBasicMaterial({ color: C.stubble, transparent: true, opacity: 0.32 });
-  const beard = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.15), shadow);
-  beard.position.set(0.262, 0.18, 0);
+  // Bartschatten: weicher Verlauf ohne harte Kante
+  const bc = document.createElement('canvas');
+  bc.width = 128;
+  bc.height = 64;
+  const bg = bc.getContext('2d');
+  const grad = bg.createRadialGradient(64, 42, 4, 64, 42, 62);
+  grad.addColorStop(0, 'rgba(94,70,56,0.5)');
+  grad.addColorStop(0.65, 'rgba(94,70,56,0.42)');
+  grad.addColorStop(1, 'rgba(94,70,56,0)');
+  bg.fillStyle = grad;
+  bg.fillRect(0, 0, 128, 64);
+  const shadow = new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(bc), transparent: true, depthWrite: false });
+  const beard = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.24), shadow);
+  beard.position.set(0.262, 0.21, 0);
   beard.rotation.y = Math.PI / 2;
   head.add(beard);
   for (const z of [0.27, -0.27]) head.add(box(0.09, 0.14, 0.05, C.skinDark, { x: -0.04, y: 0.39, z, r: 0.02 }));
