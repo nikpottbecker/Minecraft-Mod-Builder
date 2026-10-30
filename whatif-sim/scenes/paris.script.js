@@ -1,0 +1,26 @@
+// Einzelvideo "One street. Two sides." Figuren erfunden, Zahlen aus Berichten mit Zuordnung.
+export default {
+  tts: 'directed',
+  voice: 'en-US-AndrewNeural',
+  rate: '-3%',
+  pitch: '-5Hz',
+  lines: [
+    { id: 'hook', role: 'hook', rate: '-5%', pitch: '-7Hz', beat: 0.34, space: 'street', text: 'One street in Paris. Two people. Neither of them *wanted this night.*', pause: 0.35 },
+    { id: 'lea', role: 'setup', link: 'also', rate: '-3%', beat: 0.3, space: 'street', text: 'You are Léa, 19. Your school is short of *teachers.*', say: 'You are Léa, nineteen. Your school is short of teachers.' },
+    { id: 'march', role: 'setup', link: 'deshalb', rate: '-2%', beat: 0.3, space: 'street', text: "So you march. Rent, prices, classrooms. You're not *alone.*" },
+    { id: 'peace', role: 'setup', link: 'denn', rate: '-3%', space: 'street', text: 'Most of this crowd came to be *heard.*', pause: 0.4 },
+    { id: 'break', role: 'turn', link: 'aber', rate: '-5%', pitch: '-7Hz', beat: 0.34, space: 'street', text: 'Then masked groups break away. Glass *shatters.*', pause: 0.5 },
+    { id: 'gas', role: 'escalation', link: 'deshalb', rate: '-6%', pitch: '-7Hz', beat: 0.34, space: 'street', text: 'Tear gas drifts over everyone. Your eyes burn. You *run.*', pause: 0.8 },
+    { id: 'rewind', role: 'turn', link: 'aber', rate: '-8%', pitch: '-8Hz', space: 'street', text: 'Now rewind *ten minutes.*', pause: 0.5 },
+    { id: 'marc', role: 'setup', link: 'also', rate: '-3%', beat: 0.3, space: 'street', text: "You are Marc, 34. Riot police. Twelve hours in the *gear.*", say: "You are Marc, thirty-four. Riot police. Twelve hours in the gear." },
+    { id: 'order', role: 'escalation', link: 'deshalb', rate: '-3%', space: 'street', text: 'Your job: hold this street. People live *behind you.*' },
+    { id: 'fire', role: 'peak', link: 'aber', rate: '-5%', pitch: '-6Hz', beat: 0.32, space: 'street', text: 'Fireworks hit your line. A shop goes up. *Your radio screams.*', pause: 0.5 },
+    { id: 'tell', role: 'twist', link: 'denn', rate: '-6%', pitch: '-7Hz', beat: 0.36, space: 'street', text: "From here, you can't tell who came to march, and who came to *fight.*" },
+    { id: 'orderg', role: 'consequence', link: 'deshalb', rate: '-6%', pitch: '-7Hz', space: 'street', text: 'The order comes. Tear gas. It hits *everyone.*', pause: 0.8 },
+    { id: 'march2', role: 'answer', link: 'denn', rate: '-2%', beat: 0.3, space: 'street', text: 'On October 17, the government counted 550,000 marchers. Organizers said 800,000.', say: 'On October seventeen, the government counted five hundred fifty thousand marchers. Organizers said eight hundred thousand.' },
+    { id: 'toll', role: 'answer', link: 'also', rate: '-2%', beat: 0.3, space: 'street', text: 'The Interior Ministry reported over 1,100 officers hurt and more than 1,500 shops looted.', say: 'The Interior Ministry reported over eleven hundred officers hurt and more than fifteen hundred shops looted.' },
+    { id: 'hurt', role: 'answer', link: 'doch', rate: '-3%', space: 'street', text: 'A week later, two people were badly hurt during police operations.', pause: 0.7 },
+    { id: 'same', role: 'payoff', link: 'also', rate: '-8%', pitch: '-8Hz', beat: 0.46, space: 'street', text: 'Same street. Same smoke. *Two different nights.*', pause: 0.8 },
+    { id: 'ask', role: 'cliffhanger', link: 'doch', rate: '-12%', pitch: '-9Hz', gain: -2, space: 'street', text: 'What would *you* change?' },
+  ],
+};
