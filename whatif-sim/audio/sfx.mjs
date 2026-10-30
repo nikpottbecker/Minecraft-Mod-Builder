@@ -324,6 +324,57 @@ export const sfx = {
     return normalize(x.map((v, i) => v * Math.min(1, i / (RATE * 0.2), (x.length - i) / (RATE * 0.2))), 0.35);
   },
 
+  // Schwerer Riegel: Metall gleitet, rastet ein
+  bolt({ seed = 89 } = {}) {
+    const n = noise(seed);
+    const slide = bandpass(new Float32Array(len(0.28)).map(() => n()), (t) => 1400 + t * 2600, 5);
+    const clack = sweep(0.09, (t) => 310 - t * 900).map((v, i) => v * env(i / RATE, 0.001, 0.02));
+    const x = new Float32Array(len(0.42));
+    slide.forEach((v, i) => (x[i] = v * 0.5 * Math.sin((i / slide.length) * Math.PI)));
+    clack.forEach((v, i) => (x[i + len(0.27)] += v));
+    return normalize(x, 0.9);
+  },
+
+  // Kerze knistert: seltene kleine Knacker
+  crackle({ dur = 3, seed = 97 } = {}) {
+    const n = noise(seed);
+    const x = new Float32Array(len(dur));
+    for (let k = 0; k < dur * 9; k++) {
+      const at = Math.floor(((n() + 1) / 2) * (x.length - 900));
+      for (let i = 0; i < 800; i++) x[at + i] += n() * Math.exp(-i / 90) * (0.4 + (n() + 1) / 3);
+    }
+    return normalize(highpass(x, 900), 0.45);
+  },
+
+  // Feuer: tiefes Rauschen, das atmet, dazu Knacken
+  fire({ dur = 6, seed = 101 } = {}) {
+    const n = noise(seed);
+    const low = lowpass(new Float32Array(len(dur)).map(() => n()), 320);
+    const crack = sfx.crackle({ dur, seed: seed + 1 });
+    const y = low.map((v, i) => {
+      const t = i / RATE;
+      return (v * 3 * (0.65 + 0.35 * Math.sin(t * 2.3 + Math.sin(t * 0.9))) + crack[i] * 0.5) * Math.min(1, t / 0.6, (dur - t) / 0.6);
+    });
+    return normalize(y, 0.7);
+  },
+
+  // Husten: zwei kurze Stoesse
+  cough({ pitch = 1, seed = 103 } = {}) {
+    const n = noise(seed);
+    const x = new Float32Array(len(0.62));
+    for (const [o, g] of [[0, 1], [0.27, 0.75]]) {
+      const b = bandpass(new Float32Array(len(0.24)).map(() => n()), (t) => (620 - t * 900) * pitch, 1.6);
+      b.forEach((v, i) => (x[i + len(o)] += v * g * env(i / RATE, 0.006, 0.07)));
+    }
+    return normalize(x, 0.7);
+  },
+
+  // Rauchmelder weit entfernt
+  alarm({ dur = 4 } = {}) {
+    const x = sweep(dur, () => 3100);
+    return normalize(lowpass(x, 1800).map((v, i) => v * ((i / RATE) % 1 < 0.45 ? 1 : 0)), 0.3);
+  },
+
   // Stadt-Atmosphaere (Verkehrsrauschen, Hupe in der Ferne)
   city({ dur = 10, seed = 31 } = {}) {
     const n = noise(seed);

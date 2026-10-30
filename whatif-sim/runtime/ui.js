@@ -382,6 +382,16 @@ export const ui = {
     g.restore();
   },
 
+  // Rauchschleier ueber dem ganzen Bild
+  haze(g, amount, color = '#7c7772') {
+    if (amount <= 0) return;
+    g.save();
+    g.globalAlpha = amount;
+    g.fillStyle = color;
+    g.fillRect(0, 0, 1080, 1920);
+    g.restore();
+  },
+
   // Farblook pro Ort: Farbe multiplizieren, dazu kraeftige Vignette.
   grade(g, { color = '#ffffff', edge = 0.6 } = {}) {
     g.save();
@@ -422,7 +432,7 @@ export const ui = {
 
   // Hochhaus-Schema: Wassersaeule im Querschnitt. mains = Stockwerk, bis zu dem der Leitungsdruck
   // reicht; level = aktueller Wasserstand (Stockwerke); pump = 0..1 Pumpe laeuft.
-  section(g, { floors = 18, mains = 7, you = 14, level = 18, pump = 1, alpha = 1, showMains = 1, marker = null }) {
+  section(g, { floors = 18, mains = 7, you = 14, level = 18, pump = 1, alpha = 1, showMains = 1, marker = null, fire = null, smoke = 0, mainsLabel = '22 M', mainsSub = '≈ FLOOR 7' }) {
     if (alpha <= 0) return;
     const left = 300;
     const width = 480;
@@ -443,6 +453,22 @@ export const ui = {
     for (let f = 1; f < floors; f++) {
       g.fillStyle = 'rgba(255,255,255,0.18)';
       g.fillRect(left, fy(f), width, 3);
+    }
+    if (fire) {
+      const top2 = fy(smoke);
+      const grad = g.createLinearGradient(0, fy(fire), 0, top2);
+      grad.addColorStop(0, 'rgba(190,190,195,0.62)');
+      grad.addColorStop(1, 'rgba(190,190,195,0.2)');
+      g.fillStyle = grad;
+      g.fillRect(left + 3, top2, 74, fy(fire) - top2);
+      roundRect(g, left + 180, fy(fire) - fh + 5, 280, fh - 8, 8);
+      g.fillStyle = '#ff8a2a';
+      g.fill();
+      g.fillStyle = '#16100a';
+      g.textAlign = 'center';
+      g.font = `400 40px ${DISPLAY}`;
+      g.textBaseline = 'middle';
+      g.fillText(`FIRE · FLOOR ${fire}`, left + 320, fy(fire) - fh / 2 + 2);
     }
     const pipe = left + 90;
     g.fillStyle = 'rgba(255,255,255,0.14)';
@@ -473,9 +499,9 @@ export const ui = {
       g.setLineDash([]);
       g.fillStyle = YELLOW;
       g.textAlign = 'left';
-      g.fillText('22 M', left + width + 42, fy(mains) - 28);
+      g.fillText(mainsLabel, left + width + 42, fy(mains) - 28);
       g.font = `400 42px ${DISPLAY}`;
-      g.fillText('≈ FLOOR 7', left + width + 42, fy(mains) + 26);
+      g.fillText(mainsSub, left + width + 42, fy(mains) + 26);
       g.font = `400 50px ${DISPLAY}`;
       g.globalAlpha = alpha;
     }
