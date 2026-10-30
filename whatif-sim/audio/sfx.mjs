@@ -201,6 +201,129 @@ export const sfx = {
     return normalize(x.map((v, i) => v * env(i / RATE, 0.001, 0.02)), 0.4);
   },
 
+  // Schritt auf Beton: tiefer Absatz plus Kratzen
+  concrete({ pitch = 1, seed = 41 } = {}) {
+    const n = noise(seed);
+    const heel = lowpass(new Float32Array(len(0.13)).map(() => n()), 520 * pitch);
+    const grit = highpass(new Float32Array(len(0.13)).map(() => n()), 2400);
+    return normalize(heel.map((v, i) => {
+      const t = i / RATE;
+      return v * 3 * env(t, 0.001, 0.035) + grit[i] * 0.09 * env(t, 0.004, 0.05);
+    }), 0.7);
+  },
+
+  // Atemzug: gefiltertes Rauschen, ein- und ausatmen
+  breath({ dur = 0.9, pitch = 1, seed = 43 } = {}) {
+    const n = noise(seed);
+    const x = bandpass(new Float32Array(len(dur)).map(() => n()), (t) => (1200 + 500 * Math.sin((t / dur) * Math.PI)) * pitch, 1.2);
+    return normalize(x.map((v, i) => v * Math.sin((i / x.length) * Math.PI) ** 1.6), 0.5);
+  },
+
+  // Laufendes Wasser: viele kleine Blasen ueber Rauschen
+  water({ dur = 4, pitch = 1, seed = 47 } = {}) {
+    const n = noise(seed);
+    const hiss = bandpass(new Float32Array(len(dur)).map(() => n()), (t) => (1500 + 500 * Math.sin(t * 3.1) + 300 * Math.sin(t * 7.7)) * pitch, 0.9);
+    const x = hiss.map((v, i) => {
+      const t = i / RATE;
+      return v * (0.7 + 0.3 * Math.sin(t * 19 + 3 * Math.sin(t * 2.3)));
+    });
+    const y = x.map((v, i) => v * Math.min(1, i / (RATE * 0.05), (x.length - i) / (RATE * 0.2)));
+    return normalize(y, 0.6);
+  },
+
+  // Wasser fuellt Eimer: Tonhoehe steigt mit dem Fuellstand
+  fill({ dur = 2.4, seed = 53 } = {}) {
+    const n = noise(seed);
+    const x = bandpass(new Float32Array(len(dur)).map(() => n()), (t) => 420 + (t / dur) ** 1.4 * 1500, 3);
+    return normalize(x.map((v, i) => v * Math.min(1, i / (RATE * 0.03), (x.length - i) / (RATE * 0.1))), 0.7);
+  },
+
+  // Einzelner Tropfen mit kurzem Echo im Metall
+  drip({ pitch = 1 } = {}) {
+    return normalize(sweep(0.14, (t) => (900 + 2600 * t * 7) * pitch).map((v, i) => v * env(i / RATE, 0.001, 0.03)), 0.5);
+  },
+
+  // Wasser schwappt im Eimer
+  slosh({ dur = 0.5, seed = 59 } = {}) {
+    const n = noise(seed);
+    const x = bandpass(new Float32Array(len(dur)).map(() => n()), (t) => 500 + 500 * Math.sin((t / dur) * Math.PI), 2);
+    return normalize(x.map((v, i) => v * Math.sin((i / x.length) * Math.PI)), 0.5);
+  },
+
+  // Eimergriff oder Tuer: Knarren aus schnellen Reibeimpulsen
+  creak({ dur = 0.8, pitch = 1, seed = 61 } = {}) {
+    const n = noise(seed);
+    const x = new Float32Array(len(dur));
+    let ph = 0;
+    for (let i = 0; i < x.length; i++) {
+      const t = i / RATE;
+      ph += (70 + 45 * Math.sin(t * 5) + 30 * n() * 0.1) * pitch / RATE;
+      x[i] = (ph % 1 < 0.08 ? 1 : 0) * Math.sin((i / x.length) * Math.PI);
+    }
+    return normalize(bandpass(x, 1500 * pitch, 2.4), 0.6);
+  },
+
+  // Toilettenspuelung, die ins Leere gurgelt
+  gurgle({ dur = 1.2, seed = 67 } = {}) {
+    const n = noise(seed);
+    const x = bandpass(new Float32Array(len(dur)).map(() => n()), (t) => 220 + 160 * Math.sin(t * 22) * (1 - t / dur), 5);
+    return normalize(x.map((v, i) => v * Math.exp((-2.4 * i) / x.length)), 0.7);
+  },
+
+  // Rollgitter: Metallrasseln mit Schlag
+  shutter({ dur = 0.9, seed = 71 } = {}) {
+    const n = noise(seed);
+    const x = bandpass(new Float32Array(len(dur)).map(() => n()), 1900, 8);
+    return normalize(x.map((v, i) => {
+      const t = i / RATE;
+      return v * Math.exp(-t * 6) * (0.6 + 0.4 * Math.sign(Math.sin(t * 90)));
+    }), 0.8);
+  },
+
+  // Gemurmel: mehrere gefilterte Stimmen-Formanten, die auf- und abschwellen
+  murmur({ dur = 4, seed = 73 } = {}) {
+    const n = noise(seed);
+    const base = new Float32Array(len(dur)).map(() => n());
+    const a = bandpass(base, (t) => 520 + 180 * Math.sin(t * 3.7), 3);
+    const b = bandpass(base, (t) => 1150 + 260 * Math.sin(t * 2.9 + 1), 3);
+    const y = a.map((v, i) => {
+      const t = i / RATE;
+      const k = Math.max(0, Math.sin(t * 5.3) + Math.sin(t * 8.1 + 2));
+      return (v + b[i] * 0.7) * k * Math.min(1, t / 0.5, (dur - t) / 0.4);
+    });
+    return normalize(y, 0.6);
+  },
+
+  // Herzschlag: Doppelschlag
+  heart({ pitch = 1 } = {}) {
+    const x = new Float32Array(len(0.55));
+    for (const [o, g] of [[0, 1], [0.2, 0.7]]) {
+      const b = sweep(0.2, (t) => (72 - t * 160) * pitch).map((v, i) => v * env(i / RATE, 0.004, 0.05) * g);
+      x.set(b.map((v, i) => v + (x[i + Math.round(o * RATE)] || 0)), Math.round(o * RATE));
+    }
+    return normalize(x, 0.9);
+  },
+
+  // Sirene in weiter Ferne
+  siren({ dur = 5 } = {}) {
+    const x = sweep(dur, (t) => 620 + 240 * Math.sin(t * 1.5));
+    return normalize(lowpass(x, 900).map((v, i) => v * Math.sin((i / x.length) * Math.PI)), 0.25);
+  },
+
+  // Wind
+  wind({ dur = 6, seed = 79 } = {}) {
+    const n = noise(seed);
+    const x = bandpass(new Float32Array(len(dur)).map(() => n()), (t) => 340 + 170 * Math.sin(t * 0.8) + 90 * Math.sin(t * 2.1), 1.4);
+    return normalize(x.map((v, i) => v * Math.min(1, i / (RATE * 0.6), (x.length - i) / (RATE * 0.6))), 0.5);
+  },
+
+  // Raumton: leises tiefes Rauschen, damit Stille nicht tot klingt
+  room({ dur = 6, seed = 83 } = {}) {
+    const n = noise(seed);
+    const x = lowpass(new Float32Array(len(dur)).map(() => n()), 180);
+    return normalize(x.map((v, i) => v * Math.min(1, i / (RATE * 0.2), (x.length - i) / (RATE * 0.2))), 0.35);
+  },
+
   // Stadt-Atmosphaere (Verkehrsrauschen, Hupe in der Ferne)
   city({ dur = 10, seed = 31 } = {}) {
     const n = noise(seed);

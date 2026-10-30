@@ -25,6 +25,7 @@ const MOODS = {
   drive: { pad: 0.5, bass: 0.7, hats: 0.35, tick: 0, drone: 0, arp: 0.2, cutoff: 1500 },
   resolve: { pad: 0.55, bass: 0.3, hats: 0.12, tick: 0, drone: 0, arp: 0.45, cutoff: 1800 },
   build: { pad: 0.6, bass: 0.6, hats: 0.4, tick: 0, drone: 0.2, arp: 0.5, cutoff: 2600 },
+  dread: { pad: 0.06, bass: 0, hats: 0, tick: 0, drone: 0.85, arp: 0, cutoff: 320 },
   silence: { pad: 0, bass: 0, hats: 0, tick: 0, drone: 0, arp: 0, cutoff: 400 },
 };
 const KEYS = Object.keys(MOODS.calm);

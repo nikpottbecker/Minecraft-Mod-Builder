@@ -310,6 +310,31 @@ export const ui = {
     g.restore();
   },
 
+  // Dauer-Anzeige: Wasser oder Stockwerk. warn = rot, k = 0..1 kurzer Puls bei Aenderung.
+  gauge(g, { label, value, x = 60, y = 240, warn = false, k = 0, alpha = 1 }) {
+    if (alpha <= 0) return;
+    g.save();
+    g.globalAlpha = alpha;
+    g.translate(x, y);
+    const s = 1 + 0.12 * k;
+    g.scale(s, s);
+    g.textBaseline = 'alphabetic';
+    g.textAlign = 'left';
+    g.font = `400 34px ${DISPLAY}`;
+    const lw = g.measureText(label).width;
+    g.font = `400 76px ${DISPLAY}`;
+    const w = Math.max(lw, g.measureText(value).width) + 44;
+    roundRect(g, 0, 0, w, 138, 16);
+    g.fillStyle = 'rgba(8,10,20,0.9)';
+    g.fill();
+    g.fillStyle = warn ? RED : '#3fb4ff';
+    g.fillText(value, 22, 118);
+    g.font = `400 34px ${DISPLAY}`;
+    g.fillStyle = 'rgba(255,255,255,0.75)';
+    g.fillText(label, 22, 44);
+    g.restore();
+  },
+
   // Steckbrief einer Figur: "HELEN · 81 · APT 14B"
   nameTag(g, { name, info, x = 540, y = 1180, k = 1 }) {
     if (k <= 0) return;
@@ -335,7 +360,7 @@ export const ui = {
 
   // Hochhaus-Schema: Wassersaeule im Querschnitt. mains = Stockwerk, bis zu dem der Leitungsdruck
   // reicht; level = aktueller Wasserstand (Stockwerke); pump = 0..1 Pumpe laeuft.
-  section(g, { floors = 18, mains = 7, you = 14, level = 18, pump = 1, alpha = 1, showMains = 1 }) {
+  section(g, { floors = 18, mains = 7, you = 14, level = 18, pump = 1, alpha = 1, showMains = 1, marker = null }) {
     if (alpha <= 0) return;
     const left = 300;
     const width = 480;
@@ -391,6 +416,15 @@ export const ui = {
       g.fillText('≈ FLOOR 7', left + width + 42, fy(mains) + 26);
       g.font = `400 50px ${DISPLAY}`;
       g.globalAlpha = alpha;
+    }
+    if (marker) {
+      roundRect(g, left + 180, fy(marker) - fh + 5, 280, fh - 8, 8);
+      g.fillStyle = '#3fb4ff';
+      g.fill();
+      g.fillStyle = '#071018';
+      g.textAlign = 'center';
+      g.font = `400 40px ${DISPLAY}`;
+      g.fillText(`WATER · FLOOR ${marker}`, left + 320, fy(marker) - fh / 2 + 2);
     }
     // Deine Wohnung
     const room = fy(you);

@@ -82,6 +82,8 @@ Jede Schleife öffnet eine Frage, bevor die letzte beantwortet ist.
 
 ## Stimme
 
+Entscheidung: Für die Serie bleibt `en-US-AndrewNeural` aus Part 1. Kokoro ist als Option eingebaut (`tts: 'kokoro'`).
+
 Die Stimme bekommt Regie statt eines durchgehenden Vorlesetons:
 - Ruhig und nah am Anfang, wie ein Erzähler im dunklen Raum.
 - Kürzere Sätze werden leiser und langsamer, Zahlen bekommen eine kleine Pause davor.

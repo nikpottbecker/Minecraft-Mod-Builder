@@ -18,6 +18,7 @@
 
 import { mkdir, writeFile, access, readFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
+import { homedir } from 'node:os';
 import { join, resolve, relative, basename, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
@@ -25,6 +26,7 @@ import { serve } from './render.mjs';
 import { RATE, readWav, writeWav, speechSpan } from './audio/wav.mjs';
 import { sfx } from './audio/sfx.mjs';
 import { music } from './audio/music.mjs';
+import { reverb, SPACES } from './audio/reverb.mjs';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 
@@ -77,15 +79,24 @@ export function estimateWords(text, start, end) {
 }
 
 // ---------- Sprachanbieter ----------
-async function synthesize(provider, text, file, speaker) {
+async function synthesize(provider, text, file, speaker, speed = 1) {
   const tmp = file.replace(/\.wav$/, '.src');
+  if (provider === 'kokoro') {
+    const py = join(homedir(), '.cache/whatif-tts/.venv/bin/python');
+    const json = await run(py, [join(ROOT, 'audio', 'kokoro_tts.py'), '--text', text, '--voice', speaker || 'am_michael', '--speed', String(speed), '--out', tmp + '.wav'], { capture: true });
+    await run('ffmpeg', ['-v', 'error', '-y', '-i', tmp + '.wav', '-ar', String(RATE), '-ac', '1', file]);
+    return JSON.parse(json);
+  }
   if (provider === 'espeak') {
     const json = await run('python3', ['-I', join(ROOT, 'audio', 'espeak_tts.py'), '--text', text, '--out', tmp + '.wav', '--voice', speaker || 'de', '--rate', '195'], { capture: true });
     await run('ffmpeg', ['-v', 'error', '-y', '-i', tmp + '.wav', '-ar', String(RATE), '-ac', '1', file]);
     return JSON.parse(json).words;
   }
   if (provider === 'edge') {
-    await run('edge-tts', ['--voice', speaker || 'de-DE-ConradNeural', '--text', text, '--write-media', tmp + '.mp3']);
+    // Der Dienst liefert gelegentlich kein Audio: kurz warten, neu versuchen.
+    const say = () => run('edge-tts', ['--voice', speaker || 'de-DE-ConradNeural', '--text', text, '--write-media', tmp + '.mp3']);
+    const wait = (ms) => new Promise((ok) => setTimeout(ok, ms));
+    await say().catch(() => wait(2000).then(say)).catch(() => wait(6000).then(say));
     await run('ffmpeg', ['-v', 'error', '-y', '-i', tmp + '.mp3', '-ar', String(RATE), '-ac', '1', file]);
     return null;
   }
@@ -168,12 +179,15 @@ async function main() {
   const dir = join(ROOT, 'out', 'audio', name);
   await mkdir(dir, { recursive: true });
 
+  const provider = process.argv.includes('--voice') ? opts.voice : def.tts || opts.voice;
   console.log(`Ton fuer: ${def.title}`);
   const { cues, vars } = await simulate(sceneRel);
   console.log(`  ${cues.length} Sound-Cues aus der Simulation`);
 
   // ---------- Stimme ----------
   const voice = track(duration);
+  const sends = {}; // Hall-Wege pro Ort (mono)
+  const send = (space) => (sends[space] ??= new Float32Array(Math.round(duration * RATE)));
   const timeline = [];
   if (!opts.noVoice) {
     const beats = [...(def.story?.beats || [])].sort((a, b) => a.at - b.at);
@@ -184,7 +198,7 @@ async function main() {
       const slotEnd = Math.min(b.until ?? Infinity, beats[i + 1]?.at ?? duration, duration);
       const slot = slotEnd - b.at - 0.12;
       const raw = join(dir, `beat-${String(i).padStart(2, '0')}.wav`);
-      let words = await synthesize(opts.voice, text, raw, opts.speaker || def.voice);
+      let words = await synthesize(provider, text, raw, opts.speaker || def.voice, b.speed ?? 1);
       let { channels } = await readWav(raw);
       let clip = channels[0];
       const span = speechSpan(clip, RATE);
@@ -206,6 +220,11 @@ async function main() {
       }
       const at = b.at + 0.06;
       place(voice, clip, at, { gain: 0 });
+      if (b.space) {
+        const s = send(b.space);
+        const o = Math.round(at * RATE);
+        for (let k = 0; k < clip.length && o + k < s.length; k++) s[o + k] += clip[k];
+      }
       timeline.push({ at, dur: clip.length / RATE, tempo: +tempo.toFixed(3), text, words: words.map((w) => ({ w: w.w, start: +(at + w.start).toFixed(3) })) });
       console.log(`  Stimme ${b.at.toFixed(1)} s: „${text}“${tempo > 1 ? ` (×${tempo.toFixed(2)})` : ''}`);
     }
@@ -220,9 +239,38 @@ async function main() {
       console.warn(`  ! Unbekannter Effekt „${c.name}“ bei ${c.t.toFixed(2)} s`);
       continue;
     }
-    place(fx, gen({ dur: c.dur, pitch: c.pitch, seed: Math.round(c.t * 100) + 1 }), c.t, { gain: c.gain ?? -6, pan: c.pan ?? 0 });
+    const clip = gen({ dur: c.dur, pitch: c.pitch, seed: Math.round(c.t * 100) + 1 });
+    place(fx, clip, c.t, { gain: c.gain ?? -6, pan: c.pan ?? 0 });
+    if (c.space) {
+      const s = send(c.space);
+      const o = Math.round(c.t * RATE);
+      const g = dbToGain(c.gain ?? -6);
+      for (let k = 0; k < clip.length && o + k < s.length; k++) s[o + k] += clip[k] * g;
+    }
   }
   if (def.ambience) place(fx, sfx[def.ambience]({ dur: duration }), 0, { gain: -20 });
+
+  // ---------- Stimmbearbeitung: Waerme, Praesenz, gleichmaessige Lautstaerke ----------
+  if (def.voiceChain && !opts.noVoice) {
+    const dry = join(dir, 'voice-dry.wav');
+    const wet = join(dir, 'voice-wet.wav');
+    await writeWav(dry, voice);
+    await run('ffmpeg', ['-v', 'error', '-y', '-i', dry, '-af', def.voiceChain, wet]);
+    const { channels } = await readWav(wet);
+    voice[0] = channels[0];
+    voice[1] = channels[1] ?? channels[0];
+  }
+
+  // ---------- Hall pro Ort ----------
+  const room = track(duration);
+  for (const [space, sig] of Object.entries(sends)) {
+    const cfg = SPACES[space];
+    const [l, r] = reverb(sig, cfg);
+    for (let i = 0; i < l.length; i++) {
+      room[0][i] += l[i] * cfg.wet;
+      room[1][i] += r[i] * cfg.wet;
+    }
+  }
 
   // ---------- Musik mit Ducking unter der Stimme ----------
   const bed = music({ duration, ...(def.music || {}) });
@@ -239,7 +287,7 @@ async function main() {
   const mixed = track(duration);
   for (let c = 0; c < 2; c++) {
     for (let i = 0; i < mixed[c].length; i++) {
-      mixed[c][i] = voice[c][i] + fx[c][i] * 0.9 + bed[c][i] * musicGain * duck[i];
+      mixed[c][i] = voice[c][i] + fx[c][i] * 0.9 + room[c][i] + bed[c][i] * musicGain * duck[i];
     }
   }
   const rawMix = join(dir, 'mix-raw.wav');
