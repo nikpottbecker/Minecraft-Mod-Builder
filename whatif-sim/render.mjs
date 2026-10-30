@@ -59,7 +59,7 @@ export function frameList({ totalFrames, sceneFps, fps, from = 0, to = null, che
   return frames;
 }
 
-function serve(root) {
+export function serve(root) {
   const server = createServer(async (req, res) => {
     const path = decodeURIComponent(new URL(req.url, 'http://x').pathname);
     const file = resolve(root, '.' + path);

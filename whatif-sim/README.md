@@ -14,6 +14,25 @@ npm install
 npx playwright install chromium
 ```
 
+## Ton: Stimme, Soundeffekte, Musik
+
+```bash
+pip install edge-tts                         # kostenlose, natürliche Neural-Stimmen (Internet nötig)
+node audio.mjs scenes/reibung.js             # Stimme + Effekte + Musik -> out/reibung-ton.mp4
+node audio.mjs scenes/reibung.js --speaker de-DE-KatjaNeural
+node audio.mjs scenes/reibung.js --voice elevenlabs     # ELEVENLABS_API_KEY + ELEVENLABS_VOICE_ID
+node audio.mjs scenes/reibung.js --voice say            # macOS-Stimme (offline)
+node audio.mjs scenes/reibung.js --voice espeak         # offline, roboterhaft (pip install espeakng-loader)
+```
+
+- **Stimme**: Text pro Story-Beat (`say` oder `text`), wird in den Zeitslot des Beats eingepasst.
+- **Soundeffekte**: Die Szene löst sie in der Simulation aus (`ctx.sound('crash')`), bildgenau.
+  Alle Effekte sind synthetisiert (`audio/sfx.mjs`): whoosh, impact, crash, thud, skid, rev,
+  click, pop, ding, boom, riser, powerdown, glitch, step, city.
+- **Musik** (`audio/music.mjs`): folgt den Abschnitten in `scene.music` (pulse, suspense,
+  drive, resolve, build, calm, silence) und wird unter der Stimme automatisch leiser.
+- **Mischung**: Lautheit -14 LUFS für TikTok/Reels/Shorts, danach ins Video gemuxt.
+
 ## Benutzung mit Claude Code
 
 Im Ordner `whatif-sim` Claude Code starten und eine Zeile schreiben:
@@ -55,6 +74,8 @@ runtime/blocks.js   Bausteine mit runden Kanten: Figuren mit Gesichtsausdrücken
 runtime/ui.js       TikTok-Overlays: Label, Titel, Wort-für-Wort-Untertitel, Zahlenkacheln, Faktenkarte
 runtime/motion.js   Easing, Federn, Keyframes, Kamera-Shot-Liste, Wackeln
 runtime/look.js     Bildlook: Umgebungslicht, Ambient Occlusion, Tiefenunschärfe, Bloom
+audio.mjs           Ton: Stimme, Effekte, Musik, Mischung
+audio/              Synthesizer für Effekte und Musik, WAV-Helfer, Offline-Stimme
 lint-story.mjs      Story-Prüfer (Hook, aber/deshalb, Höhepunkt, Ende, Quellen, Lesetempo)
 scenes/reibung.js   Beispiel: „Was wäre, wenn die Reibung 5 Sekunden verschwindet?“
 scenes/studio.js    Look-Vorlage: Studio mit Gitterboden, Bokeh-Lichtern, Figuren in Nahaufnahme

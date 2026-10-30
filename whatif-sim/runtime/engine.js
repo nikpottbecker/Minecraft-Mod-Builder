@@ -75,7 +75,14 @@ export async function boot(sceneUrl, { scale = 1, live = false, quality = 'final
     // Fokus-Distanz fuer die Tiefenunschaerfe (m). Szene setzt sie pro Frame, z. B. auf das Motiv.
     focus: 10,
     aperture: null,
+    t: 0,
+    // Soundeffekt zum aktuellen Zeitpunkt der Simulation ausloesen (bildgenau).
+    // name = Effekt aus audio/sfx.mjs, opts: { gain (dB), pan (-1..1), dur (s), pitch }
+    sound(name, opts = {}) {
+      cues.push({ t: ctx.t, name, ...opts });
+    },
   };
+  const cues = [];
 
   await def.setup(ctx);
   const look = createLook(THREE, { renderer, scene, camera, width: w, height: h, look: def.look, quality });
@@ -84,6 +91,7 @@ export async function boot(sceneUrl, { scale = 1, live = false, quality = 'final
   const step = () => {
     frame += 1;
     const t = frame / fps;
+    ctx.t = t;
     def.update?.(ctx, t, 1 / fps);
   };
 
@@ -111,6 +119,11 @@ export async function boot(sceneUrl, { scale = 1, live = false, quality = 'final
     frame(i, type = 'image/jpeg', quality = 0.93) {
       renderFrame(i);
       return out.toDataURL(type, quality);
+    },
+    // Nur simulieren (ohne Bild): liefert Sound-Cues und Variablen fuer Ton und Stimme.
+    simulate() {
+      while (frame < totalFrames - 1) step();
+      return { cues, vars: def.vars ? def.vars(ctx) : {} };
     },
   };
   window.__simReady = true;

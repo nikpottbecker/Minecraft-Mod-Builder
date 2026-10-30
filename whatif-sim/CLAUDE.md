@@ -63,3 +63,14 @@ node render.mjs scenes/<kurzname>.js --gpu        # mit Grafikkarte (Mac/PC) sch
 node render.mjs scenes/<kurzname>.js --audio musik.mp3
 ```
 Melde am Ende den Pfad zum Video, die Länge, den Story-Score und die Quellen.
+
+## 7. Ton
+- Während der Szene `ctx.sound(name, { gain, pan, dur, pitch })` an den Ereignissen aufrufen
+  (Aufprall, Schnitt, Umschalten). Physik auch im Ton ehrlich halten (z. B. kein
+  Reifenquietschen ohne Reibung). Weniger ist mehr: höchstens ein lauter Effekt pro Moment.
+- `music.sections` an die Story-Rollen koppeln: hook/setup → `pulse`, turn → `suspense`,
+  escalation/peak → `drive`, payoff → `resolve`, loop → `build`.
+- `node audio.mjs scenes/<name>.js` (Stimme edge-tts) → `out/<name>-ton.mp4`.
+  Warnungen „Text zu lang für den Slot“ ernst nehmen: Sprechertext kürzen.
+
+Siehe auch [`KANAL.md`](./KANAL.md) für Serien, Titel und Captions (nächster Ausbau).

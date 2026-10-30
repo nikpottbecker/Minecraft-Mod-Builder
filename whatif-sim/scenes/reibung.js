@@ -33,6 +33,24 @@ export default {
 
   // Story zuerst (siehe STORY.md). `link` = Verbindung zum vorherigen Beat (aber/deshalb statt
   // "und dann"), `role` = Funktion im Bogen. {name} wird zur Laufzeit aus der Simulation ersetzt.
+  // Ton: Musik folgt der Story, Atmosphaere laeuft darunter (siehe audio.mjs)
+  music: {
+    bpm: 98,
+    gain: -15,
+    sections: [
+      { at: 0, mood: 'pulse' },
+      { at: 3.5, mood: 'suspense' },
+      { at: 8.5, mood: 'drive' },
+      { at: 13.2, mood: 'resolve' },
+      { at: 16.6, mood: 'build' },
+    ],
+  },
+  ambience: 'city',
+  // Werte aus der Simulation fuer Platzhalter in Sprechertext/Untertiteln
+  vars(ctx) {
+    return { fallen: ctx.state.fallenCount, stop: Math.round((50 / KMH) ** 2 / (2 * MU * G)) };
+  },
+
   story: {
     hook: 'Was wäre, wenn die Reibung 5 Sekunden lang verschwindet?',
     beats: [
@@ -44,7 +62,7 @@ export default {
       { at: 7.4, role: 'escalation', link: 'deshalb', text: 'Grün? Räder *drehen durch.*' },
       { at: 8.8, role: 'consequence', link: 'doch', text: 'Reibung zurück. *Doch* {fallen} liegen am Boden.' },
       { at: 11.0, role: 'twist', link: 'aber', text: 'Nur wer *stillstand*, steht noch.' },
-      { at: 13.2, role: 'answer', link: 'denn', text: 'Mit Reibung: *{stop} m* Bremsweg.' },
+      { at: 13.2, role: 'answer', link: 'denn', text: 'Mit Reibung: *{stop} m* Bremsweg.', say: 'Mit Reibung: {stop} Meter Bremsweg.' },
       { at: 14.8, role: 'payoff', link: 'aber', text: 'Ohne Reibung: *unendlich.*' },
       { at: 16.6, role: 'loop', link: 'denn', text: 'Und das alles, weil für 5 Sekunden …' },
     ],
@@ -301,6 +319,26 @@ export default {
     const { THREE, camera, blocks: b, smooth, phase, lerp } = ctx;
     const S = ctx.state;
     const off = t >= T_OFF && t < T_ON;
+    const at = (time) => t >= time && t - dt < time; // genau einmal, im Frame von `time`
+
+    // ---------- Ton ----------
+    if (at(0)) ctx.sound('whoosh', { gain: -8 });
+    // Reifen quietschen nur MIT Reibung: das Quietschen bricht bei T_OFF abrupt ab.
+    if (at(1.5)) ctx.sound('skid', { dur: T_OFF - 1.5, gain: -12, pan: -0.2 });
+    if (at(2.5)) ctx.sound('skid', { dur: T_OFF - 2.5, gain: -16, pan: 0.4, pitch: 1.08 });
+    if (at(T_OFF)) {
+      ctx.sound('glitch', { gain: -6 });
+      ctx.sound('powerdown', { gain: -8 });
+    }
+    if (at(4.5)) ctx.sound('rev', { dur: T_ON - 4.5, gain: -14, pan: 0.3 });
+    if (at(T_ON)) {
+      ctx.sound('impact', { gain: -10, pitch: 1.6 });
+      ctx.sound('skid', { dur: 1.1, gain: -12, pan: 0.2, pitch: 0.95 });
+    }
+    if (at(T_ON + 0.4)) ctx.sound('rev', { dur: 2.0, gain: -18 });
+    if (at(13.2)) ctx.sound('ding', { gain: -10 });
+    if (at(14.8)) ctx.sound('boom', { gain: -6 });
+    if (at(16.6)) ctx.sound('riser', { dur: 19 - 16.6, gain: -10 });
     S.mu = off ? 0 : MU;
 
     // Ampeln
@@ -341,6 +379,7 @@ export default {
           if (car.pos.x > w.x0 - 1.6 && car.pos.x < w.x1 + 1.6 && car.pos.z > w.z0 - 1.6 && car.pos.z < w.z1 + 1.6) {
             car.pos.copy(prev);
             car.vel.set(0, 0, 0);
+            if (car.crashT == null) ctx.sound('crash', { gain: -2, pan: -0.3 });
             car.crashT ??= t;
           }
         }
@@ -384,6 +423,12 @@ export default {
             p.vz *= k;
           }
           p.fall = Math.min(1, p.fall + dt / 0.55);
+          if (p.fall > 0.6 && !p.fallen) {
+            // Nur einige Aufschlaege hoerbar machen, sonst wird es ein Brei
+            const k = S.people.indexOf(p);
+            if (p === S.hero) ctx.sound('thud', { gain: -4 });
+            else if (k % 7 === 0) ctx.sound('thud', { gain: -16, pan: ((k % 5) - 2) / 3, pitch: 0.9 + (k % 3) * 0.1 });
+          }
           if (p.fall > 0.6) p.fallen = true;
           p.phase += dt * 14;
           b.animatePerson(m, p.phase, t < T_ON ? 0.8 : 0.15, t < T_ON ? 0.8 : 0.2);
@@ -457,6 +502,10 @@ export default {
     }
     const blueCrash = S.blue.crashT;
     S.rig.apply(camera, t, ctx, ctx.motion.shake(t, blueCrash, { amp: 0.9, decay: 4 }));
+    // Schnitt-Whoosh bei jedem Wechsel der Einstellung
+    const shot = S.rig.current(t);
+    if (S.lastShot != null && shot !== S.lastShot) ctx.sound('whoosh', { gain: -16, pitch: 1.3 });
+    S.lastShot = shot;
   },
 
   overlay(g, t, ui, ctx) {
