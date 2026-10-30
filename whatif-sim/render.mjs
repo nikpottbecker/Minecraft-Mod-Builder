@@ -15,7 +15,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
-const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg' };
+const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.woff2': 'font/woff2' };
 
 export function parseArgs(argv) {
   const opts = { scene: null, out: null, scale: 1, fps: null, check: false, checkCount: 12, preview: false, draft: false, audio: null, gpu: false, from: 0, to: null };

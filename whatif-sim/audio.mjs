@@ -184,7 +184,7 @@ async function main() {
       const slotEnd = Math.min(b.until ?? Infinity, beats[i + 1]?.at ?? duration, duration);
       const slot = slotEnd - b.at - 0.12;
       const raw = join(dir, `beat-${String(i).padStart(2, '0')}.wav`);
-      let words = await synthesize(opts.voice, text, raw, opts.speaker);
+      let words = await synthesize(opts.voice, text, raw, opts.speaker || def.voice);
       let { channels } = await readWav(raw);
       let clip = channels[0];
       const span = speechSpan(clip, RATE);

@@ -35,6 +35,8 @@ export function createRng(seed = 1) {
 
 export async function boot(sceneUrl, { scale = 1, live = false, quality = 'final' } = {}) {
   if (!sceneUrl) throw new Error('Parameter ?scene=... fehlt');
+  const display = new FontFace('Anton', 'url(/runtime/fonts/anton-latin-400-normal.woff2)');
+  document.fonts.add(await display.load());
   const mod = await import(new URL(sceneUrl, location.origin + '/').href);
   const def = mod.default;
   const fps = def.fps || 30;

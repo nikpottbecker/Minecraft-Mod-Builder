@@ -74,3 +74,11 @@ Melde am Ende den Pfad zum Video, die Länge, den Story-Score und die Quellen.
   Warnungen „Text zu lang für den Slot“ ernst nehmen: Sprechertext kürzen.
 
 Siehe auch [`KANAL.md`](./KANAL.md) für Serien, Titel und Captions (nächster Ausbau).
+
+## Erzählvideos und Serien (englisch, 60–120 s)
+Vorlage: `scenes/blackout.js`. Die Sprache der Videos ist ab jetzt Englisch.
+1. Text in `scenes/<name>.script.js` schreiben (`*wort*` = gelb, `say` = gesprochene Fassung).
+2. `node timing.mjs scenes/<name>.script.js` misst die Stimme und schreibt `<name>.timing.js`.
+3. Die Szene baut daraus mit `layout()` (`runtime/narration.js`) Beats, Untertitel und Länge.
+4. Rendern wie gewohnt, dann `node audio.mjs`, dann `node caption.mjs scenes/<name>.js`
+   (Caption + Cover). Bausteine: `ui.cover`, `ui.clock`, `ui.rule`, `ui.nameTag`, `ui.section`, `ui.words`.

@@ -3,6 +3,8 @@
 const FONT = "'Inter', -apple-system, 'Helvetica Neue', Arial, sans-serif";
 const MONO = "'JetBrains Mono', 'SF Mono', Menlo, monospace";
 const YELLOW = '#ffd23f';
+const RED = '#ff4438';
+const DISPLAY = "'Anton', 'Impact', sans-serif";
 
 function roundRect(g, x, y, w, h, r) {
   g.beginPath();
@@ -231,6 +233,217 @@ export const ui = {
         g.restore();
         x += widths[wi];
       });
+    });
+    g.restore();
+  },
+
+  // Cover (erstes Bild): riesiger Titel, `*wort*` = rot. lines = eine Zeile pro Eintrag.
+  cover(g, { lines, part, y = 300, size = 190, alpha = 1 }) {
+    if (alpha <= 0) return;
+    g.save();
+    g.globalAlpha = alpha;
+    g.textBaseline = 'alphabetic';
+    lines.forEach((line, i) => {
+      g.font = `400 ${size}px ${DISPLAY}`;
+      drawMarked(g, line.toUpperCase(), 540, y + i * size * 1.1, '#ffffff', RED, { color: '#000', width: 18 });
+    });
+    if (part) {
+      const by = y + (lines.length - 1) * size * 1.1 + 40;
+      g.font = `400 62px ${DISPLAY}`;
+      const label = part.toUpperCase();
+      const w = g.measureText(label).width + 60;
+      roundRect(g, 540 - w / 2, by, w, 92, 14);
+      g.fillStyle = YELLOW;
+      g.fill();
+      g.fillStyle = '#10131f';
+      g.textAlign = 'center';
+      g.fillText(label, 540, by + 70);
+    }
+    g.restore();
+  },
+
+  // Uhrzeit-Chip: zeigt, wann man in der Geschichte ist.
+  clock(g, time, { y = 130, alpha = 1 } = {}) {
+    if (alpha <= 0) return;
+    g.save();
+    g.globalAlpha = alpha;
+    g.font = `400 58px ${DISPLAY}`;
+    const w = g.measureText(time).width + 56;
+    roundRect(g, 540 - w / 2, y, w, 88, 16);
+    g.fillStyle = 'rgba(8,10,20,0.9)';
+    g.fill();
+    g.fillStyle = '#ffffff';
+    g.textAlign = 'center';
+    g.textBaseline = 'middle';
+    g.fillText(time, 540, y + 47);
+    g.restore();
+  },
+
+  // Regel- oder Rechenkarte: kleines Label, grosse Zeile, optional Ergebnis. k = 0..1 (Einflug).
+  rule(g, { label, text, result, y = 270, k = 1 }) {
+    if (k <= 0) return;
+    const ks = 0.85 + 0.15 * k;
+    g.save();
+    g.globalAlpha = Math.min(1, k * 1.6);
+    g.translate(540, y);
+    g.scale(ks, ks);
+    const h = result ? 330 : 230;
+    roundRect(g, -470, 0, 940, h, 26);
+    g.fillStyle = 'rgba(8,10,20,0.92)';
+    g.fill();
+    g.strokeStyle = YELLOW;
+    g.lineWidth = 5;
+    g.stroke();
+    g.textAlign = 'center';
+    g.textBaseline = 'alphabetic';
+    g.font = `400 46px ${DISPLAY}`;
+    g.fillStyle = YELLOW;
+    g.fillText(label.toUpperCase(), 0, 66);
+    g.font = `400 72px ${DISPLAY}`;
+    g.fillStyle = '#ffffff';
+    g.fillText(text.toUpperCase(), 0, 160);
+    if (result) {
+      g.font = `400 96px ${DISPLAY}`;
+      g.fillStyle = RED;
+      g.fillText(result.toUpperCase(), 0, 280);
+    }
+    g.restore();
+  },
+
+  // Steckbrief einer Figur: "HELEN · 81 · APT 14B"
+  nameTag(g, { name, info, x = 540, y = 1180, k = 1 }) {
+    if (k <= 0) return;
+    g.save();
+    g.globalAlpha = Math.min(1, k * 1.6);
+    g.font = `400 66px ${DISPLAY}`;
+    const a = name.toUpperCase();
+    const b = ` · ${info.toUpperCase()}`;
+    const wa = g.measureText(a).width;
+    const w = wa + g.measureText(b).width + 56;
+    const left = x - w / 2;
+    roundRect(g, left, y, w, 98, 14);
+    g.fillStyle = 'rgba(8,10,20,0.92)';
+    g.fill();
+    g.textAlign = 'left';
+    g.textBaseline = 'middle';
+    g.fillStyle = YELLOW;
+    g.fillText(a, left + 28, y + 52);
+    g.fillStyle = '#ffffff';
+    g.fillText(b, left + 28 + wa, y + 52);
+    g.restore();
+  },
+
+  // Hochhaus-Schema: Wassersaeule im Querschnitt. mains = Stockwerk, bis zu dem der Leitungsdruck
+  // reicht; level = aktueller Wasserstand (Stockwerke); pump = 0..1 Pumpe laeuft.
+  section(g, { floors = 18, mains = 7, you = 14, level = 18, pump = 1, alpha = 1, showMains = 1 }) {
+    if (alpha <= 0) return;
+    const left = 300;
+    const width = 480;
+    const top = 250;
+    const fh = 50;
+    const bottom = top + floors * fh;
+    const fy = (f) => bottom - f * fh;
+    g.save();
+    g.globalAlpha = alpha;
+    g.fillStyle = 'rgba(8,10,20,0.9)';
+    g.fillRect(0, 0, 1080, 1920);
+    roundRect(g, left, top, width, bottom - top, 10);
+    g.fillStyle = '#1b2036';
+    g.fill();
+    g.strokeStyle = 'rgba(255,255,255,0.75)';
+    g.lineWidth = 5;
+    g.stroke();
+    for (let f = 1; f < floors; f++) {
+      g.fillStyle = 'rgba(255,255,255,0.18)';
+      g.fillRect(left, fy(f), width, 3);
+    }
+    const pipe = left + 90;
+    g.fillStyle = 'rgba(255,255,255,0.14)';
+    g.fillRect(pipe, top, 34, bottom - top);
+    g.fillStyle = '#3fb4ff';
+    g.fillRect(pipe, fy(level), 34, bottom - fy(level) + 40);
+    g.fillRect(left - 180, bottom + 10, 300, 30);
+    g.font = `400 50px ${DISPLAY}`;
+    g.textBaseline = 'middle';
+    g.textAlign = 'left';
+    // Pumpe im Keller
+    roundRect(g, left + 150, bottom + 8, 190, 78, 10);
+    g.fillStyle = pump > 0.5 ? '#2ecc71' : RED;
+    g.fill();
+    g.fillStyle = '#0b0d16';
+    g.textAlign = 'center';
+    g.fillText(pump > 0.5 ? 'PUMP ON' : 'PUMP OFF', left + 245, bottom + 49);
+    // Grenze Leitungsdruck
+    if (showMains > 0) {
+      g.globalAlpha = alpha * showMains;
+      g.setLineDash([22, 14]);
+      g.strokeStyle = YELLOW;
+      g.lineWidth = 6;
+      g.beginPath();
+      g.moveTo(left - 30, fy(mains));
+      g.lineTo(left + width + 30, fy(mains));
+      g.stroke();
+      g.setLineDash([]);
+      g.fillStyle = YELLOW;
+      g.textAlign = 'left';
+      g.fillText('22 M', left + width + 42, fy(mains) - 28);
+      g.font = `400 42px ${DISPLAY}`;
+      g.fillText('≈ FLOOR 7', left + width + 42, fy(mains) + 26);
+      g.font = `400 50px ${DISPLAY}`;
+      g.globalAlpha = alpha;
+    }
+    // Deine Wohnung
+    const room = fy(you);
+    roundRect(g, left + 180, room - fh + 5, 280, fh - 8, 8);
+    g.fillStyle = RED;
+    g.fill();
+    g.fillStyle = '#ffffff';
+    g.textAlign = 'center';
+    g.font = `400 40px ${DISPLAY}`;
+    g.fillText('YOU · FLOOR 14', left + 320, room - fh / 2 + 2);
+    g.restore();
+  },
+
+  // Untertitel aus den echten Wortzeiten: Stuecke mit 2-4 Woertern, Woerter ploppen im Sprechtakt auf.
+  words(g, t, chunks, { y = 1340, size = 94 } = {}) {
+    const c = chunks.find((x) => t >= x.start && t < x.end);
+    if (!c) return;
+    g.save();
+    g.font = `400 ${size}px ${DISPLAY}`;
+    g.textBaseline = 'middle';
+    g.textAlign = 'center';
+    const space = g.measureText(' ').width;
+    const rows = [[]];
+    let width = 0;
+    for (const word of c.words) {
+      const w = g.measureText(word.w.toUpperCase()).width;
+      if (width + w > 900 && rows.at(-1).length) {
+        rows.push([]);
+        width = 0;
+      }
+      rows.at(-1).push({ ...word, width: w });
+      width += w + space;
+    }
+    rows.forEach((row, ri) => {
+      const total = row.reduce((s, w) => s + w.width + space, -space);
+      let x = 540 - total / 2;
+      for (const word of row) {
+        const wt = (t - word.start) / 0.14;
+        if (wt > 0) {
+          const k = wt >= 1 ? 1 : 1 + 2.2 * (wt - 1) ** 3 + 1.2 * (wt - 1) ** 2;
+          g.save();
+          g.translate(x + word.width / 2, y + ri * size * 1.18);
+          g.scale(0.7 + 0.3 * k, 0.7 + 0.3 * k);
+          g.strokeStyle = '#000';
+          g.lineWidth = 16;
+          g.lineJoin = 'round';
+          g.strokeText(word.w.toUpperCase(), 0, 0);
+          g.fillStyle = word.mark ? YELLOW : '#ffffff';
+          g.fillText(word.w.toUpperCase(), 0, 0);
+          g.restore();
+        }
+        x += word.width + space;
+      }
     });
     g.restore();
   },

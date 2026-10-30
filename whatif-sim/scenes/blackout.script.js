@@ -1,0 +1,28 @@
+// Skript zuerst: Stimme und Untertitel. `*wort*` = gelb, `say` = gesprochene Fassung.
+export default {
+  voice: 'en-US-AndrewNeural',
+  lines: [
+    { id: 'hook', role: 'hook', text: 'What if the power never comes back and you live on *floor 14*?', pause: 0.3 },
+    { id: 'dinner', role: 'setup', link: 'also', text: "6:42 PM. You're making *dinner.*", say: "Six forty-two P M. You're making dinner." },
+    { id: 'off', role: 'turn', link: 'aber', text: 'Then the whole city goes *dark.*', pause: 0.9 },
+    { id: 'phone', role: 'escalation', link: 'deshalb', text: 'You grab your phone. So does *everyone else.*' },
+    { id: 'busy', role: 'escalation', link: 'also', text: 'In minutes, the network is *overloaded.*' },
+    { id: 'mast', role: 'escalation', link: 'denn', text: 'Cell towers now run on batteries. About *2 hours.*', say: 'Cell towers now run on batteries. About two hours.' },
+    { id: 'lift', role: 'escalation', link: 'deshalb', text: 'So you head downstairs. The elevator is *dead.*' },
+    { id: 'rule1', role: 'escalation', link: 'also', text: '*Rule one:* stay out of the elevator.' },
+    { id: 'tap', role: 'turn', link: 'aber', text: '7:20 PM. You turn on the tap. It *drips.*', say: 'Seven twenty P M. You turn on the tap. It drips.' },
+    { id: 'press', role: 'escalation', link: 'denn', text: 'Street pressure only pushes water about *22 meters* up.', say: 'Street pressure only pushes water about twenty-two meters up.' },
+    { id: 'seven', role: 'escalation', link: 'also', text: "That's around floor *7.*", say: "That's around floor seven." },
+    { id: 'pumps', role: 'escalation', link: 'denn', text: 'Above that, pumps do the work. *Electric* pumps.' },
+    { id: 'peak', role: 'peak', link: 'doch', text: 'You live *twice* as high. The water just stopped.', pause: 0.7 },
+    { id: 'count', role: 'consequence', link: 'deshalb', text: 'You count. 6 bottles. *9 liters.*', say: 'You count. Six bottles. Nine liters.' },
+    { id: 'math', role: 'answer', link: 'also', text: "At 2 liters a day, that's *4.5 days.*", say: "At two liters a day, that's four and a half days." },
+    { id: 'fridge', role: 'consequence', link: 'also', text: '*Rule two:* keep the fridge shut. It stays cold 4 to 6 hours.', say: 'Rule two: keep the fridge shut. It stays cold four to six hours.' },
+    { id: 'helen', role: 'twist', link: 'aber', text: '9:15 PM. In the hallway, you meet *Helen.*', say: 'Nine fifteen P M. In the hallway, you meet Helen.' },
+    { id: 'helen2', role: 'twist', link: 'deshalb', text: "She's 81. Her walker *can't* do 14 floors.", say: "She's eighty-one. Her walker can't do fourteen floors." },
+    { id: 'share', role: 'payoff', link: 'also', text: 'Share your water, and it lasts just *2 days.*', say: 'Share your water, and it lasts just two days.', pause: 0.9 },
+    { id: 'knock', role: 'turn', link: 'aber', text: '11:08 PM. Someone *knocks* on your door.', say: 'Eleven oh eight P M. Someone knocks on your door.', pause: 0.7 },
+    { id: 'empty', role: 'consequence', link: 'doch', text: "It's Helen. She's *out of water.*" },
+    { id: 'ask', role: 'cliffhanger', link: 'doch', text: 'Would you *open it?*' },
+  ],
+};

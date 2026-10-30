@@ -30,7 +30,8 @@ export function lintStory(def) {
   const beats = [...story.beats].sort((a, b) => a.at - b.at);
 
   // Laenge
-  if (duration < 12 || duration > 35) warn(`Länge ${duration} s: Für „Was wäre wenn“ funktionieren 12–35 s am besten.`);
+  const serial = Boolean(def.series); // Serien-Teile erzaehlen laenger und enden offen
+  if (serial ? duration < 30 || duration > 150 : duration < 12 || duration > 35) warn(`Länge ${duration} s: Für „Was wäre wenn“ funktionieren 12–35 s am besten.`);
 
   // Hook
   const first = beats[0];
@@ -47,7 +48,7 @@ export function lintStory(def) {
     if (!b.text) return;
     if (shown < 0.8) warn(`Beat bei ${b.at} s steht nur ${shown.toFixed(1)} s — zu kurz zum Lesen.`);
     if (n / shown > MAX_WPS) warn(`Beat bei ${b.at} s: ${n} Wörter in ${shown.toFixed(1)} s ist zu schnell (max. ${MAX_WPS}/s). Kürzen.`);
-    if (n > 9) warn(`Beat bei ${b.at} s hat ${n} Wörter. Eine Zeile = ein Gedanke (≤ 7–9 Wörter).`);
+    if (n > (serial ? 14 : 9)) warn(`Beat bei ${b.at} s hat ${n} Wörter. Eine Zeile = ein Gedanke (≤ 7–9 Wörter).`);
   });
   for (let i = 0; i < beats.length; i++) {
     const end = beats[i].until ?? beats[i + 1]?.at ?? duration;
@@ -70,14 +71,15 @@ export function lintStory(def) {
   const last = beats[beats.length - 1];
   if (last.at < duration * 0.8) warn(`Letzter Beat bei ${last.at} s — das Ende muss in den letzten 20 % stark sein (Peak-End-Regel).`);
   if (!beats.some((b) => b.role === 'payoff')) err('Keine Auflösung (role: "payoff"). Die Frage aus dem Hook muss beantwortet werden.');
-  if (!beats.some((b) => b.role === 'loop')) tip('Kein Loop-Ende (role: "loop"). Wenn der letzte Satz in den Anfang übergeht, schauen viele ein zweites Mal.');
+  if (serial && last.role !== 'cliffhanger') warn('Serien-Teil endet ohne `role: "cliffhanger"`. Die offene Frage holt die Kommentare und Teil 2.');
+  if (!serial && !beats.some((b) => b.role === 'loop')) tip('Kein Loop-Ende (role: "loop"). Wenn der letzte Satz in den Anfang übergeht, schauen viele ein zweites Mal.');
 
   // Quellen
   const texts = [hook, ...beats.map((b) => b.text)].join(' ');
   if (/\d/.test(texts) && !(def.sources || []).length) err('Zahlen im Text, aber keine `sources`. Jede Zahl braucht eine Quelle oder Formel.');
 
   // Ansprache
-  if (!/\b(du|dich|dir|dein\w*)\b/i.test(texts)) tip('Der Zuschauer wird nie mit „du“ angesprochen. Ein „Stell dir vor…“ oder „Du würdest…“ macht es persönlich.');
+  if (!/\b(du|dich|dir|dein\w*|you|your)\b/i.test(texts)) tip('Der Zuschauer wird nie mit „du“ angesprochen. Ein „Stell dir vor…“ oder „Du würdest…“ macht es persönlich.');
 
   return out;
 }

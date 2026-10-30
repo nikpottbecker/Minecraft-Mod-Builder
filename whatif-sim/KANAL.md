@@ -44,12 +44,12 @@ die Struktur verstehen und auf eigene Themen übertragen. Für das nächste Vide
 
 ## Für unsere Videos übernehmen (To-do)
 
-- [ ] Serien-System: `series: { name, part }` in der Szene → Label im ersten Bild,
+- [x] Serien-System: `series: { name, part }` in der Szene → Label im ersten Bild,
       Caption „Teil N“, Hinweis auf Teil N+1 am Ende
-- [ ] Cover-/Titel-Generator (Condensed-Schrift, farbige Schlüsselwörter, Figur mit Gefühl)
-- [ ] Caption-Generator: `Teil N | Szenario… Emojis Frage? #hashtags` (de + en)
-- [ ] Uhrzeit-Chip und Regel-/Rechen-Karten als UI-Bausteine
-- [ ] Benannte Figuren mit Alter und Steckbrief-Label
-- [ ] Schemata-Szenen (Querschnitt, Diagramm) als eigener Baustein
-- [ ] Längere Erzählvideos (60–120 s) mit durchgehender Stimme, Untertitel aus den Wortzeiten
-- [ ] Ende mit Frage an den Zuschauer (Kommentare) statt nur Loop
+- [x] Cover-/Titel-Generator (Condensed-Schrift, farbige Schlüsselwörter, Figur mit Gefühl)
+- [x] Caption-Generator: `Teil N | Szenario… Emojis Frage? #hashtags` (de + en)
+- [x] Uhrzeit-Chip und Regel-/Rechen-Karten als UI-Bausteine
+- [x] Benannte Figuren mit Alter und Steckbrief-Label
+- [x] Schemata-Szenen (Querschnitt, Diagramm) als eigener Baustein
+- [x] Längere Erzählvideos (60–120 s) mit durchgehender Stimme, Untertitel aus den Wortzeiten
+- [x] Ende mit Frage an den Zuschauer (Kommentare) statt nur Loop
