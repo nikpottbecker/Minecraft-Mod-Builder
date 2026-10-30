@@ -3,9 +3,9 @@
 Status on 2026-10-30: `@worstcase.files` was free on TikTok and YouTube. Instagram could not be
 checked automatically, so check it when signing up.
 
-- **Name:** Worst Case Files
+- **Display name:** Worst Case Files | What If
 - **Handle:** @worstcase.files
-- **TikTok/Instagram bio:** Every disaster has a floor plan. Would you make it? 🔦 New parts weekly.
+- **TikTok/Instagram bio:** You're the main character. It's the worst day ever. / Would you make it? 👇 (two lines)
 - **YouTube description:** Worst Case Files turns real disasters into animated survival stories. Every number comes from a source. Would you make it?
 - **Links line:** Sources for every video in the pinned comment.
 - **Assets:** `out/channel/avatar.png` (1080×1080), `out/channel/banner.png` (2560×1440)
