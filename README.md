@@ -27,6 +27,7 @@ Bonuspunkt für die schnellste Runde (nur wenn der Fahrer in den Top 10 liegt).
 wrangler.toml, src/     -> Cloudflare Worker (aktuelle, live Version)
 legacy-express-app/     -> urspr. Prototyp: Node/Express + lokale SQLite-DB
 telemetry-listener/     -> F1-25-UDP-Telemetrie-Listener
+whatif-sim/             -> "Was waere wenn"-Kurzvideos als Code (eigenes Projekt, siehe whatif-sim/README.md)
 ```
 
 ## Deploy

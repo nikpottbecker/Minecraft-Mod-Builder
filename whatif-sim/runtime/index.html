@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>whatif-sim</title>
+<style>
+  html, body { margin: 0; background: #000; }
+  #out { display: block; max-height: 100vh; margin: 0 auto; }
+  #gl { display: none; }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "/node_modules/three/build/three.module.js",
+    "three/addons/": "/node_modules/three/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="out"></canvas>
+<script type="module">
+  import { boot } from './engine.js';
+  const params = new URLSearchParams(location.search);
+  boot(params.get('scene'), { scale: Number(params.get('scale') || 1), live: params.has('live') })
+    .catch((err) => { window.__simError = String(err && err.stack || err); console.error(err); });
+</script>
+</body>
+</html>

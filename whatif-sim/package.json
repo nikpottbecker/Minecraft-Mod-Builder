@@ -1,0 +1,17 @@
+{
+  "name": "whatif-sim",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "\"Was waere wenn...\"-Kurzvideos als Code: Three.js-Szene -> Headless-Browser -> ffmpeg -> MP4 (9:16)",
+  "scripts": {
+    "render": "node render.mjs",
+    "check": "node render.mjs --check",
+    "preview": "node render.mjs --preview",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.63.0",
+    "three": "0.187.0"
+  }
+}
