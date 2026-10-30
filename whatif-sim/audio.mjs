@@ -207,8 +207,9 @@ async function main() {
       let clip = channels[0];
       const span = speechSpan(clip, RATE);
       // Stille am Anfang/Ende abschneiden
-      clip = clip.slice(Math.max(0, Math.round(span.start * RATE) - 480), Math.round(span.end * RATE) + 2400);
-      const offset = Math.max(0, span.start - 0.01);
+      // Geregelte Stimme ist schon sauber geschnitten: nichts mehr kuerzen
+      if (provider !== 'directed') clip = clip.slice(Math.max(0, Math.round(span.start * RATE) - 480), Math.round(span.end * RATE) + 2400);
+      const offset = provider === 'directed' ? 0 : Math.max(0, span.start - 0.01);
       words = (words || estimateWords(text, span.start, span.end)).map((w) => ({ ...w, start: Math.max(0, w.start - offset) }));
       // In den Slot einpassen: notfalls Tempo erhoehen (ohne Tonhoehe zu aendern)
       let tempo = 1;

@@ -42,7 +42,8 @@ async def sentence(text, voice, rate, pitch, cache):
 
 
 def decode(mp3):
-    trim = 'silenceremove=start_periods=1:start_threshold=-45dB,areverse,silenceremove=start_periods=1:start_threshold=-45dB,areverse,apad=pad_dur=0.04'
+    # Nur echte Stille entfernen: Ausklang der Woerter bleibt, weich ausgeblendet durch Nachlauf
+    trim = 'silenceremove=start_periods=1:start_threshold=-55dB:start_silence=0.02,areverse,silenceremove=start_periods=1:start_threshold=-65dB:start_silence=0.12,afade=t=in:d=0.02,areverse,apad=pad_dur=0.03'
     return subprocess.run(['ffmpeg', '-v', 'error', '-i', mp3, '-af', trim, '-ac', '1', '-ar', str(RATE), '-f', 's16le', '-'], capture_output=True, check=True).stdout
 
 

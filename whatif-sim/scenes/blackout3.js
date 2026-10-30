@@ -543,11 +543,7 @@ export default {
     const clock = CLOCKS.filter(([id]) => at[id] <= t).pop();
     if (clock && !schema && t < at.ask && t >= at.bolt) ui.clock(g, clock[1]);
     if (t >= at.water && t < at.ask && !schema) ui.gauge(g, { label: 'WATER LEFT', value: '11 L', warn: true, x: 60, y: 90 });
-    if (t >= at.bolt && t < at.ask) {
-      const left = Math.ceil(at.ask - t);
-      ui.gauge(g, { label: 'DECISION IN', value: `${left}s`, warn: left <= 10, x: 800, y: 90 });
-    }
-    if (t >= FIRE_T && t < at.ask) ui.gauge(g, { label: 'SMOKE', value: `FLOOR ${Math.floor(smokeNow)}`, warn: true, x: 765, y: 240 });
+    if (t >= FIRE_T && t < at.ask) ui.gauge(g, { label: 'SMOKE', value: `FLOOR ${Math.floor(smokeNow)}`, warn: true, x: 765, y: 90 });
     if (t >= at.warn && t < at.smell) ui.rule(g, { label: 'Rule #4', text: 'Flashlights, not candles', y: 270, k: pop(at.warn + 0.1, at.smell) });
     if (t >= at.look + 1 && t < at.alone) ui.nameTag(g, { name: 'Helen', info: '81 · Apt 14B', y: 1130, k: pop(at.look + 1, at.alone) });
 
