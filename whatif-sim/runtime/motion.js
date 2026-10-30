@@ -56,6 +56,8 @@ export function shake(t, t0, { amp = 0.4, decay = 5, freq = 23 } = {}) {
 //   { at, pos: [x,y,z] | (t, ctx) => [x,y,z], look: ..., fov, blend, move }
 //   blend = Sekunden weiche Ueberblendung vom vorherigen Shot (0 = harter Schnitt)
 //   move  = { pos, look, fov, dur, easing } — Kamerafahrt innerhalb des Shots
+//   focus = Punkt [x,y,z] oder Funktion fuer die Schaerfe (Standard: look), aperture = Unschaerfe-Staerke
+//   Setzt ctx.focus/ctx.aperture, damit die Tiefenunschaerfe dem Motiv folgt.
 // Liefert apply(camera, t, ctx, extraOffset) und current(t) (Index des aktiven Shots).
 export function shots(THREE, list) {
   const sorted = [...list].sort((a, b) => a.at - b.at);
@@ -95,6 +97,11 @@ export function shots(THREE, list) {
       camera.position.set(v.pos[0] + offset[0], v.pos[1] + offset[1], v.pos[2] + offset[2]);
       look.set(v.look[0] + offset[0] * 0.5, v.look[1] + offset[1] * 0.5, v.look[2] + offset[2] * 0.5);
       camera.lookAt(look);
+      if (ctx) {
+        const f = s.focus ? val(s.focus, t, ctx) : v.look;
+        ctx.focus = Math.hypot(f[0] - v.pos[0], f[1] - v.pos[1], f[2] - v.pos[2]);
+        ctx.aperture = s.aperture ?? null;
+      }
       if (camera.fov !== v.fov) {
         camera.fov = v.fov;
         camera.updateProjectionMatrix();

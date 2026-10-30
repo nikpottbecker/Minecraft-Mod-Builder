@@ -18,7 +18,7 @@ const ROOT = dirname(fileURLToPath(import.meta.url));
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg' };
 
 export function parseArgs(argv) {
-  const opts = { scene: null, out: null, scale: 1, fps: null, check: false, checkCount: 12, preview: false, audio: null, gpu: false, from: 0, to: null };
+  const opts = { scene: null, out: null, scale: 1, fps: null, check: false, checkCount: 12, preview: false, draft: false, audio: null, gpu: false, from: 0, to: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     const next = () => argv[++i];
@@ -28,6 +28,7 @@ export function parseArgs(argv) {
     else if (a === '--check') opts.check = true;
     else if (a === '--count') opts.checkCount = Number(next());
     else if (a === '--preview') opts.preview = true;
+    else if (a === '--draft') opts.draft = true;
     else if (a === '--audio') opts.audio = next();
     else if (a === '--gpu') opts.gpu = true;
     else if (a === '--from') opts.from = Number(next());
@@ -39,6 +40,7 @@ export function parseArgs(argv) {
   if (opts.preview) {
     opts.scale = Math.min(opts.scale, 0.5);
     opts.fps ??= 15;
+    opts.draft = true;
   }
   return opts;
 }
@@ -109,7 +111,7 @@ async function main() {
   page.on('pageerror', (e) => console.error('[browser]', e.message));
 
   try {
-    await page.goto(`http://127.0.0.1:${port}/runtime/index.html?scene=/${sceneRel}&scale=${opts.scale}`);
+    await page.goto(`http://127.0.0.1:${port}/runtime/index.html?scene=/${sceneRel}&scale=${opts.scale}&quality=${opts.draft ? 'draft' : 'final'}`);
     await page.waitForFunction(() => window.__simReady || window.__simError, null, { timeout: 120000 });
     const error = await page.evaluate(() => window.__simError);
     if (error) throw new Error('Szene konnte nicht geladen werden:\n' + error);

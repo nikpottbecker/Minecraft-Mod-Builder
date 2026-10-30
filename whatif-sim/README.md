@@ -35,7 +35,8 @@ Claude folgt dann [`CLAUDE.md`](./CLAUDE.md), dazu das Story-Regelwerk
 | Befehl | Was passiert |
 | --- | --- |
 | `node render.mjs scenes/reibung.js` | Finales Video nach `out/reibung.mp4` |
-| `... --preview` | Halbe Auflösung, 15 fps, schnell zum Anschauen |
+| `... --preview` | Halbe Auflösung, 15 fps, ohne AO/Unschärfe, schnell zum Anschauen |
+| `... --draft` | Volle Auflösung, aber ohne AO/Unschärfe (schneller) |
 | `... --check [--from 3 --to 8 --count 8]` | Standbilder + `kontaktbogen.jpg` in `out/check/` |
 | `... --gpu` | Grafikkarte statt Software-Rendering (viel schneller auf dem Mac) |
 | `... --audio musik.mp3` | Tonspur dazumischen |
@@ -50,12 +51,15 @@ Live im Browser ansehen: `npx serve .` und
 ```
 render.mjs          Renderer: Headless-Chromium -> JPEG-Frames -> ffmpeg (H.264)
 runtime/engine.js   Lädt die Szene, feste Zeitschritte (deterministisch), Kamera, Licht
-runtime/blocks.js   Bausteine: Häuser, Autos, Blockfiguren, Bäume, Werbetafeln
+runtime/blocks.js   Bausteine mit runden Kanten: Figuren mit Gesichtsausdrücken, Häuser, Autos, Bäume
 runtime/ui.js       TikTok-Overlays: Label, Titel, Wort-für-Wort-Untertitel, Zahlenkacheln, Faktenkarte
 runtime/motion.js   Easing, Federn, Keyframes, Kamera-Shot-Liste, Wackeln
+runtime/look.js     Bildlook: Umgebungslicht, Ambient Occlusion, Tiefenunschärfe, Bloom
 lint-story.mjs      Story-Prüfer (Hook, aber/deshalb, Höhepunkt, Ende, Quellen, Lesetempo)
 scenes/reibung.js   Beispiel: „Was wäre, wenn die Reibung 5 Sekunden verschwindet?“
+scenes/studio.js    Look-Vorlage: Studio mit Gitterboden, Bokeh-Lichtern, Figuren in Nahaufnahme
 ```
 
-Rendering-Zeit für das 18-s-Beispiel: ca. 8 Minuten mit reinem Software-Rendering
-in einer Cloud-VM ohne Grafikkarte; mit `--gpu` auf einem normalen Laptop deutlich weniger.
+Rendering-Zeit für das 19-s-Beispiel in voller Qualität: rund 1,5 Stunden mit reinem
+Software-Rendering in einer Cloud-VM ohne Grafikkarte (`--draft`: deutlich schneller).
+Mit `--gpu` auf einem Rechner mit Grafikkarte sollte es viel schneller gehen.

@@ -13,6 +13,7 @@ import * as THREE from 'three';
 import { blocks } from './blocks.js';
 import { ui } from './ui.js';
 import * as motion from './motion.js';
+import { createLook } from './look.js';
 
 export const WIDTH = 1080;
 export const HEIGHT = 1920;
@@ -32,7 +33,7 @@ export function createRng(seed = 1) {
   return next;
 }
 
-export async function boot(sceneUrl, { scale = 1, live = false } = {}) {
+export async function boot(sceneUrl, { scale = 1, live = false, quality = 'final' } = {}) {
   if (!sceneUrl) throw new Error('Parameter ?scene=... fehlt');
   const mod = await import(new URL(sceneUrl, location.origin + '/').href);
   const def = mod.default;
@@ -71,9 +72,13 @@ export async function boot(sceneUrl, { scale = 1, live = false } = {}) {
     smooth: (t) => t * t * (3 - 2 * t),
     phase: (t, start, end) => Math.min(1, Math.max(0, (t - start) / (end - start))),
     lerp: (a, b, k) => a + (b - a) * k,
+    // Fokus-Distanz fuer die Tiefenunschaerfe (m). Szene setzt sie pro Frame, z. B. auf das Motiv.
+    focus: 10,
+    aperture: null,
   };
 
   await def.setup(ctx);
+  const look = createLook(THREE, { renderer, scene, camera, width: w, height: h, look: def.look, quality });
 
   let frame = -1;
   const step = () => {
@@ -84,7 +89,8 @@ export async function boot(sceneUrl, { scale = 1, live = false } = {}) {
 
   const draw = () => {
     const t = frame / fps;
-    renderer.render(scene, camera);
+    look.setFocus(ctx.focus, ctx.aperture);
+    look.render();
     g.setTransform(1, 0, 0, 1, 0, 0);
     g.drawImage(glCanvas, 0, 0);
     // Overlays werden immer in 1080x1920-Koordinaten gezeichnet und skaliert.

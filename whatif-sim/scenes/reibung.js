@@ -19,6 +19,12 @@ export default {
   duration: 19,
   fps: 30,
   seed: 7,
+  look: {
+    env: 0.35,
+    ao: { radius: 1.2, intensity: 0.8 },
+    dof: { aperture: 0.25, maxblur: 0.012 },
+    bloom: { strength: 0.5, radius: 0.55, threshold: 1.4 },
+  },
   sources: [
     'Haftreibungszahl Reifen/trockener Asphalt ≈ 0,7–0,8 — Wikipedia „Reibungskoeffizient“ / Kfz-Fachliteratur',
     'Bremsweg s = v² / (2·μ·g) — Grundformel der Mechanik',
@@ -48,15 +54,29 @@ export default {
     const { THREE, scene, blocks: b, rng } = ctx;
     const S = ctx.state;
 
-    scene.background = new THREE.Color('#8ec5f0');
-    scene.fog = new THREE.Fog('#8ec5f0', 140, 360);
-    scene.add(new THREE.HemisphereLight('#dfefff', '#5b5246', 1.4));
-    const sun = new THREE.DirectionalLight('#fff3dc', 2.6);
-    sun.position.set(-60, 110, 40);
+    // Spaeter Nachmittag: Himmelsverlauf, warme tiefe Sonne, kuehles Fuelllicht
+    const sky = document.createElement('canvas');
+    sky.width = 4;
+    sky.height = 256;
+    const sg = sky.getContext('2d');
+    const grad = sg.createLinearGradient(0, 0, 0, 256);
+    grad.addColorStop(0, '#3b6fd1');
+    grad.addColorStop(0.55, '#8fb8ee');
+    grad.addColorStop(1, '#ffd2a1');
+    sg.fillStyle = grad;
+    sg.fillRect(0, 0, 4, 256);
+    const skyTex = new THREE.CanvasTexture(sky);
+    skyTex.colorSpace = THREE.SRGBColorSpace;
+    scene.background = skyTex;
+    scene.fog = new THREE.Fog('#c4cfe6', 120, 340);
+    scene.add(new THREE.HemisphereLight('#bcd4ff', '#6b5a4a', 1.1));
+    const sun = new THREE.DirectionalLight('#ffd9a8', 3.4);
+    sun.position.set(-70, 75, 55);
     sun.castShadow = true;
     sun.shadow.mapSize.set(2048, 2048);
     Object.assign(sun.shadow.camera, { left: -90, right: 90, top: 90, bottom: -90, near: 10, far: 300 });
     sun.shadow.bias = -0.0005;
+    sun.shadow.normalBias = 0.05;
     scene.add(sun);
 
     // Boden, Strassen, Gehwege
@@ -385,17 +405,28 @@ export default {
         m.position.z += p.vz * dt;
         const a = smooth(p.fall) * (Math.PI / 2 - 0.08);
         m.rotation.z = a;
-        m.position.y = 0.25 + Math.sin(a) * 0.26;
+        m.position.y = 0.25 + Math.sin(a) * 0.29;
+        // Gesicht erzaehlt mit: normal -> Schock beim Wegrutschen -> besorgt am Boden -> erleichtert
+        const ex = t < slipStart ? 'smile' : t < slipStart + 1.4 ? 'shock' : t < p.getUp ? 'worried' : 'smile';
+        if (m.userData.expression !== ex) b.expression(m, ex);
       } else if (off) {
         // Stillstehende brauchen keine Reibung — sie balancieren nur nervoes.
         const k = smooth(phase(t, T_OFF, T_OFF + 0.6));
         b.animatePerson(m, 0, 0, 0.32 * k);
         m.rotation.x = Math.sin(t * 5 + p.wobble) * 0.04 * k;
+        if (m.userData.expression !== 'o') b.expression(m, 'o');
+        b.look(m, Math.sin(t * 2 + p.wobble), -0.3);
       } else {
         const k = 1 - smooth(phase(t, T_ON, T_ON + 0.8));
         b.animatePerson(m, 0, 0, t >= T_ON ? 0.32 * k : 0);
         m.rotation.x = 0;
+        const ex = t > T_ON ? 'smile' : 'flat';
+        if (m.userData.expression !== ex) b.expression(m, ex);
+        b.look(m, 0, 0);
       }
+      // Blinzeln, pro Figur versetzt
+      const bt = (t + p.wobble) % 3.1;
+      b.blink(m, bt < 0.12 ? Math.sin((bt / 0.12) * Math.PI) : 0);
       if (p.fallen) fallen++;
     }
     S.fallenCount = Math.max(S.fallenCount, fallen);
@@ -409,7 +440,7 @@ export default {
         // Hook: hinter dem roten Auto auf Strassenhoehe
         { at: 0, fov: 48, pos: () => [red().x - 15, 5.5, red().z + 2], look: () => [red().x + 14, 1.5, red().z - 1] },
         // Wendepunkt: harter Schnitt auf den Fussgaenger, der wegrutscht
-        { at: 3.5, fov: 46, pos: () => [hero().x - 5.5, 1.7, 10.2], look: () => [hero().x + 0.6, 0.8, hero().z - 0.8], move: { fov: 52, dur: 1.4 } },
+        { at: 3.5, fov: 46, pos: () => [hero().x - 5.5, 1.7, 10.2], look: () => [hero().x + 0.6, 1.25, hero().z - 0.8], move: { fov: 52, dur: 1.4 } },
         // Totale: rotes Auto rutscht ueber Rot, blaues Auto in die Hausecke
         { at: 4.9, fov: 58, pos: [-30, 34, 1.5], look: [4, 0, -2], move: { pos: [-26, 30, 1.5], dur: 2.5 } },
         // Detail: Raeder des Querverkehrs drehen durch

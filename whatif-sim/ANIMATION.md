@@ -54,3 +54,32 @@ Werkzeuge: `ctx.motion` (`runtime/motion.js`), Overlays: `ui` (`runtime/ui.js`).
 - Alle **1–3 s** ein neuer Reiz: Schnitt, neuer Text, Zahl springt, Ereignis.
 - Vor dem Höhepunkt kurz **ruhiger** werden, dann wirkt der Peak stärker.
 - Das Ende nicht ausblenden: Loop-Satz stehen lassen, damit das Video nahtlos neu startet.
+
+## Look: Licht, Material, Kamera-Optik
+
+Gesteuert über `look` in der Szene (`runtime/look.js`) und `ctx.blocks`:
+
+- **Abgerundete Kanten** (`box(..., { r })`): Jede Box hat leicht runde Kanten. Die fangen
+  Glanzlichter und lassen alles wie Spielzeug aus Plastik wirken.
+- **Drei-Punkt-Licht**: warmes Hauptlicht (Sonne/Key), kühles Fülllicht (Himmel/Hemisphere),
+  farbiges Kantenlicht von hinten (Rim), das die Silhouette vom Hintergrund trennt.
+- **`env`**: weiche Studio-Umgebung für Reflexionen. 0,25–0,4 reicht, mehr macht alles flach.
+- **`ao`** (Ambient Occlusion): Kontaktschatten in Fugen und unter Figuren. Gibt Gewicht.
+- **`dof`** (Tiefenunschärfe): Der Fokus folgt automatisch dem `look`-Punkt bzw. `focus` des
+  aktiven Shots. Nahaufnahmen bekommen dadurch einen weichen Hintergrund wie bei einer
+  echten Kamera. Für Studios ist `aperture` 4–6 gut, für Städte 0,2–0,4.
+- **`bloom`**: Nur Dinge über `threshold` leuchten (Fenster, Werbetafeln, Scheinwerfer,
+  Bokeh-Lichter). Weiße Flächen dürfen nicht glühen, deshalb den Schwellenwert hoch halten (≥ 1,4).
+- **Himmel**: Verlauf als Canvas-Textur, Nebel in Horizontfarbe, damit die Ferne weich ausläuft.
+
+## Figuren (`ctx.blocks.character`)
+
+- Optionen: `shirt`, `pants`, `skin`, `hair`, `shoes`, `accent`,
+  `outfit` (`hoodie` | `jacket` | `tshirt`), `hairStyle` (`tufts` | `spiky` | `bun` | `cap` | `short` | `none`).
+- Ausdrücke: `blocks.expression(fig, 'smile' | 'flat' | 'worried' | 'open' | 'o' | 'shock' | 'angry')`.
+- `blocks.blink(fig, 0..1)`, `blocks.look(fig, seite, oben)` für Pupillen, Kopf: `fig.userData.face.head`.
+- **Das Gesicht erzählt mit**: Jeder Beat bekommt einen passenden Ausdruck (normal → Schock →
+  Sorge → Erleichterung). Blinzeln alle 2–4 s, pro Figur versetzt, sonst wirken sie tot.
+- Nahaufnahmen von vorne zeigen, damit man das Gesicht sieht.
+
+`scenes/studio.js` ist eine Vorlage für Studio-/Moderationsszenen (Gitterboden, Bokeh, Nahaufnahme).

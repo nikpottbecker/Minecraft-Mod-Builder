@@ -22,7 +22,7 @@
 <script type="module">
   import { boot } from './engine.js';
   const params = new URLSearchParams(location.search);
-  boot(params.get('scene'), { scale: Number(params.get('scale') || 1), live: params.has('live') })
+  boot(params.get('scene'), { scale: Number(params.get('scale') || 1), live: params.has('live'), quality: params.get('quality') || 'final' })
     .catch((err) => { window.__simError = String(err && err.stack || err); console.error(err); });
 </script>
 </body>
