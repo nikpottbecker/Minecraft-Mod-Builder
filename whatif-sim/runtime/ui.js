@@ -382,6 +382,36 @@ export const ui = {
     g.restore();
   },
 
+  // Echter Zuschauer-Kommentar als Karte im Bild
+  comment(g, { name, text, label = 'FIRST COMMENT', y = 300, k = 1 }) {
+    if (k <= 0) return;
+    const s = 0.86 + 0.14 * k;
+    g.save();
+    g.globalAlpha = Math.min(1, k * 1.6);
+    g.translate(540, y);
+    g.scale(s, s);
+    roundRect(g, -440, 0, 880, 210, 26);
+    g.fillStyle = '#ffffff';
+    g.fill();
+    g.fillStyle = '#10131f';
+    g.beginPath();
+    g.arc(-356, 105, 54, 0, Math.PI * 2);
+    g.fill();
+    g.fillStyle = '#ffffff';
+    g.textAlign = 'center';
+    g.textBaseline = 'middle';
+    g.font = `400 54px ${DISPLAY}`;
+    g.fillText(name.toUpperCase(), -356, 106);
+    g.textAlign = 'left';
+    g.fillStyle = '#6b7080';
+    g.font = `400 34px ${DISPLAY}`;
+    g.fillText(label, -276, 58);
+    g.fillStyle = '#10131f';
+    g.font = `400 74px ${DISPLAY}`;
+    g.fillText(text.toUpperCase(), -276, 132);
+    g.restore();
+  },
+
   // Rauchschleier ueber dem ganzen Bild
   haze(g, amount, color = '#7c7772') {
     if (amount <= 0) return;
