@@ -51,7 +51,7 @@ export default {
   ],
   music: {
     bpm: 76,
-    gain: -8,
+    gain: -10,
     duck: 0.72,
     sections: [
       { at: 0, mood: 'suspense' },

@@ -281,8 +281,8 @@ async function main() {
   const duck = new Float32Array(bed[0].length);
   let envl = 0;
   for (let i = 0; i < duck.length; i++) {
-    const v = Math.abs(voice[0][i]);
-    envl = v > envl ? envl + (v - envl) * 0.02 : envl * 0.99994;
+    const v = Math.abs(voice[0][Math.min(i + (def.fxDuck ? Math.round(RATE * 0.09) : 0), duck.length - 1)]);
+    envl = v > envl ? envl + (v - envl) * (def.fxDuck ? 0.2 : 0.02) : envl * 0.99994;
     duck[i] = 1 - (def.music?.duck ?? 0.65) * Math.min(1, envl * 6);
   }
   const musicGain = dbToGain(def.music?.gain ?? -14);
